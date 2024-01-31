@@ -2,33 +2,59 @@ import {Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {StyleSheet} from 'react-native';
-import {colors} from '../utils/colors';
-export default function Button() {
+import {colors} from '../utils/commonStyle/colors';
+import {fontSizes} from '../utils/commonStyle/fontSizes';
+
+interface Props {
+  onPress?: () => void;
+  title?: string;
+  outline?: boolean;
+}
+const Button: React.FC<Props> = ({
+  onPress,
+  title = 'Button',
+  outline = false,
+}) => {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onPress} style={[styles.btn]}>
       <LinearGradient
+        style={[styles.linearGradient, outline && {padding: 2}]}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
         colors={[colors.purle, colors.blue]}>
-        <Text style={styles.buttonText}>Sign in with Facebook</Text>
+        <Text
+          style={[
+            styles.buttonText,
+            outline && {
+              padding: 14,
+              backgroundColor: colors.dargBg,
+              color: colors.purle,
+            },
+          ]}>
+          {title}
+        </Text>
       </LinearGradient>
     </TouchableOpacity>
   );
-}
+};
 
+export default Button;
 const styles = StyleSheet.create({
+  btn: {
+    width: '100%',
+  },
   linearGradient: {
-    flex: 1,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderRadius: 5,
+    borderRadius: 16,
   },
   buttonText: {
-    fontSize: 18,
-    fontFamily: 'Gill Sans',
+    fontSize: fontSizes.p,
+    fontWeight: '600',
     textAlign: 'center',
-    margin: 10,
-    color: '#ffffff',
+    borderRadius: 16,
+    padding: 16,
+    color: colors.white,
     backgroundColor: 'transparent',
+    width: '100%',
+    borderColor: 'transparent',
   },
 });
