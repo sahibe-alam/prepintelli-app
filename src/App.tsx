@@ -1,20 +1,10 @@
-import {StatusBar, View} from 'react-native';
-import React from 'react';
-import Button from './components/Button';
-import {colors} from './utils/commonStyle/colors';
+import Splash from './screens/Splash';
 
 const App = () => {
   return (
-    <View
-      style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
-        paddingHorizontal: 20,
-        backgroundColor: colors.lightBg,
-      }}>
-      <Button outline={false} title="Button Title" />
-    </View>
+    <>
+      <Splash />
+    </>
   );
 };
 
