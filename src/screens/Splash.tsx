@@ -11,7 +11,14 @@ import {colors} from '../utils/commonStyle/colors';
 import Button from '../components/Button';
 import {fontSizes} from '../utils/commonStyle/fontSizes';
 
-export default function Splash() {
+interface Props {
+  navigation?: any;
+  route?: any;
+}
+const Splash: React.FC<Props> = ({navigation}) => {
+  const getStartHandler = () => {
+    navigation.navigate('Main');
+  };
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={'white'} />
@@ -25,37 +32,39 @@ export default function Splash() {
           Your AI Guide to Exam Success and Language Proficiency
         </Text>
       </View>
-      <View style={{flex: 1, position: 'relative'}}>
+      <View style={styles.imgWrapper}>
         <Image
-          style={{objectFit: 'contain', flex: 1}}
+          style={{objectFit: 'contain', flex: 1, width: '100%'}}
           source={require('../../src/assets/img/splash-image.png')}
         />
       </View>
       <SafeAreaView style={{width: '100%', paddingBottom: 10}}>
-        <Button />
+        <Button title="Let's start" onPress={getStartHandler} />
       </SafeAreaView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     backgroundColor: colors.white,
     paddingHorizontal: 22,
     justifyContent: 'space-between',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   logoText: {
     fontSize: fontSizes.h1,
     color: colors.black,
-    fontWeight: '700',
+    fontWeight: '600',
     textAlign: 'center',
     paddingBottom: 20,
   },
   logo: {
     objectFit: 'contain',
     width: 70,
+    height: 70,
   },
   branding: {
     flexDirection: 'column',
@@ -66,6 +75,14 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontSize: fontSizes.h5,
     textAlign: 'center',
-    fontWeight: '700',
+    fontWeight: '600',
+  },
+  imgWrapper: {
+    verticalAlign: 'bottom',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
 });
+
+export default Splash;

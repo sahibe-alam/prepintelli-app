@@ -1,9 +1,13 @@
-import Splash from './screens/Splash';
+import React from 'react';
+import GlobalState from './contexts/GlobalState';
+import AppNavigator from './navigation/AppNavigator';
 
 const App = () => {
   return (
     <>
-      <Splash />
+      <GlobalState>
+        <AppNavigator />
+      </GlobalState>
     </>
   );
 };
