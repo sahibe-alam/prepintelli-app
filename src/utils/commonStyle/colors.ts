@@ -1,6 +1,7 @@
 export const colors = {
   purle: '#A13AC9',
   grey: '#ccc',
+  light_grey: '#EEEEEE',
   blue: '#5D6EFF',
   black: '#000',
   white: '#fff',

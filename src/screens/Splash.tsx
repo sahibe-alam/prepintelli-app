@@ -29,7 +29,7 @@ const Splash: React.FC<Props> = ({navigation}) => {
         />
         <Text style={styles.logoText}>prepIntelli</Text>
         <Text style={styles.tagline}>
-          Your AI Guide to Exam Success and Language Proficiency
+          Your AI guide to exam success {'\n'} and language proficiency
         </Text>
       </View>
       <View style={styles.imgWrapper}>
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   logoText: {
     fontSize: fontSizes.h1,
     color: colors.black,
-    fontWeight: '600',
+    fontWeight: '700',
     textAlign: 'center',
     paddingBottom: 20,
   },
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   },
   tagline: {
     color: colors.black,
-    fontSize: fontSizes.h5,
+    fontSize: fontSizes.p,
     textAlign: 'center',
     fontWeight: '600',
   },
