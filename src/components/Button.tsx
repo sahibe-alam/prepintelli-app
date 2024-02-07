@@ -25,6 +25,7 @@ const Button: React.FC<Props> = ({
         <Text
           style={[
             styles.buttonText,
+            // eslint-disable-next-line react-native/no-inline-styles
             outline && {
               padding: 14,
               backgroundColor: colors.dargBg,
