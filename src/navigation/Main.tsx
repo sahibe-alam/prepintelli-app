@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderColor: colors.light_grey,
     paddingTop: 6,
-    paddingBottom: 4,
+    paddingBottom: 8,
     borderRadius: 30,
   },
   customTabBarButton: {
