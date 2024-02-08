@@ -1,7 +1,7 @@
 import {View, Text, StyleSheet, Image} from 'react-native';
 import React from 'react';
 import {colors} from '../utils/commonStyle/colors';
-import {fontSizes} from '../utils/commonStyle/fontSizes';
+import {fontSizes} from '../utils/commonStyle';
 
 const Header = () => {
   return (

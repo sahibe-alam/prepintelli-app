@@ -3,7 +3,7 @@ import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {StyleSheet} from 'react-native';
 import {colors} from '../utils/commonStyle/colors';
-import {fontSizes} from '../utils/commonStyle/fontSizes';
+import {fontSizes} from '../utils/commonStyle';
 
 interface Props {
   onPress?: () => void;

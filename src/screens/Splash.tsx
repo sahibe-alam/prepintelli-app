@@ -9,7 +9,7 @@ import {
 import React from 'react';
 import {colors} from '../utils/commonStyle/colors';
 import Button from '../components/Button';
-import {fontSizes} from '../utils/commonStyle/fontSizes';
+import {fontSizes, spacing} from '../utils/commonStyle';
 
 interface Props {
   navigation?: any;
@@ -38,7 +38,7 @@ const Splash: React.FC<Props> = ({navigation}) => {
           source={require('../../src/assets/img/splash-image.png')}
         />
       </View>
-      <SafeAreaView style={{width: '100%', paddingBottom: 10}}>
+      <SafeAreaView style={{width: '100%', paddingBottom: spacing.m}}>
         <Button title="Let's start" onPress={getStartHandler} />
       </SafeAreaView>
     </View>
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     flex: 1,
 
     backgroundColor: colors.white,
-    paddingHorizontal: 22,
+    paddingHorizontal: spacing.l,
     justifyContent: 'space-between',
     // alignItems: 'center',
   },
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontWeight: '700',
     textAlign: 'center',
-    paddingBottom: 20,
+    paddingBottom: spacing.l,
   },
   logo: {
     objectFit: 'contain',
