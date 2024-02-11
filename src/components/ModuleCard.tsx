@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   cardWrapper: {
     flex: 1,
     backgroundColor: colors.white,
-    borderRadius: 14,
+    borderRadius: 12,
     overflow: 'hidden',
     shadowColor: colors.black,
     shadowOffset: {
