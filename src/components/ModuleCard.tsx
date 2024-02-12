@@ -7,11 +7,12 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 interface Props {
   cardTitle?: string;
   moduleType?: string;
+  onPress?: () => void;
 }
-const ModuleCard: React.FC<Props> = ({cardTitle, moduleType}) => {
+const ModuleCard: React.FC<Props> = ({cardTitle, moduleType, onPress}) => {
   return (
     <View style={styles.cardWrapper}>
-      <TouchableOpacity activeOpacity={0.9}>
+      <TouchableOpacity activeOpacity={0.9} onPress={onPress}>
         <Gradient>
           <View style={styles.cardThumbnail}>
             <Image

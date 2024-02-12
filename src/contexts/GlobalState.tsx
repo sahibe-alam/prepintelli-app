@@ -1,5 +1,10 @@
-import React from 'react';
-import {Appearance, ColorSchemeName} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Appearance,
+  ColorSchemeName,
+  Dimensions,
+  ScaledSize,
+} from 'react-native';
 
 interface GlobalStateProps {
   hello?: string;
@@ -7,12 +12,12 @@ interface GlobalStateProps {
   children: React.ReactNode;
 }
 interface PrepContextProps {
-  hello?: string;
-  setHello?: (value: string) => void;
   colorScheme?: ColorSchemeName;
+  orientation?: 'PORTRAIT' | 'LANDSCAPE';
 }
-export const PrepContext = React.createContext<PrepContextProps>({});
+const PrepContext = React.createContext<PrepContextProps>({});
 
+export const usePrepContext = () => React.useContext(PrepContext);
 interface PrepContextProps {
   hello?: string;
   setHello?: (value: string) => void;
@@ -23,11 +28,32 @@ const GlobalState: React.FC<GlobalStateProps> = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [hello, setHello] = React.useState<string>('Hello, World!');
+  // STATES DEFINE HERE
   const colorScheme = Appearance.getColorScheme();
+  const [orientation, setOrientation] = useState<'PORTRAIT' | 'LANDSCAPE'>(
+    'PORTRAIT',
+  );
 
+  useEffect(() => {
+    const detectOrientation = ({
+      window: {width, height},
+    }: {
+      window: ScaledSize;
+    }) => {
+      setOrientation(width > height ? 'LANDSCAPE' : 'PORTRAIT');
+    };
+
+    const subscription = Dimensions.addEventListener(
+      'change',
+      detectOrientation,
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
   return (
-    <PrepContext.Provider value={{hello, setHello, colorScheme}}>
+    <PrepContext.Provider value={{colorScheme, orientation}}>
       {children}
     </PrepContext.Provider>
   );

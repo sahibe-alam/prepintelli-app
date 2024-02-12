@@ -2,6 +2,7 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import React from 'react';
 import {colors} from '../utils/commonStyle/colors';
 import {fontSizes} from '../utils/commonStyle';
+import SliderWrapper from './SliderWrapper';
 
 const HomeSlider = () => {
   const data = [
@@ -25,20 +26,23 @@ const HomeSlider = () => {
     },
   ];
 
-  return (
-    <>
-      {data.map((item, index) => {
-        return (
-          <View key={index} style={[styles.slideItem]}>
-            <View style={styles.slideContent}>
-              <Text style={[styles.moduleTag]}>{item.title}</Text>
-              <View style={styles.imgWrapper}>
-                <Image source={item.image} style={styles.slideImg} />
-              </View>
+  const renderItem = ({item, index}: {item: any; index: number}) => {
+    return (
+      <>
+        <View key={index} style={[styles.slideItem]}>
+          <View style={styles.slideContent}>
+            <Text style={[styles.moduleTag]}>{item.title}</Text>
+            <View style={styles.imgWrapper}>
+              <Image source={item.image} style={styles.slideImg} />
             </View>
           </View>
-        );
-      })}
+        </View>
+      </>
+    );
+  };
+  return (
+    <>
+      <SliderWrapper sliderData={data} renderItem={renderItem} />
     </>
   );
 };
@@ -46,6 +50,7 @@ const styles = StyleSheet.create({
   imgWrapper: {
     width: '30%',
     flex: 1,
+    maxWidth: '30%',
   },
   slideImg: {
     width: '100%',
@@ -55,6 +60,7 @@ const styles = StyleSheet.create({
   slideContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   desc: {
     color: colors.grey,
@@ -65,11 +71,11 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.p,
     fontWeight: 'bold',
     maxWidth: '70%',
+    flex: 1,
   },
   slideItem: {
     marginHorizontal: 20,
     flex: 1,
-    marginBottom: 20,
     height: 100,
     borderRadius: 12,
     overflow: 'hidden',
