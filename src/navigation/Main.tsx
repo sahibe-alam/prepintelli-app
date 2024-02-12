@@ -10,6 +10,8 @@ import {colors} from '../utils/commonStyle/colors';
 import Header from '../components/Header';
 import LanguageLearn from '../screens/LanguageLearn';
 import Profile from '../screens/Profile';
+import CreateExam from '../screens/CreateExam';
+import CreateLearnLang from '../screens/CreateLearnLang';
 
 const Bottom = createBottomTabNavigator();
 
@@ -118,6 +120,16 @@ const Main = () => {
         <Bottom.Screen
           name="Profile"
           component={Profile}
+          options={{tabBarLabel: () => null}}
+        />
+        <Bottom.Screen
+          name="Create Exam"
+          component={CreateExam}
+          options={{tabBarLabel: () => null}}
+        />
+        <Bottom.Screen
+          name="Create Learn Lang"
+          component={CreateLearnLang}
           options={{tabBarLabel: () => null}}
         />
       </Bottom.Navigator>

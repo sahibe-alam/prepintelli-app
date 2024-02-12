@@ -4,16 +4,27 @@ import {colors} from '../utils/commonStyle/colors';
 import {fontSizes, spacing} from '../utils/commonStyle';
 import ModuleCard from '../components/ModuleCard';
 import HomeSlider from '../components/HomeSlider';
-
-const Home = () => {
+interface PropsType {
+  navigation?: any;
+  route?: any;
+}
+const Home: React.FC<PropsType> = props => {
   return (
     <View style={styles.container}>
       <ScrollView>
         <HomeSlider />
         <Text style={styles.modulesHeading}>Smart Study, Smart AI</Text>
         <View style={styles.moduleWrapper}>
-          <ModuleCard cardTitle="Exam preparation" moduleType="exam" />
-          <ModuleCard cardTitle="Language learning" moduleType="lang" />
+          <ModuleCard
+            onPress={() => props.navigation.navigate('Create Exam')}
+            cardTitle="Exam preparation"
+            moduleType="exam"
+          />
+          <ModuleCard
+            onPress={() => props.navigation.navigate('Create Learn Lang')}
+            cardTitle="Language learning"
+            moduleType="lang"
+          />
         </View>
       </ScrollView>
     </View>
