@@ -8,20 +8,32 @@ interface PropsType {
   navigation?: any;
   route?: any;
 }
-const Home: React.FC<PropsType> = props => {
+const Home: React.FC<PropsType> = ({navigation}) => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <HomeSlider />
+        <View style={styles.sliderWrapper}>
+          <HomeSlider />
+        </View>
         <Text style={styles.modulesHeading}>Smart Study, Smart AI</Text>
         <View style={styles.moduleWrapper}>
           <ModuleCard
-            onPress={() => props.navigation.navigate('Create Exam')}
+            onPress={() =>
+              navigation.navigate('Create Exam', {
+                itemId: 86,
+                title: 'Target your exam with ai 🔥',
+              })
+            }
             cardTitle="Exam preparation"
             moduleType="exam"
           />
           <ModuleCard
-            onPress={() => props.navigation.navigate('Create Learn Lang')}
+            onPress={() =>
+              navigation.navigate('Create Learn Lang', {
+                itemId: 86,
+                title: 'Target learning language with ai 🔥',
+              })
+            }
             cardTitle="Language learning"
             moduleType="lang"
           />
@@ -32,6 +44,10 @@ const Home: React.FC<PropsType> = props => {
 };
 
 const styles = StyleSheet.create({
+  sliderWrapper: {
+    marginTop: 4,
+    marginBottom: spacing.xl,
+  },
   moduleWrapper: {
     paddingHorizontal: spacing.l,
     paddingTop: spacing.m,

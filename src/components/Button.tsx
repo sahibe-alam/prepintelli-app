@@ -3,7 +3,7 @@ import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {StyleSheet} from 'react-native';
 import {colors} from '../utils/commonStyle/colors';
-import {fontSizes} from '../utils/commonStyle';
+import {fontSizes, spacing} from '../utils/commonStyle';
 
 interface Props {
   onPress?: () => void;
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     borderRadius: 16,
-    padding: 16,
+    padding: spacing.m,
     color: colors.white,
     backgroundColor: 'transparent',
     width: '100%',

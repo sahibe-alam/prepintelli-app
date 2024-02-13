@@ -1,7 +1,7 @@
 export const spacing = {
   s: 10,
-  m: 14,
-  l: 18,
+  m: 12,
+  l: 14,
   xl: 22,
   xxl: 26,
 };
