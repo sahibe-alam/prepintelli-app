@@ -66,6 +66,7 @@ const getStyle = (orientation: string) =>
       backgroundColor: colors.white,
       paddingHorizontal: spacing.l,
       justifyContent: 'space-between',
+      paddingBottom: spacing.xl,
       // alignItems: 'center',
     },
     logoText: {

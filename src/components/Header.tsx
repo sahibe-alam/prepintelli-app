@@ -10,7 +10,7 @@ const Header = () => {
         <View style={styles.dpWrapper}>
           <Image
             style={styles.dp}
-            source={require('../assets/img/boys-style-dp.jpg')}
+            source={require('../assets/img/user_icon.png')}
           />
         </View>
         <Text style={styles.userName} numberOfLines={1} ellipsizeMode="tail">

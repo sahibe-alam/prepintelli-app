@@ -1,20 +1,26 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {Text, StyleSheet, SafeAreaView} from 'react-native';
 import React from 'react';
 import {colors} from '../utils/commonStyle/colors';
+import BackHeader from '../components/BackHeader';
 
-const CreateLearnLang = () => {
+interface PropsType {
+  navigation: any;
+  route: any;
+}
+const CreateLearnLang: React.FC<PropsType> = ({navigation, route}) => {
+  const {title} = route.params;
   return (
-    <View style={styles.container}>
-      <Text>CreateLearnLang</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <BackHeader onPress={() => navigation.goBack()} title={title} />
+      <Text style={{color: colors.black}}>langiage learning </Text>
+    </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 export default CreateLearnLang;

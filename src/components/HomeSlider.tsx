@@ -1,7 +1,7 @@
 import {View, Text, StyleSheet, Image} from 'react-native';
 import React from 'react';
 import {colors} from '../utils/commonStyle/colors';
-import {fontSizes} from '../utils/commonStyle';
+import {fontSizes, spacing} from '../utils/commonStyle';
 import SliderWrapper from './SliderWrapper';
 
 const HomeSlider = () => {
@@ -68,20 +68,20 @@ const styles = StyleSheet.create({
   },
   moduleTag: {
     color: colors.white,
-    fontSize: fontSizes.p,
+    fontSize: fontSizes.p2,
     fontWeight: 'bold',
     maxWidth: '70%',
     flex: 1,
   },
   slideItem: {
-    marginHorizontal: 20,
+    marginHorizontal: spacing.l,
     flex: 1,
     height: 100,
     borderRadius: 12,
     overflow: 'hidden',
     backgroundColor: colors.blue,
     justifyContent: 'center',
-    padding: 10,
+    padding: spacing.s,
   },
 });
 export default HomeSlider;
