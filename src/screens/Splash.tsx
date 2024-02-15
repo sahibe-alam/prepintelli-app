@@ -11,7 +11,6 @@ import {colors} from '../utils/commonStyle/colors';
 import Button from '../components/Button';
 import {fontSizes, spacing} from '../utils/commonStyle';
 import {usePrepContext} from '../contexts/GlobalState';
-
 interface Props {
   navigation?: any;
   route?: any;
