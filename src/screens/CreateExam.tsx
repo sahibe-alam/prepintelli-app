@@ -1,7 +1,8 @@
-import {Text, StyleSheet, SafeAreaView} from 'react-native';
+import {StyleSheet, SafeAreaView} from 'react-native';
 import React from 'react';
 import {colors} from '../utils/commonStyle/colors';
 import BackHeader from '../components/BackHeader';
+import ExamType from '../components/ExamType';
 
 interface PropsType {
   navigation: any;
@@ -12,7 +13,7 @@ const CreateExam: React.FC<PropsType> = ({navigation, route}) => {
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader onPress={() => navigation.goBack()} title={title} />
-      <Text style={{color: colors.black}}>exam screen</Text>
+      <ExamType />
     </SafeAreaView>
   );
 };
