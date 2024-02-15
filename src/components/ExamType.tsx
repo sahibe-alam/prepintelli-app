@@ -3,27 +3,35 @@ import React from 'react';
 import Gradient from './Gradient';
 import {fontSizes, spacing} from '../utils/commonStyle';
 import {colors} from '../utils/commonStyle/colors';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 interface ExamTypeProps {
   onPress?: () => void;
   title?: string;
   type?: string;
 }
-const ExamType: React.FC<ExamTypeProps> = () => {
+const ExamType: React.FC<ExamTypeProps> = ({title, type}) => {
   const styles = getStyle();
   return (
     <View style={styles.container}>
-      <View style={styles.wrapper}>
+      <TouchableOpacity style={styles.wrapper}>
         <Gradient>
           <View style={styles.examTypeWrapper}>
             <View style={styles.itemWrapper}>
               <View style={styles.iconWrapper}>
                 <Image
                   style={styles.examIc}
-                  source={require('../assets/img/competative_ic.png')}
+                  source={
+                    (type === 'comptv' &&
+                      require('../assets/img/competative_ic.png')) ||
+                    (type === 'clg' &&
+                      require('../assets/img/college_icon.png')) ||
+                    (type === 'acdmc' &&
+                      require('../assets/img/academics_ic.png'))
+                  }
                 />
               </View>
-              <Text style={styles.title}>ExamType</Text>
+              <Text style={styles.title}>{title}</Text>
             </View>
             <Image
               style={styles.arrow}
@@ -31,7 +39,7 @@ const ExamType: React.FC<ExamTypeProps> = () => {
             />
           </View>
         </Gradient>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };

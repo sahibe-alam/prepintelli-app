@@ -3,7 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import Splash from '../screens/Splash';
 import Main from './Main';
-import CreateExam from '../screens/CreateExam';
+import TargetExam from '../screens/TargetExam';
 import CreateLearnLang from '../screens/CreateLearnLang';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
@@ -27,7 +27,7 @@ const AppNavigator = () => {
         />
         <Stack.Screen
           name="Create Exam"
-          component={CreateExam}
+          component={TargetExam}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
