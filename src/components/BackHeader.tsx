@@ -40,7 +40,7 @@ const getstyles = () =>
       backgroundColor: colors.white,
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 10,
+      gap: 0,
       paddingHorizontal: spacing.l,
       borderBottomWidth: 1,
       borderColor: colors.light_grey,

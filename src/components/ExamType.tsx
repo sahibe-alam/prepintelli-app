@@ -14,7 +14,7 @@ const ExamType: React.FC<ExamTypeProps> = ({title, type}) => {
   const styles = getStyle();
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.wrapper}>
+      <TouchableOpacity style={styles.wrapper} activeOpacity={0.9}>
         <Gradient>
           <View style={styles.examTypeWrapper}>
             <View style={styles.itemWrapper}>

@@ -4,6 +4,7 @@ import {colors} from '../utils/commonStyle/colors';
 import BackHeader from '../components/BackHeader';
 import ExamType from '../components/ExamType';
 import {spacing} from '../utils/commonStyle';
+import DropDownSelect from '../components/DropDownSelect';
 interface PropsType {
   navigation: any;
   route: any;
@@ -31,6 +32,7 @@ const TargetExam: React.FC<PropsType> = ({navigation, route}) => {
         {(typeExam as Array<any>).map((item, index) => (
           <ExamType key={index} title={item.title} type={item.type} />
         ))}
+        <DropDownSelect />
       </View>
     </SafeAreaView>
   );
