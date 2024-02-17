@@ -4,11 +4,11 @@ import React from 'react';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
-import Exam_prep from '../screens/Exam_prep';
+import Exam_prep from '../screens/ExamPreparation/Exam_prep';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors} from '../utils/commonStyle/colors';
 import Header from '../components/Header';
-import LanguageLearn from '../screens/LanguageLearn';
+import LanguageLearn from '../screens/LanguageLearn/LanguageLearn';
 import Profile from '../screens/Profile';
 
 const Bottom = createBottomTabNavigator();

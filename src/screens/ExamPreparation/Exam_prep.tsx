@@ -1,11 +1,11 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
-import {colors} from '../utils/commonStyle/colors';
+import {colors} from '../../utils/commonStyle/colors';
 
-const LanguageLearn = () => {
+const Exam_prep = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.screenName}>Language learning</Text>
+      <Text style={styles.screenName}>Exam_prep</Text>
     </View>
   );
 };
@@ -21,4 +21,4 @@ const styles = StyleSheet.create({
     color: 'black',
   },
 });
-export default LanguageLearn;
+export default Exam_prep;
