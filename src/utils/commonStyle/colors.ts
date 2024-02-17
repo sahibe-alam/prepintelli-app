@@ -14,6 +14,6 @@ export const colors = {
   orange: 'FF8726',
   light_red: '#FFC7D1',
   dargBg: '#222222',
-  lightBg: '#F2FAFF',
+  lightBg: '#fff',
   light_border: 'rgba(255, 255, 255, 0.2)',
 };

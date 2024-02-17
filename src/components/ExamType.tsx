@@ -10,11 +10,14 @@ interface ExamTypeProps {
   title?: string;
   type?: string;
 }
-const ExamType: React.FC<ExamTypeProps> = ({title, type}) => {
+const ExamType: React.FC<ExamTypeProps> = ({title, type, onPress}) => {
   const styles = getStyle();
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.wrapper} activeOpacity={0.9}>
+      <TouchableOpacity
+        onPress={onPress}
+        style={styles.wrapper}
+        activeOpacity={0.9}>
         <Gradient>
           <View style={styles.examTypeWrapper}>
             <View style={styles.itemWrapper}>

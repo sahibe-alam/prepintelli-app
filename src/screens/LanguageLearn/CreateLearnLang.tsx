@@ -1,7 +1,7 @@
 import {Text, StyleSheet, SafeAreaView} from 'react-native';
 import React from 'react';
-import {colors} from '../utils/commonStyle/colors';
-import BackHeader from '../components/BackHeader';
+import {colors} from '../../utils/commonStyle/colors';
+import BackHeader from '../../components/BackHeader';
 
 interface PropsType {
   navigation: any;

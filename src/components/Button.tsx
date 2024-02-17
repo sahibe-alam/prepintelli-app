@@ -16,7 +16,10 @@ const Button: React.FC<Props> = ({
   outline = false,
 }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.btn]}>
+    <TouchableOpacity
+      activeOpacity={0.9}
+      onPress={onPress}
+      style={[styles.btn]}>
       <LinearGradient
         style={[styles.linearGradient, outline && {padding: 2}]}
         start={{x: 0, y: 0}}
@@ -27,8 +30,8 @@ const Button: React.FC<Props> = ({
             styles.buttonText,
             // eslint-disable-next-line react-native/no-inline-styles
             outline && {
-              padding: 14,
-              backgroundColor: colors.dargBg,
+              padding: 12,
+              backgroundColor: colors.white,
               color: colors.purle,
             },
           ]}>
