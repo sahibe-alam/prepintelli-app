@@ -10,7 +10,7 @@ import React from 'react';
 import BackHeader from '../../components/BackHeader';
 import {colors} from '../../utils/commonStyle/colors';
 import {fontSizes, spacing} from '../../utils/commonStyle';
-import AccordionItem from '../../components/Accordion';
+import AccordionItem from '../../components/AccordionItem';
 
 interface PropsType {
   navigation: any;
@@ -46,15 +46,21 @@ const MyExam: React.FC<PropsType> = ({navigation}) => {
         </TouchableOpacity>
       </View>
 
-      <AccordionItem title="Accordion 1">
-        <Text>Content 1</Text>
-      </AccordionItem>
+      <View style={styles.accordionWrapper}>
+        <AccordionItem title="Road map for [xyz] exam">
+          <Text style={{color: 'black'}}>Content 1</Text>
+        </AccordionItem>
+      </View>
     </SafeAreaView>
   );
 };
 
 const getStyles = () =>
   StyleSheet.create({
+    accordionWrapper: {
+      paddingHorizontal: spacing.l,
+      marginTop: spacing.xl,
+    },
     cardTitle: {
       color: colors.blue,
       fontWeight: '600',

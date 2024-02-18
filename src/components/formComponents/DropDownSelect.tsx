@@ -82,7 +82,7 @@ const DropDownSelect: React.FC<PropsType> = ({
                     : [{rotate: '90deg'}, {rotateY: '-180deg'}],
                 },
               ]}
-              source={require('../../assets/img//header_back_arrow.png')}
+              source={require('../../assets/img/header_back_arrow.png')}
             />
           );
         }}
