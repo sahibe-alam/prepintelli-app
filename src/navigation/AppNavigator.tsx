@@ -6,7 +6,7 @@ import Main from './Main';
 import TargetExam from '../screens/ExamPreparation/TargetExam';
 import CreateLearnLang from '../screens/LanguageLearn/CreateLearnLang';
 import SelectExam from '../screens/ExamPreparation/SelectExam';
-import ExamZone from '../screens/ExamPreparation/ExamZone';
+import MyExam from '../screens/ExamPreparation/MyExam';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
   return (
@@ -39,7 +39,7 @@ const AppNavigator = () => {
         />
         <Stack.Screen
           name="Exam Zone"
-          component={ExamZone}
+          component={MyExam}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

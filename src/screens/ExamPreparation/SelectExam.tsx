@@ -12,19 +12,22 @@ interface PropsType {
   route: any;
 }
 const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
-  const {title} = route.params;
+  const {title, type, dropdownLabel, dropdownLabel2, inputLabel} = route.params;
   const styles = getStyles();
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader onPress={() => navigation.goBack()} title={title} />
       <View style={styles.formWrapper}>
-        <DropDownSelect DropDownLabel="Select your target exam?*" />
-        <SubjectSelector />
+        <DropDownSelect DropDownLabel={dropdownLabel} />
+        {type === 'acdmc' && <DropDownSelect DropDownLabel={dropdownLabel2} />}
+        <SubjectSelector label={inputLabel} />
       </View>
       <View style={styles.btnWrapper}>
         <Button
           title="Get start"
-          onPress={() => navigation.navigate('Exam Zone', {title: 'Exam Zone'})}
+          onPress={() =>
+            navigation.navigate('Exam Zone', {title: 'Exam prepration zone'})
+          }
         />
       </View>
     </SafeAreaView>

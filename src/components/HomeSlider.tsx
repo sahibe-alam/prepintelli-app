@@ -9,7 +9,7 @@ const HomeSlider = () => {
     {
       title: (
         <Text style={[styles.moduleTag]}>
-          🚀 AI-Powered Exam{'\n'}Preparation for any exam
+          AI-Powered Preparation: Elevate Your Competitive Exam Journey
         </Text>
       ),
       desc: 'Prepare for exams with AI-powered modules',
@@ -18,7 +18,16 @@ const HomeSlider = () => {
     {
       title: (
         <Text style={[styles.moduleTag]}>
-          🌟 Master any language with AI-Powered speaking practice 🎙️
+          Empower Your Future: AI-Driven College Exam Excellence
+        </Text>
+      ),
+      image: require('../assets/img/lang_ai_img.png'),
+      desc: 'Practice languages in live voice chats with our AI powered language learning modules',
+    },
+    {
+      title: (
+        <Text style={[styles.moduleTag]}>
+          Unlock Your Academic Potential with AI: Exam Prep Made Simple
         </Text>
       ),
       image: require('../assets/img/lang_ai_img.png'),
@@ -68,7 +77,7 @@ const styles = StyleSheet.create({
   },
   moduleTag: {
     color: colors.white,
-    fontSize: fontSizes.p2,
+    fontSize: fontSizes.p3,
     fontWeight: 'bold',
     maxWidth: '70%',
     flex: 1,
