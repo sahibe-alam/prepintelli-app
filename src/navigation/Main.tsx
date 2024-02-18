@@ -4,12 +4,12 @@ import React from 'react';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
-import Exam_prep from '../screens/ExamPreparation/Exam_prep';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors} from '../utils/commonStyle/colors';
 import Header from '../components/Header';
 import LanguageLearn from '../screens/LanguageLearn/LanguageLearn';
 import Profile from '../screens/Profile';
+import MyExam from '../screens/ExamPreparation/MyExam';
 
 const Bottom = createBottomTabNavigator();
 
@@ -73,11 +73,11 @@ const Main = () => {
             />
             <CustomTabBarButton
               isFocused={
-                props.state.routes[props.state.index].name === 'Exam prep'
+                props.state.routes[props.state.index].name === 'My exam'
               }
-              onPress={() => props.navigation.navigate('Exam prep')}
+              onPress={() => props.navigation.navigate('My exam')}
               iconName="exam"
-              labelName="Exam prep"
+              labelName="My exam"
             />
             <CustomTabBarButton
               isFocused={
@@ -106,9 +106,12 @@ const Main = () => {
           }}
         />
         <Bottom.Screen
-          name="Exam prep"
-          component={Exam_prep}
-          options={{tabBarLabel: () => null}}
+          name="My exam"
+          component={MyExam}
+          options={{
+            tabBarLabel: () => null,
+            headerShown: false,
+          }}
         />
         <Bottom.Screen
           name="Lang learn"

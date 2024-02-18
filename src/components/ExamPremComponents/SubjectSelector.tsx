@@ -4,13 +4,16 @@ import {colors} from '../../utils/commonStyle/colors';
 import {fontSizes, spacing} from '../../utils/commonStyle';
 import InputField from '../formComponents/InputField';
 
-const SubjectSelector = () => {
+interface PropsType {
+  label?: string;
+}
+const SubjectSelector: React.FC<PropsType> = ({label}) => {
   const [circle, setCircle] = useState(false);
   const styles = getStyles();
   return (
     <View style={styles.wrapper}>
       <View>
-        <Text style={styles.labelText}>Type your exam subjects</Text>
+        <Text style={styles.labelText}>{label}</Text>
         <View style={styles.inputWrapper}>
           <InputField placeholder="Enter subject 1" />
           <TouchableOpacity

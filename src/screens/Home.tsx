@@ -2,21 +2,42 @@ import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import React from 'react';
 import {colors} from '../utils/commonStyle/colors';
 import {fontSizes, spacing} from '../utils/commonStyle';
-import ModuleCard from '../components/ModuleCard';
 import HomeSlider from '../components/HomeSlider';
+import ExamType from '../components/ExamType';
 interface PropsType {
   navigation?: any;
   route?: any;
 }
 const Home: React.FC<PropsType> = ({navigation}) => {
+  const typeExam = [
+    {
+      title: 'Competitive exam',
+      type: 'comptv',
+      dropdownLabel: 'Select your target exam?*',
+      inputLabel: 'Type your exam subjects*',
+    },
+    {
+      title: 'College exam',
+      type: 'clg',
+      dropdownLabel: 'Select your course?*',
+      inputLabel: 'Type your exam subjects*',
+    },
+    {
+      title: 'Academics exam',
+      type: 'acdmc',
+      dropdownLabel: 'Select board*',
+      dropdownLabel2: 'Select class*',
+      inputLabel: 'Type your exam subjects*',
+    },
+  ];
   return (
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.sliderWrapper}>
           <HomeSlider />
         </View>
-        <Text style={styles.modulesHeading}>Smart Study, Smart AI</Text>
-        <View style={styles.moduleWrapper}>
+        <Text style={styles.modulesHeading}>Target your exam, With Ai </Text>
+        {/* <View style={styles.moduleWrapper}>
           <ModuleCard
             onPress={() =>
               navigation.navigate('Create Exam', {
@@ -37,6 +58,16 @@ const Home: React.FC<PropsType> = ({navigation}) => {
             cardTitle="Language learning"
             moduleType="lang"
           />
+        </View> */}
+        <View style={styles.typeWrapper}>
+          {(typeExam as Array<any>).map((item, index) => (
+            <ExamType
+              onPress={() => navigation.navigate('Select Exam', item)}
+              key={index}
+              title={item.title}
+              type={item.type}
+            />
+          ))}
         </View>
       </ScrollView>
     </View>
@@ -44,6 +75,9 @@ const Home: React.FC<PropsType> = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  typeWrapper: {
+    marginTop: spacing.m,
+  },
   sliderWrapper: {
     marginTop: 4,
     marginBottom: spacing.xl,
@@ -61,7 +95,7 @@ const styles = StyleSheet.create({
   modulesHeading: {
     color: 'black',
     paddingHorizontal: spacing.l,
-    fontSize: fontSizes.h5,
+    fontSize: fontSizes.p,
     fontWeight: 'bold',
   },
 });

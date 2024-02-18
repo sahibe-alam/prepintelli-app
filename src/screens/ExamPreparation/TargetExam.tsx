@@ -12,14 +12,21 @@ const typeExam = [
   {
     title: 'Competitive exam',
     type: 'comptv',
+    dropdownLabel: 'Select your target exam?*',
+    inputLabel: 'Type your exam subjects*',
   },
   {
     title: 'College exam',
     type: 'clg',
+    dropdownLabel: 'Select your target exam?*',
+    inputLabel: 'Type your exam subjects*',
   },
   {
     title: 'Academics exam',
     type: 'acdmc',
+    dropdownLabel: 'Select board*',
+    dropdownLabel2: 'Select class*',
+    inputLabel: 'Type your exam subjects*',
   },
 ];
 const TargetExam: React.FC<PropsType> = ({navigation, route}) => {
@@ -30,11 +37,7 @@ const TargetExam: React.FC<PropsType> = ({navigation, route}) => {
       <View style={styles.typeWrapper}>
         {(typeExam as Array<any>).map((item, index) => (
           <ExamType
-            onPress={() =>
-              navigation.navigate('Select Exam', {
-                title: item?.title,
-              })
-            }
+            onPress={() => navigation.navigate('Select Exam', item)}
             key={index}
             title={item.title}
             type={item.type}
