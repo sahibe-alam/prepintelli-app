@@ -75,7 +75,7 @@ const PaginationItem: React.FC<{
   animValue: Animated.SharedValue<number>;
 }> = props => {
   const {animValue, index, length, backgroundColor} = props;
-  const width = 6;
+  const width = 5;
 
   const animStyle = useAnimatedStyle(() => {
     let inputRange = [index - 1, index, index + 1];
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignSelf: 'center',
-    gap: 10,
+    gap: 6,
     position: 'absolute',
     bottom: 10,
   },

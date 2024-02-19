@@ -7,7 +7,7 @@ import Home from '../screens/Home';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors} from '../utils/commonStyle/colors';
 import Header from '../components/Header';
-import LanguageLearn from '../screens/LanguageLearn/LanguageLearn';
+import MyPerformance from '../screens/MyPerformance';
 import Profile from '../screens/Profile';
 import MyExam from '../screens/ExamPreparation/MyExam';
 
@@ -31,7 +31,8 @@ const CustomTabBarButton = ({
           source={
             (iconName === 'home' && require('../assets/img/home_icon.png')) ||
             (iconName === 'exam' && require('../assets/img/exam_icon.png')) ||
-            (iconName === 'lang' && require('../assets/img/lang_icon.png')) ||
+            (iconName === 'perform' &&
+              require('../assets/img/progress_ic.png')) ||
             (iconName === 'profile' && require('../assets/img/user_icon.png'))
           }
           style={[
@@ -81,11 +82,11 @@ const Main = () => {
             />
             <CustomTabBarButton
               isFocused={
-                props.state.routes[props.state.index].name === 'Lang learn'
+                props.state.routes[props.state.index].name === 'Performance'
               }
-              onPress={() => props.navigation.navigate('Lang learn')}
-              iconName="lang"
-              labelName="Lang learn"
+              onPress={() => props.navigation.navigate('Performance')}
+              iconName="perform"
+              labelName="Performance"
             />
             <CustomTabBarButton
               isFocused={
@@ -114,14 +115,14 @@ const Main = () => {
           }}
         />
         <Bottom.Screen
-          name="Lang learn"
-          component={LanguageLearn}
-          options={{tabBarLabel: () => null}}
+          name="Performance"
+          component={MyPerformance}
+          options={{tabBarLabel: () => null, headerShown: false}}
         />
         <Bottom.Screen
           name="Profile"
           component={Profile}
-          options={{tabBarLabel: () => null}}
+          options={{tabBarLabel: () => null, headerShown: false}}
         />
       </Bottom.Navigator>
     </SafeAreaView>
@@ -144,6 +145,8 @@ const styles = StyleSheet.create({
   },
   customTabBarButton: {
     alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
   icon: {
     width: 22,
