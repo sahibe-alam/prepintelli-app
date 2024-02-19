@@ -4,7 +4,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import Splash from '../screens/Splash';
 import Main from './Main';
 import TargetExam from '../screens/ExamPreparation/TargetExam';
-import CreateLearnLang from '../screens/LanguageLearn/CreateLearnLang';
 import SelectExam from '../screens/ExamPreparation/SelectExam';
 import MyExam from '../screens/ExamPreparation/MyExam';
 const Stack = createStackNavigator();
@@ -20,11 +19,6 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Main"
           component={Main}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Create Learn Lang"
-          component={CreateLearnLang}
           options={{headerShown: false}}
         />
         <Stack.Screen

@@ -19,8 +19,7 @@ const PrepContext = React.createContext<PrepContextProps>({});
 
 export const usePrepContext = () => React.useContext(PrepContext);
 interface PrepContextProps {
-  hello?: string;
-  setHello?: (value: string) => void;
+  deviceWidth?: number;
 }
 
 const GlobalState: React.FC<GlobalStateProps> = ({
@@ -30,6 +29,7 @@ const GlobalState: React.FC<GlobalStateProps> = ({
 }) => {
   // STATES DEFINE HERE
   const colorScheme = Appearance.getColorScheme();
+  const deviceWidth = Dimensions.get('window').width;
   const [orientation, setOrientation] = useState<'PORTRAIT' | 'LANDSCAPE'>(
     'PORTRAIT',
   );
@@ -53,7 +53,7 @@ const GlobalState: React.FC<GlobalStateProps> = ({
     };
   }, []);
   return (
-    <PrepContext.Provider value={{colorScheme, orientation}}>
+    <PrepContext.Provider value={{colorScheme, orientation, deviceWidth}}>
       {children}
     </PrepContext.Provider>
   );
