@@ -3,56 +3,68 @@ import React from 'react';
 import {colors} from '../utils/commonStyle/colors';
 import BackHeader from '../components/BackHeader';
 import {ScrollView} from 'react-native-gesture-handler';
-import Gradient from '../components/Gradient';
-import {usePrepContext} from '../contexts/GlobalState';
-import {fontSizes} from '../utils/commonStyle';
+import DpWrapper from '../components/DpWrapper';
+import IconLink from '../components/IconLink';
+import {spacing} from '../utils/commonStyle';
 
 interface PropsType {
   navigation: any;
 }
 
 const Profile: React.FC<PropsType> = ({navigation}) => {
-  const {deviceWidth} = usePrepContext();
-  const styles = getSyle(deviceWidth || 0);
+  const styles = getSyle();
+
+  const links = [
+    {
+      icon: require('../assets/img/dp.png'),
+      linkText: 'Edit profile',
+      onPress: () => navigation.navigate('Profile'),
+    },
+    {
+      icon: require('../assets/img/dp.png'),
+      linkText: 'Practice reminder',
+      onPress: () => navigation.navigate('Profile'),
+    },
+    {
+      icon: require('../assets/img/dp.png'),
+      linkText: 'How it works',
+      onPress: () => navigation.navigate('Profile'),
+    },
+    {
+      icon: require('../assets/img/dp.png'),
+      linkText: 'About us',
+      onPress: () => navigation.navigate('Profile'),
+    },
+    {
+      icon: require('../assets/img/dp.png'),
+      linkText: 'fAQs',
+      onPress: () => navigation.navigate('Profile'),
+    },
+    {
+      icon: require('../assets/img/dp.png'),
+      linkText: 'Log out',
+      onPress: () => navigation.navigate('Profile'),
+    },
+  ];
   return (
     <View style={styles.container}>
       <BackHeader title="My profile" onPress={() => navigation.goBack()} />
       <ScrollView style={styles.scrollWrapper}>
-        <View style={styles.gradientWrapper}>
-          <View style={styles.borderRadius}>
-            <Gradient>
-              <View style={styles.gradient} />
-            </Gradient>
-          </View>
-          <View style={styles.dpWrapper} />
+        <DpWrapper />
+        <View style={styles.iconLinkWrapper}>
+          {links.map((item, index) => (
+            <IconLink key={index} {...item} />
+          ))}
         </View>
       </ScrollView>
     </View>
   );
 };
 
-const getSyle = (deviceWidth: number) =>
+const getSyle = () =>
   StyleSheet.create({
-    borderRadius: {
-      borderRadius: deviceWidth,
-      overflow: 'hidden',
-      position: 'absolute',
-      bottom: 0,
-      alignSelf: 'center',
-    },
-    gradient: {
-      aspectRatio: 1,
-      width: deviceWidth * 2,
-      borderRadius: 500,
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-    },
-
-    gradientWrapper: {
-      width: '100%',
-      position: 'relative',
-      height: 140,
-      marginBottom: 50,
+    iconLinkWrapper: {
+      paddingHorizontal: spacing.l,
     },
     scrollWrapper: {
       flex: 1,
@@ -60,22 +72,6 @@ const getSyle = (deviceWidth: number) =>
     container: {
       flex: 1,
       backgroundColor: colors.white,
-    },
-    userName: {
-      color: colors.black,
-      textAlign: 'center',
-      fontSize: fontSizes.h5,
-    },
-    dpWrapper: {
-      width: 100,
-      height: 100,
-      borderRadius: 50,
-      position: 'absolute',
-      bottom: -50,
-      alignSelf: 'center',
-      borderWidth: 2,
-      borderColor: colors.black,
-      overflow: 'hidden',
     },
   });
 export default Profile;

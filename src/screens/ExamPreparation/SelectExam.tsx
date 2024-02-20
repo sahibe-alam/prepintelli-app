@@ -5,7 +5,7 @@ import {colors} from '../../utils/commonStyle/colors';
 import BackHeader from '../../components/BackHeader';
 import {spacing} from '../../utils/commonStyle';
 import Button from '../../components/Button';
-import SubjectSelector from '../../components/ExamPremComponents/SubjectSelector';
+import SubjectSelector from '../../components/examPremComponents/SubjectSelector';
 
 interface PropsType {
   navigation: any;
