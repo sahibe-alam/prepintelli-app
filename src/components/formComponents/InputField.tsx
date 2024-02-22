@@ -8,13 +8,7 @@ interface PropsType {
   value?: string;
   label?: string;
   onChangeText?: (text: string) => void;
-  keyboardType?:
-    | 'default'
-    | 'number-pad'
-    | 'decimal-pad'
-    | 'numeric'
-    | 'email-address'
-    | 'phone-pad';
+  keyboardType?: string;
 }
 const InputField: React.FC<PropsType> = ({
   placeholder = 'Enter text here',
@@ -25,7 +19,7 @@ const InputField: React.FC<PropsType> = ({
 
   const styles = getStyles();
   return (
-    <View style={styles.inpuWrapper}>
+    <View>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         style={styles.input}
@@ -45,7 +39,6 @@ const getStyles = () =>
       fontSize: fontSizes.p2,
       color: colors.black,
     },
-    inpuWrapper: {flex: 1},
     input: {
       height: 48,
       padding: 8,
