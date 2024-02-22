@@ -18,7 +18,7 @@ interface Props {
 const Splash: React.FC<Props> = ({navigation}) => {
   const {orientation} = usePrepContext();
   const getStartHandler = () => {
-    navigation.navigate('Main');
+    navigation.navigate('Login');
   };
   const styles = getStyle(orientation || ''); // Ensure orientation is always a string
   return (
