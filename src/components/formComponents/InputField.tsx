@@ -1,5 +1,5 @@
+import React from 'react';
 import {Text, TextInput, StyleSheet, View} from 'react-native';
-import React, {useState} from 'react';
 import {fontSizes} from '../../utils/commonStyle';
 import {colors} from '../../utils/commonStyle/colors';
 
@@ -8,16 +8,26 @@ interface PropsType {
   value?: string;
   label?: string;
   onChangeText?: (text: string) => void;
-  keyboardType?: string;
+  keyboardType?:
+    | 'default'
+    | 'number-pad'
+    | 'decimal-pad'
+    | 'numeric'
+    | 'email-address'
+    | 'phone-pad';
 }
+
 const InputField: React.FC<PropsType> = ({
   placeholder = 'Enter text here',
   keyboardType = 'default',
+  onChangeText,
+  value,
   label,
 }) => {
-  const [text, setText] = useState('');
-
+  // Define styles for the component
   const styles = getStyles();
+
+  // Render the component
   return (
     <View>
       {label && <Text style={styles.label}>{label}</Text>}
@@ -25,14 +35,15 @@ const InputField: React.FC<PropsType> = ({
         style={styles.input}
         placeholder={placeholder}
         placeholderTextColor={colors.grey}
-        onChangeText={text => setText(text)}
-        value={text}
+        onChangeText={onChangeText} // Call handleTextChange when text changes
+        value={value} // Value of the input is controlled by the state variable text
         keyboardType={keyboardType}
       />
     </View>
   );
 };
 
+// Function to get styles for the component
 const getStyles = () =>
   StyleSheet.create({
     label: {
@@ -49,4 +60,5 @@ const getStyles = () =>
       borderColor: colors.grey,
     },
   });
+
 export default InputField;
