@@ -1,4 +1,4 @@
-import {View, StyleSheet, SafeAreaView} from 'react-native';
+import {View, StyleSheet, SafeAreaView, ScrollView} from 'react-native';
 import React from 'react';
 import DropDownSelect from '../../components/formComponents/DropDownSelect';
 import {colors} from '../../utils/commonStyle/colors';
@@ -17,25 +17,41 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader onPress={() => navigation.goBack()} title={title} />
-      <View style={styles.formWrapper}>
-        <DropDownSelect DropDownLabel={dropdownLabel} />
-        {type === 'acdmc' && <DropDownSelect DropDownLabel={dropdownLabel2} />}
-        <SubjectSelector label={inputLabel} />
-      </View>
-      <View style={styles.btnWrapper}>
-        <Button
-          title="Get start"
-          onPress={() =>
-            navigation.navigate('Exam Zone', {title: 'Exam prepration zone'})
-          }
-        />
-      </View>
+      <ScrollView
+        contentContainerStyle={styles.scrollWrapper}
+        centerContent={true}>
+        <View style={styles.inputsWrapper}>
+          <View style={styles.formWrapper}>
+            <DropDownSelect DropDownLabel={dropdownLabel} />
+            {type === 'acdmc' && (
+              <DropDownSelect DropDownLabel={dropdownLabel2} />
+            )}
+            <SubjectSelector label={inputLabel} />
+          </View>
+          <View style={styles.btnWrapper}>
+            <Button
+              title="Get start"
+              onPress={() =>
+                navigation.navigate('Exam Zone', {
+                  title: 'Exam prepration zone',
+                })
+              }
+            />
+          </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
 const getStyles = () =>
   StyleSheet.create({
+    inputsWrapper: {
+      flex: 1,
+    },
+    scrollWrapper: {
+      flexGrow: 1,
+    },
     btnWrapper: {
       paddingHorizontal: spacing.l,
       paddingBottom: spacing.l,
