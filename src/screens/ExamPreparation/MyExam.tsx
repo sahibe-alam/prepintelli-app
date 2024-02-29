@@ -30,7 +30,12 @@ const MyExam: React.FC<PropsType> = ({navigation}) => {
           />
           <Text style={styles.cardTitle}>Practice test</Text>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.8} style={styles.card}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Ask doubt');
+          }}
+          activeOpacity={0.8}
+          style={styles.card}>
           <Image
             style={styles.cardImg}
             source={require('../../assets/img/ask_img.png')}

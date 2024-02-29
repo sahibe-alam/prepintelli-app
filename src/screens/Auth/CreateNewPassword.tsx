@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import {View, StyleSheet, SafeAreaView, ScrollView} from 'react-native';
 import React from 'react';
 import {colors} from '../../utils/commonStyle/colors';
 import LogoTitle from '../../components/commonComponents/LogoTitle';
@@ -17,10 +10,10 @@ interface Props {
   navigation?: any;
   route?: any;
 }
-const LoginScreen: React.FC<Props> = props => {
+const CreateNewPassword: React.FC<Props> = props => {
   const {navigation} = props;
   const loginHandler = () => {
-    navigation.navigate('Main');
+    navigation.navigate('OTP');
   };
   const styles = getStyles();
   return (
@@ -29,42 +22,18 @@ const LoginScreen: React.FC<Props> = props => {
         contentContainerStyle={styles.scrollWrapper}
         centerContent={true}>
         <View style={styles.wrapper}>
-          <LogoTitle title="Login" />
-          <InputField label="Email" placeholder="Enter email id" />
-          <View>
-            <InputField label="Password" placeholder="Enter password" />
-            <View style={styles.forgotBtnWrapper}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Forgot password');
-                }}
-                style={styles.forgotBtn}>
-                <Text style={styles.forgotText}>Forgot password</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <LogoTitle title="Create new password" />
+          <InputField label="Password*" placeholder="Enter password" />
+          <InputField
+            label="Confirm password*"
+            placeholder="Enter confirm  password"
+          />
+
           <View style={styles.btnWrapper}>
-            <Button title="Login" onPress={loginHandler} />
-            <View style={styles.t_and_c_wrapper}>
-              <Text style={styles.t_and_c}>Create new account?</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Sign Up');
-                }}>
-                <Text style={styles.linkText}>Sign up</Text>
-              </TouchableOpacity>
-            </View>
+            <Button title="Create" onPress={loginHandler} />
           </View>
         </View>
       </ScrollView>
-      <View style={styles.t_and_c_wrapper}>
-        <Text style={styles.t_and_c}>
-          By continuing, I accept PrepIntelli's
-        </Text>
-        <TouchableOpacity style={styles.btnLink}>
-          <Text style={styles.linkText}>Terms of use</Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 };
@@ -118,4 +87,4 @@ const getStyles = () =>
       backgroundColor: colors.white,
     },
   });
-export default LoginScreen;
+export default CreateNewPassword;

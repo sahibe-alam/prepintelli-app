@@ -17,10 +17,10 @@ interface Props {
   navigation?: any;
   route?: any;
 }
-const LoginScreen: React.FC<Props> = props => {
+const ForgotPassword: React.FC<Props> = props => {
   const {navigation} = props;
   const loginHandler = () => {
-    navigation.navigate('Main');
+    navigation.navigate('OTP');
   };
   const styles = getStyles();
   return (
@@ -29,40 +29,22 @@ const LoginScreen: React.FC<Props> = props => {
         contentContainerStyle={styles.scrollWrapper}
         centerContent={true}>
         <View style={styles.wrapper}>
-          <LogoTitle title="Login" />
+          <LogoTitle title="Forgot password" />
           <InputField label="Email" placeholder="Enter email id" />
-          <View>
-            <InputField label="Password" placeholder="Enter password" />
-            <View style={styles.forgotBtnWrapper}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Forgot password');
-                }}
-                style={styles.forgotBtn}>
-                <Text style={styles.forgotText}>Forgot password</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+
           <View style={styles.btnWrapper}>
-            <Button title="Login" onPress={loginHandler} />
-            <View style={styles.t_and_c_wrapper}>
-              <Text style={styles.t_and_c}>Create new account?</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Sign Up');
-                }}>
-                <Text style={styles.linkText}>Sign up</Text>
-              </TouchableOpacity>
-            </View>
+            <Button title="Send OTP" onPress={loginHandler} />
           </View>
         </View>
       </ScrollView>
       <View style={styles.t_and_c_wrapper}>
-        <Text style={styles.t_and_c}>
-          By continuing, I accept PrepIntelli's
-        </Text>
-        <TouchableOpacity style={styles.btnLink}>
-          <Text style={styles.linkText}>Terms of use</Text>
+        <Text style={styles.t_and_c}>Remember your password?</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Login');
+          }}
+          style={styles.btnLink}>
+          <Text style={styles.linkText}>Login</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -118,4 +100,4 @@ const getStyles = () =>
       backgroundColor: colors.white,
     },
   });
-export default LoginScreen;
+export default ForgotPassword;
