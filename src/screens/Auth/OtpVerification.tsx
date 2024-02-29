@@ -11,8 +11,15 @@ import OTPTextInput from 'react-native-otp-textinput';
 import {fontSizes, spacing} from '../../utils/commonStyle';
 import {colors} from '../../utils/commonStyle/colors';
 import Button from '../../components/Button';
-const OtpVerification = () => {
+interface PropsType {
+  navigation: any;
+}
+const OtpVerification: React.FC<PropsType> = ({navigation}) => {
   const styles = getSyles();
+
+  const hadleSubmit = () => {
+    navigation.navigate('Main');
+  };
   return (
     <SafeAreaView style={styles.safeview}>
       <View style={styles.wrapper}>
@@ -21,6 +28,7 @@ const OtpVerification = () => {
           An email has been sent to your address with a verification code.
         </Text>
         <OTPTextInput
+          tintColor={colors.purle}
           containerStyle={styles.container}
           textInputStyle={styles.input}
         />
@@ -30,7 +38,7 @@ const OtpVerification = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.submitBtnWrapper}>
-          <Button title="Sunmit" />
+          <Button onPress={hadleSubmit} title="Sunmit" />
         </View>
       </View>
     </SafeAreaView>

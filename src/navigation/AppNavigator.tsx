@@ -9,6 +9,8 @@ import MyExam from '../screens/ExamPreparation/MyExam';
 import LoginScreen from '../screens/Auth/LoginScreen';
 import SignUp from '../screens/Auth/SignUp';
 import OtpVerification from '../screens/Auth/OtpVerification';
+import ForgotPassword from '../screens/Auth/ForgotPassword';
+import AskDoubt from '../screens/ExamPreparation/AskDoubt';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
   return (
@@ -52,6 +54,16 @@ const AppNavigator = () => {
         <Stack.Screen
           name="OTP"
           component={OtpVerification}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Forgot password"
+          component={ForgotPassword}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Ask doubt"
+          component={AskDoubt}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
