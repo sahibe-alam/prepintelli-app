@@ -11,6 +11,8 @@ import SignUp from '../screens/Auth/SignUp';
 import OtpVerification from '../screens/Auth/OtpVerification';
 import ForgotPassword from '../screens/Auth/ForgotPassword';
 import AskDoubt from '../screens/ExamPreparation/AskDoubt';
+import StudyPlan from '../screens/ExamPreparation/StudyPlan';
+import PracticeTest from '../screens/ExamPreparation/PracticeTest';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
   return (
@@ -64,6 +66,16 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Ask doubt"
           component={AskDoubt}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Study plan"
+          component={StudyPlan}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Practice test"
+          component={PracticeTest}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

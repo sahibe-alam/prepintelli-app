@@ -8,7 +8,7 @@ import ResponseCard from '../../components/commonComponents/ResponseCard';
 interface propsType {
   navigation: any;
 }
-const AskDoubt: React.FC<propsType> = props => {
+const StudyPlan: React.FC<propsType> = props => {
   const styles = getStyles();
   const {navigation} = props;
   return (
@@ -17,7 +17,7 @@ const AskDoubt: React.FC<propsType> = props => {
         onPress={() => {
           navigation.goBack();
         }}
-        title="Ask about [xyz subject]"
+        title="Create [xyz exam] study plan"
       />
       <View style={styles.wrapper}>
         <ScrollView>
@@ -61,4 +61,4 @@ const getStyles = () =>
       backgroundColor: colors.lightBg,
     },
   });
-export default AskDoubt;
+export default StudyPlan;

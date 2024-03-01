@@ -1,42 +1,48 @@
-import {Text, TouchableOpacity} from 'react-native';
+import {Text, TouchableOpacity, View, ViewStyle} from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {StyleSheet} from 'react-native';
 import {colors} from '../utils/commonStyle/colors';
-import {fontSizes, spacing} from '../utils/commonStyle';
+import {fontSizes} from '../utils/commonStyle';
 
 interface Props {
   onPress?: () => void;
   title?: string;
   outline?: boolean;
+  btnWidth?: ViewStyle['width'];
 }
 const Button: React.FC<Props> = ({
   onPress,
   title = 'Button',
   outline = false,
+  btnWidth = '100%',
 }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.9}
       onPress={onPress}
-      style={[styles.btn]}>
+      style={{width: btnWidth}}>
       <LinearGradient
         style={[styles.linearGradient, outline && {padding: 2}]}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
         colors={[colors.purle, colors.blue]}>
-        <Text
+        <View
           style={[
-            styles.buttonText,
-            // eslint-disable-next-line react-native/no-inline-styles
-            outline && {
-              padding: 12,
-              backgroundColor: colors.white,
-              color: colors.purle,
+            styles.btnTextWrapper,
+            {
+              backgroundColor: outline ? colors.white : 'transparent',
+              padding: outline ? 10 : 12,
             },
           ]}>
-          {title}
-        </Text>
+          <Text
+            style={[
+              styles.buttonText,
+              {color: outline ? colors.blue : colors.white},
+            ]}>
+            {title}
+          </Text>
+        </View>
       </LinearGradient>
     </TouchableOpacity>
   );
@@ -44,21 +50,21 @@ const Button: React.FC<Props> = ({
 
 export default Button;
 const styles = StyleSheet.create({
+  btnTextWrapper: {
+    borderRadius: 16,
+    color: colors.white,
+  },
   btn: {
     width: '100%',
   },
   linearGradient: {
     borderRadius: 16,
+    overflow: 'hidden',
   },
   buttonText: {
     fontSize: fontSizes.p,
     fontWeight: '600',
     textAlign: 'center',
-    borderRadius: 16,
-    padding: spacing.m,
     color: colors.white,
-    backgroundColor: 'transparent',
-    width: '100%',
-    borderColor: 'transparent',
   },
 });
