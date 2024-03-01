@@ -5,8 +5,9 @@ import {fontSizes, spacing} from '../utils/commonStyle';
 interface PropsType {
   onPress?: () => void;
   title?: string;
+  isTimer?: boolean;
 }
-const BackHeader: React.FC<PropsType> = ({onPress, title}) => {
+const BackHeader: React.FC<PropsType> = ({onPress, title, isTimer = false}) => {
   const styles = getstyles();
   return (
     <View style={styles.backHeader}>
@@ -17,12 +18,47 @@ const BackHeader: React.FC<PropsType> = ({onPress, title}) => {
         />
       </TouchableOpacity>
       <Text style={styles.backTitle}>{title}</Text>
+      {isTimer && (
+        <View style={styles.counterWrapper}>
+          <View style={styles.counter}>
+            <Image
+              style={styles.timerIc}
+              source={require('../assets/img/timer_ic.png')}
+            />
+            <Text style={styles.counterText}>10:00</Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
 
 const getstyles = () =>
   StyleSheet.create({
+    counter: {
+      backgroundColor: colors.light_purple,
+      paddingHorizontal: spacing.m,
+      paddingVertical: 4,
+      borderRadius: 20,
+      alignItems: 'center',
+      flexDirection: 'row',
+      minWidth: 90,
+      justifyContent: 'center',
+      gap: 4,
+    },
+    timerIc: {
+      width: 18,
+      height: 18,
+      resizeMode: 'contain',
+    },
+    counterText: {
+      color: colors.purle,
+      fontSize: fontSizes.p,
+    },
+    counterWrapper: {
+      flex: 1,
+      alignItems: 'flex-end',
+    },
     backBtn: {
       padding: 10,
       paddingLeft: 0,

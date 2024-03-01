@@ -1,11 +1,15 @@
 import {
   Image,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from 'react-native';
+import RenderHtml from 'react-native-render-html';
+
 import React from 'react';
 import BackHeader from '../../components/BackHeader';
 import {colors} from '../../utils/commonStyle/colors';
@@ -17,13 +21,45 @@ interface PropsType {
   route: any;
 }
 const MyExam: React.FC<PropsType> = ({navigation}) => {
+  const source = {
+    html: `
+    <div>
+  <p style="font-size: 26px; color: black;">Study Plan for Class 10th</p>
+  <p style="font-size: 18px; color: black;">Subjects:</p>
+  <ul style="font-size: 14px; color: black;">
+    <li>Mathematics</li>
+    <li>Science</li>
+    <li>English</li>
+    <li>Social Studies</li>
+    <li>Hindi</li>
+  </ul>
+  <p style="font-size: 18px; color: black;">Study Plan:</p>
+  <ul style="font-size: 14px; color: black;">
+    <li>Allocate specific time slots for each subject every day.</li>
+    <li>Focus on understanding concepts rather than rote memorization.</li>
+    <li>Take regular breaks to avoid burnout.</li>
+    <li>Practice previous years' question papers for each subject.</li>
+    <li>Seek help from teachers or classmates for difficult topics.</li>
+    <li>Maintain a healthy balance between study, rest, and recreation.</li>
+  </ul>
+</div>
+
+    `,
+  };
   const styles = getStyles();
+  const {width} = useWindowDimensions();
+
   return (
     <SafeAreaView style={styles.conatainer}>
       <BackHeader onPress={() => navigation.goBack()} title={'My exam'} />
       <Text style={styles.title}>Prepare [xyz] exam with ai 🚀</Text>
       <View style={styles.cardsWrapper}>
-        <TouchableOpacity activeOpacity={0.8} style={styles.card}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Practice test');
+          }}
+          activeOpacity={0.8}
+          style={styles.card}>
           <Image
             style={styles.cardImg}
             source={require('../../assets/img/practice_img.png')}
@@ -42,7 +78,12 @@ const MyExam: React.FC<PropsType> = ({navigation}) => {
           />
           <Text style={styles.cardTitle}>Ask doubt?</Text>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.8} style={styles.card}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Study plan');
+          }}
+          activeOpacity={0.8}
+          style={styles.card}>
           <Image
             style={styles.cardImg}
             source={require('../../assets/img/studyplan_img.png')}
@@ -50,12 +91,13 @@ const MyExam: React.FC<PropsType> = ({navigation}) => {
           <Text style={styles.cardTitle}>Study plan</Text>
         </TouchableOpacity>
       </View>
-
-      <View style={styles.accordionWrapper}>
-        <AccordionItem title="Road map for [xyz] exam">
-          <Text style={{color: 'black'}}>Content 1</Text>
-        </AccordionItem>
-      </View>
+      <ScrollView>
+        <View style={styles.accordionWrapper}>
+          <AccordionItem title="Road map for [xyz] exam">
+            <RenderHtml source={source} contentWidth={width} />
+          </AccordionItem>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -63,8 +105,8 @@ const MyExam: React.FC<PropsType> = ({navigation}) => {
 const getStyles = () =>
   StyleSheet.create({
     accordionWrapper: {
-      paddingHorizontal: spacing.l,
-      marginTop: spacing.xl,
+      flex: 1,
+      padding: spacing.l,
     },
     cardTitle: {
       color: colors.blue,
@@ -97,6 +139,7 @@ const getStyles = () =>
       flexDirection: 'row',
       paddingTop: spacing.l,
       paddingHorizontal: spacing.l,
+      paddingBottom: spacing.m,
       gap: spacing.l,
     },
     title: {
