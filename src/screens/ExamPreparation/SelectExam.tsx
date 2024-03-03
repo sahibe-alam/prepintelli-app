@@ -58,6 +58,7 @@ const getStyles = () =>
     },
     formWrapper: {
       paddingTop: spacing.l,
+      paddingHorizontal: spacing.l,
       gap: spacing.l,
       flex: 1,
     },

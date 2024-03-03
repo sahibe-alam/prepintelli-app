@@ -106,9 +106,7 @@ const getStyles = () =>
       alignItems: 'center',
       justifyContent: 'center',
     },
-    wrapper: {
-      paddingHorizontal: spacing.l,
-    },
+    wrapper: {},
     addButton: {
       alignItems: 'center',
       marginTop: spacing.m,

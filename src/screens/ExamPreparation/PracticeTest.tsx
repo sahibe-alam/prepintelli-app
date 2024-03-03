@@ -7,18 +7,33 @@ import {spacing} from '../../utils/commonStyle';
 import QuestionsProgreeBar from '../../components/examPrepComponents/QuestionsProgreeBar';
 import Questions from '../../components/examPrepComponents/Questions';
 
-const PracticeTest = () => {
+interface PropsType {
+  navigation?: any;
+}
+const PracticeTest: React.FC<PropsType> = props => {
+  const {navigation} = props;
   const styles = getStyles();
+
+  const handleSubmit = () => {
+    navigation.navigate('Test Result');
+  };
   return (
     <SafeAreaView style={styles.container}>
-      <BackHeader title="02/10" isTimer={true} />
+      <BackHeader
+        onPress={() => navigation.goBack()}
+        title="02/10"
+        isTimer={true}
+      />
       <QuestionsProgreeBar />
       <View style={styles.questionWrapper}>
         <Questions />
       </View>
+
       <View style={styles.actionBtn}>
-        <Button btnWidth={'40%'} title="Prev" outline={true} />
-        <Button btnWidth="40%" title="Next" />
+        {/* <Button btnWidth={'40%'} title="Prev" outline={true} />
+        <Button btnWidth="40%" title="Next" /> */}
+
+        <Button onPress={handleSubmit} title="Sunmit test" />
       </View>
     </SafeAreaView>
   );
