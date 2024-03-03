@@ -33,7 +33,7 @@ const Splash: React.FC<Props> = ({navigation}) => {
             />
             <Text style={styles.logoText}>prepIntelli</Text>
             <Text style={styles.tagline}>
-              Your AI guide to exam success {'\n'} and language proficiency
+              PrepIntelli app: Your AI-powered {'\n'} exam preparation companion
             </Text>
           </View>
           <View style={styles.imgWrapper}>

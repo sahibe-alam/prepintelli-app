@@ -1,7 +1,7 @@
 import SelectDropdown from 'react-native-select-dropdown';
-import React from 'react';
+import React, {useState} from 'react';
 import {fontSizes, spacing} from '../../utils/commonStyle';
-import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {colors} from '../../utils/commonStyle/colors';
 
 interface PropsType {
@@ -16,7 +16,6 @@ const DropDownSelect: React.FC<PropsType> = ({
   searchPlaceHolder = 'Search',
   defaultButtonText = 'Select an option',
 }) => {
-  const width = Dimensions.get('window').width;
   const [isSelected, setIsSelected] = React.useState(null);
   const countries = [
     {
@@ -40,56 +39,64 @@ const DropDownSelect: React.FC<PropsType> = ({
       name: 'Sri Lanka',
     },
   ];
+  const [viewWidth, setViewWidth] = useState(0);
 
-  const styles = getStyles(width);
+  const handleLayout = (event: any) => {
+    const {width} = event.nativeEvent.layout;
+    setViewWidth(width);
+  };
+
+  const styles = getStyles(viewWidth);
   return (
     <View style={styles.wrapper}>
       <Text style={styles.label}>{DropDownLabel}</Text>
-      <SelectDropdown
-        search={true}
-        searchPlaceHolder={searchPlaceHolder}
-        searchPlaceHolderColor={colors.black}
-        selectedRowStyle={styles.selectedRowStyle}
-        defaultButtonText={defaultButtonText}
-        showsVerticalScrollIndicator={false}
-        selectedRowTextStyle={{color: colors.white}}
-        statusBarTranslucent={false}
-        rowStyle={styles.rowStyle}
-        rowTextStyle={styles.rowTextStyle}
-        dropdownStyle={styles.dropdownStyle}
-        buttonStyle={styles.button}
-        buttonTextStyle={[
-          styles.buttonTextStyle,
-          {color: isSelected ? colors.black : colors.grey},
-        ]}
-        data={countries}
-        onSelect={(selectedItem, index) => {
-          setIsSelected(selectedItem);
-          console.log(selectedItem, index);
-        }}
-        buttonTextAfterSelection={selectedItem => {
-          console.log(selectedItem);
-          return selectedItem.name;
-        }}
-        renderDropdownIcon={isopen => {
-          return (
-            <Image
-              style={[
-                styles.arrow,
-                {
-                  transform: isopen
-                    ? [{rotate: '-90deg'}, {rotateY: '180deg'}]
-                    : [{rotate: '90deg'}, {rotateY: '-180deg'}],
-                },
-              ]}
-              source={require('../../assets/img/header_back_arrow.png')}
-            />
-          );
-        }}
-        rowTextForSelection={item => {
-          return item.name;
-        }}
-      />
+      <View onLayout={handleLayout}>
+        <SelectDropdown
+          search={true}
+          searchPlaceHolder={searchPlaceHolder}
+          searchPlaceHolderColor={colors.black}
+          selectedRowStyle={styles.selectedRowStyle}
+          defaultButtonText={defaultButtonText}
+          showsVerticalScrollIndicator={false}
+          selectedRowTextStyle={{color: colors.white}}
+          statusBarTranslucent={false}
+          rowStyle={styles.rowStyle}
+          rowTextStyle={styles.rowTextStyle}
+          dropdownStyle={styles.dropdownStyle}
+          buttonStyle={styles.button}
+          buttonTextStyle={[
+            styles.buttonTextStyle,
+            {color: isSelected ? colors.black : colors.grey},
+          ]}
+          data={countries}
+          onSelect={(selectedItem, index) => {
+            setIsSelected(selectedItem);
+            console.log(selectedItem, index);
+          }}
+          buttonTextAfterSelection={selectedItem => {
+            console.log(selectedItem);
+            return selectedItem.name;
+          }}
+          renderDropdownIcon={isopen => {
+            return (
+              <Image
+                style={[
+                  styles.arrow,
+                  {
+                    transform: isopen
+                      ? [{rotate: '-90deg'}, {rotateY: '180deg'}]
+                      : [{rotate: '90deg'}, {rotateY: '-180deg'}],
+                  },
+                ]}
+                source={require('../../assets/img/header_back_arrow.png')}
+              />
+            );
+          }}
+          rowTextForSelection={item => {
+            return item.name;
+          }}
+        />
+      </View>
     </View>
   );
 };
@@ -107,7 +114,7 @@ const getStyles = (width: any) =>
       borderBottomColor: colors.light_grey,
     },
     dropdownStyle: {
-      width: width - 30,
+      width: width,
       backgroundColor: 'white',
       borderRadius: 10,
       borderColor: 'black',
@@ -124,9 +131,7 @@ const getStyles = (width: any) =>
       resizeMode: 'contain',
       transform: [{rotate: '90deg'}, {rotateY: '180deg'}],
     },
-    wrapper: {
-      paddingHorizontal: spacing.l,
-    },
+    wrapper: {},
     buttonTextStyle: {
       textAlign: 'left',
       color: colors.black,
