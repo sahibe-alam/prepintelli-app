@@ -14,6 +14,7 @@ import AskDoubt from '../screens/ExamPreparation/AskDoubt';
 import StudyPlan from '../screens/ExamPreparation/StudyPlan';
 import PracticeTest from '../screens/ExamPreparation/PracticeTest';
 import TestResult from '../screens/ExamPreparation/TestResult';
+import AnswersSheet from '../screens/ExamPreparation/AnswersSheet';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
   return (
@@ -82,6 +83,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Test Result"
           component={TestResult}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Answers Sheet"
+          component={AnswersSheet}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

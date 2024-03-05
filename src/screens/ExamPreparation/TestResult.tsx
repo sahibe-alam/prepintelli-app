@@ -64,7 +64,10 @@ const TestResult: React.FC<PropsType> = props => {
           </View>
         </View>
         <View style={styles.btnWrapper}>
-          <Button title="View answers" />
+          <Button
+            onPress={() => navigation.navigate('Answers Sheet')}
+            title="View answers"
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -91,7 +94,7 @@ const getStylle = () =>
     },
     correctText: {
       color: colors.green,
-      fontSize: fontSizes.p3,
+      fontSize: fontSizes.p2,
     },
     resultBar: {
       padding: 8,

@@ -14,8 +14,8 @@ export const fontSizes = {
   h3: RFValue(24),
   h4: RFValue(20),
   h5: RFValue(18),
-  p: RFValue(16),
-  p2: RFValue(14),
-  p3: RFValue(12),
+  p: RFValue(15),
+  p2: RFValue(13),
+  p3: RFValue(11),
   p4: RFValue(10),
 };

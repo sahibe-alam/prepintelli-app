@@ -1,4 +1,4 @@
-import {StyleSheet, SafeAreaView, Text, View} from 'react-native';
+import {StyleSheet, SafeAreaView, Text, View, ScrollView} from 'react-native';
 import React from 'react';
 import {colors} from '../utils/commonStyle/colors';
 import BackHeader from '../components/BackHeader';
@@ -48,43 +48,120 @@ const MyPerformance: React.FC<PropsType> = props => {
       stroke: colors.purle,
     },
     color: () => colors.light_purple,
-
     strokeWidth: 2, // optional, default 3
-
     useShadowColorFromDataset: false, // optional
   };
+
+  const subjectsArray = [
+    {
+      name: 'Maths',
+      progress: 80,
+    },
+    {
+      name: 'Science',
+      progress: 40,
+    },
+    {
+      name: 'English',
+      progress: 60,
+    },
+    {
+      name: 'Social Science',
+      progress: 80,
+    },
+    {
+      name: 'Hindi',
+      progress: 90,
+    },
+  ];
   return (
     <SafeAreaView style={styles.container}>
-      <BackHeader onPress={() => navigation.goBack()} title="Test Result" />
-      <LineChart
-        data={data}
-        horizontalLabelRotation={0}
-        formatYLabel={value => value.slice(0, -3)}
-        width={screenWidth}
-        segments={6}
-        height={220}
-        chartConfig={chartConfig}
-        bezier
+      <BackHeader
+        onPress={() => navigation.goBack()}
+        title="My exam performance"
       />
-      <View style={styles.resultWrapper}>
-        <View style={{flex: 1}}>
-          <Text style={styles.examName}>
-            Overall performance for [xyz] exam
-          </Text>
+      <ScrollView>
+        <LineChart
+          data={data}
+          horizontalLabelRotation={0}
+          formatYLabel={value => value.slice(0, -3)}
+          width={screenWidth}
+          segments={6}
+          height={220}
+          chartConfig={chartConfig}
+          bezier
+        />
+        <View style={styles.resultWrapper}>
+          <View style={{flex: 1}}>
+            <Text style={styles.examName}>
+              Overall performance for [xyz] exam
+            </Text>
+          </View>
+          <View>
+            <CircleProgess />
+          </View>
         </View>
-        <View>
-          <CircleProgess />
+        <View style={styles.subjectWrapper}>
+          <Text style={styles.subjectsHeading}>Subject wise score</Text>
+          {subjectsArray.map((item, index) => {
+            return (
+              <View key={index} style={styles.subjectResult}>
+                <Text style={styles.subjectName}>{item.name}</Text>
+                <View style={styles.subjectProgress}>
+                  <View
+                    style={[styles.fillProgress, {width: `${item.progress}%`}]}>
+                    <Text style={styles.percent}>{item.progress}%</Text>
+                  </View>
+                </View>
+              </View>
+            );
+          })}
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  percent: {
+    fontSize: fontSizes.p3,
+    textAlign: 'center',
+    color: colors.white,
+  },
+  fillProgress: {
+    width: '40%',
+    justifyContent: 'center',
+    backgroundColor: colors.purle,
+  },
+  subjectProgress: {
+    marginTop: 4,
+    backgroundColor: colors.light_grey,
+    borderRadius: 50,
+    overflow: 'hidden',
+  },
+  subjectName: {
+    fontSize: fontSizes.p2,
+    color: colors.purle,
+  },
+  subjectResult: {
+    padding: spacing.m,
+    marginBottom: spacing.l,
+    backgroundColor: colors.light_purple,
+    borderRadius: 10,
+  },
+  subjectsHeading: {
+    fontSize: fontSizes.p,
+    fontWeight: '500',
+    color: colors.black,
+  },
+  subjectWrapper: {
+    marginTop: spacing.xxl,
+    paddingHorizontal: spacing.l,
+  },
   examName: {
     fontSize: fontSizes.p2,
     fontWeight: '500',
-    color: colors.black,
+    color: colors.blue,
   },
   resultWrapper: {
     marginTop: spacing.xxl,
