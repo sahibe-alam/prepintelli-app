@@ -19,7 +19,7 @@ const CircleProgess: React.FC<PropsType> = props => {
   return (
     <View>
       <CircularProgress
-        value={50}
+        value={60}
         valueSuffix={'%'}
         maxValue={100}
         activeStrokeWidth={14}

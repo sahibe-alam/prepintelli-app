@@ -52,7 +52,7 @@ const TestResult: React.FC<PropsType> = props => {
               <View
                 style={[styles.resultBar, {backgroundColor: colors.light_red}]}>
                 <Text style={[styles.correctText, {color: colors.red}]}>
-                  Correct answers 06
+                  Wrong answers 04
                 </Text>
                 <Image
                   style={styles.resultIc}

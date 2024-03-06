@@ -20,15 +20,15 @@ const DropDownSelect: React.FC<PropsType> = ({
   const countries = [
     {
       id: 1,
-      name: 'India',
+      name: 'Math',
     },
     {
       id: 2,
-      name: 'USA',
+      name: 'Physics',
     },
     {
       id: 3,
-      name: 'Canada',
+      name: 'Bio',
     },
     {
       id: 4,
