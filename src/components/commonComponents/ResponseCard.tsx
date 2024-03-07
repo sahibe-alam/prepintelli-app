@@ -5,9 +5,10 @@ import {fontSizes, spacing} from '../../utils/commonStyle';
 
 interface propsType {
   isLeft?: boolean;
+  content?: string;
 }
 const ResponseCard: React.FC<propsType> = props => {
-  const {isLeft = true} = props;
+  const {isLeft = true, content} = props;
   const styles = getStyles();
   return (
     <View
@@ -36,10 +37,7 @@ const ResponseCard: React.FC<propsType> = props => {
             styles.resWrapper,
             {backgroundColor: isLeft ? '#efe1f5' : '#ecebed'},
           ]}>
-          <Text style={styles.responseText}>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aperiam,
-            ducimus?
-          </Text>
+          <Text style={styles.responseText}>{content}</Text>
         </View>
       </View>
     </View>

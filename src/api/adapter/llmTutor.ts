@@ -1,22 +1,18 @@
-import {LLM_URL} from '@env';
 import {llmClient} from '../apiClients';
+import {LLM_URL} from '@env';
 
-type LlmRequestPayload = {
-  model: string;
-  messages: {role: string; content: string}[];
-  data?: any;
-  choices?: any;
-};
-
-export const llmTutor = async () => {
+export const llmApiCall = async (messages: any[]) => {
   try {
-    const response = await llmClient.post<LlmRequestPayload>(LLM_URL, {
+    const res = await llmClient.post(LLM_URL, {
       model: 'gpt-3.5-turbo',
-      messages: [{role: 'user', content: 'Hello'}],
+      messages,
     });
-    return response?.data.choices[0].message;
-  } catch {
-    console.log('erro');
-    return null;
+    let answer = res.data.choices[0].message.content;
+    console.log(res.data.choices[0].message.content);
+    messages.push({role: 'assistant', content: answer.trim()});
+    return Promise.resolve({success: true, data: messages});
+  } catch (error: any) {
+    console.error(error);
+    return Promise.resolve({success: false, message: error.message});
   }
 };

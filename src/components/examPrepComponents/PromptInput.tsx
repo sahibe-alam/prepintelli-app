@@ -11,15 +11,21 @@ import {colors} from '../../utils/commonStyle/colors';
 
 interface PropsTypes {
   placeholder: string;
+  onInputChange?: (value: string) => void;
+  onPress?: () => void;
 }
 const PromptInput: React.FC<PropsTypes> = props => {
-  const {placeholder} = props;
+  const {placeholder, onInputChange, onPress} = props;
   const [inputValue, setInputValue] = useState('');
   const styles = getStyles();
 
   const handleInput = (text: string) => {
     setInputValue(text);
+    if (onInputChange) {
+      onInputChange(text);
+    }
   };
+
   return (
     <View style={styles.inputWrappper}>
       <TextInput
@@ -30,6 +36,7 @@ const PromptInput: React.FC<PropsTypes> = props => {
         placeholderTextColor={colors.grey}
       />
       <TouchableOpacity
+        onPress={onPress}
         style={[
           styles.sentBtn,
           {backgroundColor: inputValue ? colors.blue : colors.grey},

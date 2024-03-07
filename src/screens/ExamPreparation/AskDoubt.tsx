@@ -1,16 +1,47 @@
 import {SafeAreaView, StyleSheet, View, ScrollView} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import BackHeader from '../../components/BackHeader';
 import {colors} from '../../utils/commonStyle/colors';
 import PromptInput from '../../components/examPrepComponents/PromptInput';
 import {spacing} from '../../utils/commonStyle';
 import ResponseCard from '../../components/commonComponents/ResponseCard';
+import {llmApiCall} from '../../api/adapter/llmTutor';
 interface propsType {
   navigation: any;
 }
+interface IMessage {
+  role: string;
+  content: string;
+}
 const AskDoubt: React.FC<propsType> = props => {
+  const [conversationList, setConversationList] = React.useState<any>([
+    {
+      role: 'system',
+      content:
+        'You are a helpful assistant you need to add line break `\n` after end every paragraph ',
+    },
+  ]);
+  const [inputValue, setInputValue] = useState('');
+
   const styles = getStyles();
   const {navigation} = props;
+  const handleInputValue = (value: string) => {
+    setInputValue(value);
+  };
+  console.log(inputValue);
+  const handleSend = () => {
+    let newMsgArray: IMessage[] = [...conversationList];
+    newMsgArray.push({role: 'user', content: inputValue});
+    setConversationList(newMsgArray);
+    // setMsg('');
+    llmApiCall(newMsgArray).then(res => {
+      if (res.success) {
+        if ('data' in res) {
+          setConversationList([...res.data]);
+        }
+      }
+    });
+  };
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader
@@ -20,22 +51,23 @@ const AskDoubt: React.FC<propsType> = props => {
         title="Ask about [xyz subject]"
       />
       <View style={styles.wrapper}>
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.scrollWrapper}>
           <View style={styles.responseWrapper}>
-            <ResponseCard />
-            <ResponseCard isLeft={false} />
-            <ResponseCard />
-            <ResponseCard isLeft={false} />
-            <ResponseCard />
-            <ResponseCard isLeft={false} />
-            <ResponseCard />
-            <ResponseCard isLeft={false} />
-            <ResponseCard />
-            <ResponseCard isLeft={false} />
+            {conversationList.map((item: any, index: number) => (
+              <ResponseCard
+                isLeft={item?.role === 'user' ? false : true}
+                content={item?.content}
+                key={index}
+              />
+            ))}
           </View>
         </ScrollView>
         <View style={styles.inputWrapper}>
-          <PromptInput placeholder="Ask doubt?" />
+          <PromptInput
+            onInputChange={handleInputValue}
+            placeholder="Ask doubt?"
+            onPress={handleSend}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -44,6 +76,7 @@ const AskDoubt: React.FC<propsType> = props => {
 
 const getStyles = () =>
   StyleSheet.create({
+    scrollWrapper: {},
     responseWrapper: {
       paddingTop: 6,
       paddingHorizontal: spacing.l,
