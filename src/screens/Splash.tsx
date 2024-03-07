@@ -6,12 +6,11 @@ import {
   SafeAreaView,
   Image,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {colors} from '../utils/commonStyle/colors';
 import Button from '../components/Button';
 import {fontSizes, spacing} from '../utils/commonStyle';
 import {usePrepContext} from '../contexts/GlobalState';
-import {llmTutor} from '../api/adapter/llmTutor';
 interface Props {
   navigation?: any;
   route?: any;
@@ -21,11 +20,7 @@ const Splash: React.FC<Props> = ({navigation}) => {
   const getStartHandler = () => {
     navigation.navigate('Login');
   };
-  useEffect(() => {
-    llmTutor().then(res => {
-      console.log(res);
-    });
-  }, []);
+
   const styles = getStyle(orientation || ''); // Ensure orientation is always a string
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
