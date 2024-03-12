@@ -8,7 +8,6 @@ export const llmApiCall = async (messages: any[]) => {
       messages,
     });
     let answer = res.data.choices[0].message.content;
-    console.log(res.data.choices[0].message.content);
     messages.push({role: 'assistant', content: answer.trim()});
     return Promise.resolve({success: true, data: messages});
   } catch (error: any) {

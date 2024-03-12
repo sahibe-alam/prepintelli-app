@@ -71,7 +71,6 @@ const DropDownSelect: React.FC<PropsType> = ({
           data={countries}
           onSelect={(selectedItem, index) => {
             setIsSelected(selectedItem);
-            console.log(selectedItem, index);
           }}
           buttonTextAfterSelection={selectedItem => {
             console.log(selectedItem);

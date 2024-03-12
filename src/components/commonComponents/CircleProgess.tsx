@@ -15,11 +15,11 @@ interface PropsType {
   valueSuffix?: string;
 }
 const CircleProgess: React.FC<PropsType> = props => {
-  const {activeStrokeColor, progressValueColor} = props;
+  const {activeStrokeColor, progressValueColor, value} = props;
   return (
     <View>
       <CircularProgress
-        value={60}
+        value={value || 60}
         valueSuffix={'%'}
         maxValue={100}
         activeStrokeWidth={14}
