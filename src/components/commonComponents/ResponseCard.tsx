@@ -2,13 +2,15 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import React from 'react';
 import {colors} from '../../utils/commonStyle/colors';
 import {fontSizes, spacing} from '../../utils/commonStyle';
+import Typing from './Typing';
 
 interface propsType {
   isLeft?: boolean;
   content?: string;
+  forLoader?: boolean;
 }
 const ResponseCard: React.FC<propsType> = props => {
-  const {isLeft = true, content} = props;
+  const {isLeft = true, content, forLoader} = props;
   const styles = getStyles();
   return (
     <View
@@ -30,15 +32,22 @@ const ResponseCard: React.FC<propsType> = props => {
             style={styles.resDp}
             source={require('../../assets/img/prepIntelliDp.png')}
           />
-          <Text style={styles.resName}>{isLeft ? 'PrepIntelli' : 'You'}</Text>
+          <View>
+            <Text style={styles.resName}>
+              {isLeft ? 'PrepIntelli: Ai teacher' : 'You'}
+            </Text>
+            {forLoader && <Typing />}
+          </View>
         </View>
-        <View
-          style={[
-            styles.resWrapper,
-            {backgroundColor: isLeft ? '#efe1f5' : '#ecebed'},
-          ]}>
-          <Text style={styles.responseText}>{content}</Text>
-        </View>
+        {content && (
+          <View
+            style={[
+              styles.resWrapper,
+              {backgroundColor: isLeft ? '#efe1f5' : '#ecebed'},
+            ]}>
+            <Text style={styles.responseText}>{content}</Text>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -64,7 +73,7 @@ const getStyles = () =>
     resName: {
       color: colors.black,
       fontWeight: '600',
-      fontSize: fontSizes.p2,
+      fontSize: fontSizes.p3,
     },
     resDp: {
       width: 30,
