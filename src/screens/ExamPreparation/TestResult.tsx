@@ -8,9 +8,14 @@ import Button from '../../components/Button';
 
 interface PropsType {
   navigation?: any;
+  results?: any;
+  route?: any;
 }
 const TestResult: React.FC<PropsType> = props => {
   const {navigation} = props;
+  const {results} = props.route.params;
+  console.log(results);
+  // Now you can use the title variable in the other screen
   const styles = getStylle();
 
   return (
@@ -43,7 +48,9 @@ const TestResult: React.FC<PropsType> = props => {
                   styles.resultBar,
                   {backgroundColor: colors.light_green},
                 ]}>
-                <Text style={styles.correctText}>Correct answers 06</Text>
+                <Text style={styles.correctText}>
+                  Correct answers {results?.correctAnswers}
+                </Text>
                 <Image
                   style={styles.resultIc}
                   source={require('../../assets/img/correct_ic.png')}
@@ -52,7 +59,7 @@ const TestResult: React.FC<PropsType> = props => {
               <View
                 style={[styles.resultBar, {backgroundColor: colors.light_red}]}>
                 <Text style={[styles.correctText, {color: colors.red}]}>
-                  Wrong answers 04
+                  Wrong answers {results.wrongAnswers}
                 </Text>
                 <Image
                   style={styles.resultIc}
@@ -60,7 +67,7 @@ const TestResult: React.FC<PropsType> = props => {
                 />
               </View>
             </View>
-            <CircleProgess />
+            <CircleProgess value={results.scorePercentage} />
           </View>
         </View>
         <View style={styles.btnWrapper}>

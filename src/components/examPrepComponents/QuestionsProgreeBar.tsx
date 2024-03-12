@@ -1,15 +1,43 @@
-import {View, StyleSheet} from 'react-native';
-import React from 'react';
+import {View, StyleSheet, Animated} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {spacing} from '../../utils/commonStyle';
 import {colors} from '../../utils/commonStyle/colors';
-import Gradient from '../Gradient';
 
-const QuestionsProgreeBar = () => {
+interface QuestionsProgressBarProps {
+  totalQuestions?: number;
+  currentQuestionNumber?: number;
+}
+
+const QuestionsProgressBar: React.FC<QuestionsProgressBarProps> = ({
+  totalQuestions = 10,
+  currentQuestionNumber = 5,
+}) => {
+  const [progressWidth] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    Animated.timing(progressWidth, {
+      toValue: (currentQuestionNumber / totalQuestions) * 100,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+  }, [currentQuestionNumber, totalQuestions, progressWidth]);
+
+  const widthInterpolate = progressWidth.interpolate({
+    inputRange: [0, 100],
+    outputRange: ['0%', '100%'],
+  });
+
   const styles = getStyles();
   return (
     <View style={styles.wrapper}>
       <View style={styles.bgProgress}>
-        <Gradient style={{height: 10, width: '40%'}} />
+        <Animated.View
+          style={{
+            height: 10,
+            backgroundColor: colors.purle,
+            width: widthInterpolate,
+          }}
+        />
       </View>
     </View>
   );
@@ -19,7 +47,7 @@ const getStyles = () =>
   StyleSheet.create({
     bgProgress: {
       height: 10,
-      backgroundColor: colors.light_grey,
+      backgroundColor: colors.light_purple,
       borderRadius: 20,
       overflow: 'hidden',
     },
@@ -28,4 +56,5 @@ const getStyles = () =>
       marginVertical: spacing.m,
     },
   });
-export default QuestionsProgreeBar;
+
+export default QuestionsProgressBar;

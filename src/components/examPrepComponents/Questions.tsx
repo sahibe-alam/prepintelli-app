@@ -4,26 +4,31 @@ import {fontSizes, spacing} from '../../utils/commonStyle';
 import {colors} from '../../utils/commonStyle/colors';
 
 interface PropsTypes {
-  options?: string[];
+  question?: any;
+  totalQuestions?: number;
+  currentQuestionNumber?: number;
+  onOptionSelect?: (questionIndex: number, optionIndex: number) => void;
 }
 const Questions: React.FC<PropsTypes> = props => {
-  const {options = ['1', '2', '3', '4']} = props;
-
+  const {question, currentQuestionNumber, onOptionSelect} = props;
   const [selected, setSelected] = useState<number | null>(null);
   const styles = getStyles();
+
   const handleOption = (index: number) => {
-    setSelected(index);
+    if (currentQuestionNumber !== undefined) {
+      setSelected(index);
+      if (onOptionSelect) {
+        onOptionSelect(currentQuestionNumber - 1, index);
+      }
+    }
   };
   return (
     <View style={styles.container}>
       <View style={styles.qWrapper}>
-        <Text style={styles.qNumber}>Q1.</Text>
-        <Text style={styles.question}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus,
-          dolorum.
-        </Text>
+        <Text style={styles.qNumber}>{currentQuestionNumber}.</Text>
+        <Text style={styles.question}>{question?.q}</Text>
       </View>
-      {options.map((item: string, index: number) => {
+      {question?.options.map((item: string, index: number) => {
         return (
           <TouchableOpacity
             activeOpacity={0.8}
