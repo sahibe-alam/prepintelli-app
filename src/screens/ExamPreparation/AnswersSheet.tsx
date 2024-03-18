@@ -12,11 +12,11 @@ import {colors} from '../../utils/commonStyle/colors';
 import {fontSizes, spacing} from '../../utils/commonStyle';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 interface PropsType {
-  navigation?: any;
+  navigation: any;
   questionsWithUserSelected: any;
-  route?: any;
+  route: any;
 }
-const AnswersSheet: React.FC<PropsType> = props => {
+const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
   const {navigation} = props;
   const {questionsWithUserSelected} = props.route.params;
   const styles = getStyles();

@@ -21,11 +21,6 @@ const AppNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Splash"
-          component={Splash}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
           name="Main"
           component={Main}
           options={{headerShown: false}}
@@ -87,7 +82,7 @@ const AppNavigator = () => {
         />
         <Stack.Screen
           name="Answers Sheet"
-          component={AnswersSheet}
+          component={AnswersSheet as React.ComponentType}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
