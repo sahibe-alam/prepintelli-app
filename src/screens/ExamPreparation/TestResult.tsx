@@ -13,11 +13,10 @@ interface PropsType {
 }
 const TestResult: React.FC<PropsType> = props => {
   const {navigation} = props;
-  const {results} = props.route.params;
-  console.log(results);
+  const {myesults, questionsWithUserSelected} = props.route.params;
+  console.log(questionsWithUserSelected);
   // Now you can use the title variable in the other screen
   const styles = getStylle();
-
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader onPress={() => navigation.goBack()} title="Test Result" />
@@ -49,7 +48,7 @@ const TestResult: React.FC<PropsType> = props => {
                   {backgroundColor: colors.light_green},
                 ]}>
                 <Text style={styles.correctText}>
-                  Correct answers {results?.correctAnswers}
+                  Correct answers {myesults?.correctAnswers}
                 </Text>
                 <Image
                   style={styles.resultIc}
@@ -59,7 +58,17 @@ const TestResult: React.FC<PropsType> = props => {
               <View
                 style={[styles.resultBar, {backgroundColor: colors.light_red}]}>
                 <Text style={[styles.correctText, {color: colors.red}]}>
-                  Wrong answers {results.wrongAnswers}
+                  Wrong answers {myesults?.wrongAnswers}
+                </Text>
+                <Image
+                  style={styles.resultIc}
+                  source={require('../../assets/img/wrong_ic.png')}
+                />
+              </View>
+              <View
+                style={[styles.resultBar, {backgroundColor: colors.light_red}]}>
+                <Text style={[styles.correctText, {color: colors.red}]}>
+                  Not attempt {myesults?.notAttempted}
                 </Text>
                 <Image
                   style={styles.resultIc}
@@ -67,12 +76,14 @@ const TestResult: React.FC<PropsType> = props => {
                 />
               </View>
             </View>
-            <CircleProgess value={results.scorePercentage} />
+            <CircleProgess value={myesults?.scorePercentage || 0} />
           </View>
         </View>
         <View style={styles.btnWrapper}>
           <Button
-            onPress={() => navigation.navigate('Answers Sheet')}
+            onPress={() =>
+              navigation.navigate('Answers Sheet', {questionsWithUserSelected})
+            }
             title="View answers"
           />
         </View>
@@ -101,10 +112,10 @@ const getStylle = () =>
     },
     correctText: {
       color: colors.green,
-      fontSize: fontSizes.p2,
+      fontSize: fontSizes.p3,
     },
     resultBar: {
-      padding: 8,
+      padding: 6,
       borderRadius: 8,
       gap: 8,
       alignSelf: 'flex-start',
@@ -115,7 +126,7 @@ const getStylle = () =>
       gap: 6,
     },
     cardText: {
-      fontSize: fontSizes.p2,
+      fontSize: fontSizes.p3,
       color: colors.purle,
     },
     boldText: {
