@@ -26,7 +26,11 @@ const InputField: React.FC<PropsType> = ({
 }) => {
   // Define styles for the component
   const styles = getStyles();
-
+  const inputHandle = text => {
+    if (onChangeText) {
+      onChangeText(text);
+    }
+  };
   // Render the component
   return (
     <View>
@@ -35,7 +39,7 @@ const InputField: React.FC<PropsType> = ({
         style={styles.input}
         placeholder={placeholder}
         placeholderTextColor={colors.grey}
-        onChangeText={onChangeText} // Call handleTextChange when text changes
+        onChangeText={inputHandle} // Call handleTextChange when text changes
         value={value} // Value of the input is controlled by the state variable text
         keyboardType={keyboardType}
       />

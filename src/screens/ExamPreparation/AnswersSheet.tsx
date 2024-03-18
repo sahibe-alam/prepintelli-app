@@ -13,69 +13,71 @@ import {fontSizes, spacing} from '../../utils/commonStyle';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 interface PropsType {
   navigation?: any;
+  questionsWithUserSelected: any;
+  route?: any;
 }
-const options = ['1', '2', '3', '4'];
 const AnswersSheet: React.FC<PropsType> = props => {
   const {navigation} = props;
+  const {questionsWithUserSelected} = props.route.params;
   const styles = getStyles();
-
+  console.log(questionsWithUserSelected);
   return (
     <SafeAreaView style={styles.conainer}>
       <BackHeader onPress={() => navigation.goBack()} title="Answers Sheet" />
       <ScrollView contentContainerStyle={styles.scrollWrapper}>
-        <View style={styles.questionContainer}>
-          <View style={styles.qWrapper}>
-            <Text style={styles.qNumber}>Q1.</Text>
-            <Text style={styles.question}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Accusamus, dolorum.
-            </Text>
-          </View>
-          {options.map((item: string, index: number) => {
-            let backgroundColor = colors.light_grey;
-            let textColor = colors.black;
-
-            if (index === 1) {
-              backgroundColor = colors.light_green;
-              textColor = colors.green;
-            } else if (index === 3) {
-              backgroundColor = colors.light_red;
-              textColor = colors.red;
-            } else {
-              backgroundColor = colors.light_grey;
-              textColor = colors.black;
-            }
-            return (
-              <View
-                key={index}
-                style={[
-                  styles.optionsWrapper,
-                  {backgroundColor: backgroundColor},
-                ]}>
-                <View style={[styles.iconWrapper]}>
-                  {index === 1 && (
-                    <Image
-                      style={styles.resultIc}
-                      source={require('../../assets/img/correct_ic.png')}
-                    />
-                  )}
-                  {index === 3 && (
-                    <Image
-                      style={styles.resultIc}
-                      source={require('../../assets/img/wrong_ic.png')}
-                    />
-                  )}
-                </View>
-                <Text style={[styles.optionText, {color: textColor}]}>
-                  {item}
-                </Text>
+        {questionsWithUserSelected?.map((item: any, index: number) => {
+          return (
+            <View style={styles.questionContainer} key={index}>
+              <View style={styles.qWrapper}>
+                <Text style={styles.qNumber}>Q{index + 1}.</Text>
+                <Text style={styles.question}>{item?.q}</Text>
               </View>
-            );
-          })}
-          <TouchableOpacity style={styles.doubtBtn}>
-            <Text style={styles.doubtBtnText}>Ask doubt🤔</Text>
-          </TouchableOpacity>
-        </View>
+              {item?.options.map((option: string, index: number) => {
+                let backgroundColor = colors.light_grey;
+                let textColor = colors.black;
+                let icon = null;
+
+                if (index === item?.correctIndex && item?.userSelected !== -1) {
+                  backgroundColor = colors.light_green;
+                  textColor = colors.green;
+                  icon = require('../../assets/img/correct_ic.png');
+                } else if (index === item?.userSelected) {
+                  backgroundColor = colors.light_red;
+                  textColor = colors.red;
+                  icon = require('../../assets/img/wrong_ic.png');
+                } else {
+                  backgroundColor = colors.light_grey;
+                  textColor = colors.black;
+                  icon = null;
+                }
+                return (
+                  <View
+                    key={index}
+                    style={[
+                      styles.optionsWrapper,
+                      {backgroundColor: backgroundColor},
+                    ]}>
+                    <View style={[styles.iconWrapper]}>
+                      <Image style={styles.resultIc} source={icon} />
+                      {/* {index === 3 && (
+                        <Image
+                          style={styles.resultIc}
+                          source={require('../../assets/img/wrong_ic.png')}
+                        />
+                      )} */}
+                    </View>
+                    <Text style={[styles.optionText, {color: textColor}]}>
+                      {option}
+                    </Text>
+                  </View>
+                );
+              })}
+              <TouchableOpacity style={styles.doubtBtn}>
+                <Text style={styles.doubtBtnText}>Ask doubt🤔</Text>
+              </TouchableOpacity>
+            </View>
+          );
+        })}
       </ScrollView>
     </SafeAreaView>
   );
@@ -93,7 +95,8 @@ const getStyles = () =>
       alignSelf: 'flex-end',
     },
     questionContainer: {
-      paddingBottom: spacing.s,
+      paddingBottom: 6,
+      marginBottom: spacing.xl,
       borderColor: colors.light_grey,
       borderBottomWidth: 1,
     },
@@ -140,11 +143,10 @@ const getStyles = () =>
     qWrapper: {
       flexDirection: 'row',
       alignItems: 'flex-start',
-      marginBottom: spacing.xl,
+      marginBottom: spacing.s,
       gap: 4,
     },
     scrollWrapper: {
-      flex: 1,
       paddingTop: spacing.l,
       paddingHorizontal: spacing.l,
     },

@@ -1,5 +1,5 @@
 import {View, SafeAreaView, StyleSheet} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {colors} from '../../utils/commonStyle/colors';
 import BackHeader from '../../components/BackHeader';
 import Button from '../../components/Button';
@@ -15,14 +15,25 @@ interface Question {
   q: string;
   options: string[];
   correctIndex: number;
+  userSelected?: number;
 }
+
 const PracticeTest: React.FC<PropsType> = props => {
   const {navigation} = props;
   const styles = getStyles();
-  const [response, setResponse] = useState<any>(null);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [answers, setAnswers] = useState<number[]>([]);
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [results, setResults] = useState<{
+    correctAnswers: number;
+    wrongAnswers: number;
+    scorePercentage: number;
+    notAttempted: number;
+  } | null>(null);
+  const [questionsWithUserSelected, setQuestionsWithUserSelected] = useState<
+    Question[] | null
+  >(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [questionsArray, setQuestionsArray] = useState<Question[] | null>([
     {
       q: "What is the output of 2 + '2' in JavaScript?",
@@ -54,66 +65,105 @@ const PracticeTest: React.FC<PropsType> = props => {
       ],
       correctIndex: 0,
     },
-    {
-      q: 'What is the correct way to write an IF statement in JavaScript?',
-      options: [
-        'if (x == 5) { // code here }',
-        'if x = 5 then { // code here }',
-        'if x == 5 then // code here',
-        'if x == 5 { // code here }',
-      ],
-      correctIndex: 0,
-    },
-    {
-      q: 'Which operator is used for strict equality in JavaScript?',
-      options: ['===', '==', '!=', '=!'],
-      correctIndex: 0,
-    },
-    {
-      q: 'What function is used to parse a JSON string into a JavaScript object?',
-      options: ['eval()', 'parse()', 'JSON.parse()', 'decode()'],
-      correctIndex: 2,
-    },
-    {
-      q: "What does the 'this' keyword refer to in JavaScript?",
-      options: [
-        'Global scope',
-        'Current function',
-        'Enclosing object',
-        'None of the above',
-      ],
-      correctIndex: 2,
-    },
-    {
-      q: 'Which method is used to add an element to the end of an array in JavaScript?',
-      options: ['push()', 'append()', 'insert()', 'concat()'],
-      correctIndex: 0,
-    },
-    {
-      q: "What is the result of '5' + 3 in JavaScript?",
-      options: ['53', '8', 'Error', 'NaN'],
-      correctIndex: 0,
-    },
+    // {
+    //   q: 'What is the correct way to write an IF statement in JavaScript?',
+    //   options: [
+    //     'if (x == 5) { // code here }',
+    //     'if x = 5 then { // code here }',
+    //     'if x == 5 then // code here',
+    //     'if x == 5 { // code here }',
+    //   ],
+    //   correctIndex: 0,
+    // },
+    // {
+    //   q: 'Which operator is used for strict equality in JavaScript?',
+    //   options: ['===', '==', '!=', '=!'],
+    //   correctIndex: 0,
+    // },
+    // {
+    //   q: 'What function is used to parse a JSON string into a JavaScript object?',
+    //   options: ['eval()', 'parse()', 'JSON.parse()', 'decode()'],
+    //   correctIndex: 2,
+    // },
+    // {
+    //   q: "What does the 'this' keyword refer to in JavaScript?",
+    //   options: [
+    //     'Global scope',
+    //     'Current function',
+    //     'Enclosing object',
+    //     'None of the above',
+    //   ],
+    //   correctIndex: 2,
+    // },
+    // {
+    //   q: 'Which method is used to add an element to the end of an array in JavaScript?',
+    //   options: ['push()', 'append()', 'insert()', 'concat()'],
+    //   correctIndex: 0,
+    // },
+    // {
+    //   q: "What is the result of '5' + 3 in JavaScript?",
+    //   options: ['53', '8', 'Error', 'NaN'],
+    //   correctIndex: 0,
+    // },
   ]);
 
-  const handleSubmit = () => {
-    const totalQuestions = questionsArray?.length || 0;
-    const correctAnswers =
-      questionsArray?.filter(
-        (question, index) => question.correctIndex === answers[index],
-      ).length || 0;
-    const wrongAnswers = totalQuestions - correctAnswers;
-    const scorePercentage = (correctAnswers / totalQuestions) * 100 || 0;
-    navigation.navigate('Test Result', {
-      results: {
-        correctAnswers,
-        wrongAnswers,
-        scorePercentage,
-      },
+  const handleOptionClick = (questionIndex: number, selectedOption: number) => {
+    setAnswers(prevAnswers => {
+      const newAnswers = [...prevAnswers];
+      newAnswers[questionIndex] = selectedOption;
+      return newAnswers;
     });
   };
 
-  const handleNext = () => {
+  const handleSubmit = (questionIndex: number) => {
+    if (results === null && answers[questionIndex] === undefined) {
+      handleOptionClick(questionIndex, -1);
+    }
+    // Calculate total questions
+    const totalQuestions = questionsArray?.length || 0;
+
+    // Count correct, wrong, and not attempted questions
+    let correctAnswers = 0;
+    let wrongAnswers = 0;
+    let notAttempted = 0;
+
+    for (let i = 0; i < totalQuestions; i++) {
+      const correctIndex = questionsArray && questionsArray[i].correctIndex;
+      const userAnswer = answers[i];
+
+      if (userAnswer === -1) {
+        // Not attempted
+        notAttempted++;
+      } else if (userAnswer === undefined) {
+        // Not attempted, if the option is undefined
+        notAttempted++;
+      } else if (userAnswer === correctIndex) {
+        // Correct answer
+        correctAnswers++;
+      } else {
+        // Wrong answer
+        wrongAnswers++;
+      }
+    }
+
+    // Calculate score percentage
+    const scorePercentage = (correctAnswers / totalQuestions) * 100 || 0;
+
+    // Update results state
+    // setResults({correctAnswers, wrongAnswers, scorePercentage, notAttempted});
+    let myesults = {
+      correctAnswers: correctAnswers,
+      wrongAnswers: wrongAnswers,
+      scorePercentage: scorePercentage,
+      notAttempted: notAttempted,
+    };
+    navigation.navigate('Test Result', {myesults, questionsWithUserSelected});
+  };
+
+  const handleNext = (questionIndex: number) => {
+    if (results === null && answers[questionIndex] === undefined) {
+      handleOptionClick(questionIndex, -1);
+    }
     if (currentQuestionIndex < (questionsArray?.length || 0) - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
@@ -125,16 +175,20 @@ const PracticeTest: React.FC<PropsType> = props => {
     }
   };
 
-  // const handleSubmit = () => {
-  //   navigation.navigate('Test Result');
-  // };
-  const handleOptionClick = (questionIndex: number, selectedOption: number) => {
-    setAnswers(prevAnswers => {
-      const newAnswers = [...prevAnswers];
-      newAnswers[questionIndex] = selectedOption;
-      return newAnswers;
+  const userSelected = () => {
+    const resultQuestions = (questionsArray || []).map((question, index) => {
+      return {
+        ...question,
+        userSelected: answers[index],
+      };
     });
+    setQuestionsWithUserSelected(resultQuestions);
   };
+
+  useEffect(() => {
+    userSelected();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [answers]);
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader
@@ -174,9 +228,19 @@ const PracticeTest: React.FC<PropsType> = props => {
           />
         )}
         {currentQuestionIndex < (questionsArray?.length || 0) - 1 ? (
-          <Button onPress={handleNext} btnWidth="40%" title="Next" />
+          <Button
+            onPress={() => handleNext(currentQuestionIndex)}
+            btnWidth="40%"
+            title="Next"
+          />
         ) : (
-          <Button onPress={handleSubmit} btnWidth="40%" title="Sunmit test" />
+          <Button
+            onPress={() => {
+              handleSubmit(currentQuestionIndex);
+            }}
+            btnWidth="40%"
+            title="Sunmit test"
+          />
         )}
       </View>
     </SafeAreaView>
