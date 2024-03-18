@@ -14,11 +14,12 @@ import {usePrepContext} from '../contexts/GlobalState';
 interface Props {
   navigation?: any;
   route?: any;
+  markAppLaunched?: any;
 }
-const Splash: React.FC<Props> = ({navigation}) => {
+const Splash: React.FC<Props> = ({markAppLaunched}) => {
   const {orientation} = usePrepContext();
   const getStartHandler = () => {
-    navigation.navigate('Login');
+    markAppLaunched();
   };
 
   const styles = getStyle(orientation || ''); // Ensure orientation is always a string
@@ -44,7 +45,7 @@ const Splash: React.FC<Props> = ({navigation}) => {
             />
           </View>
         </View>
-        <Button title="Let's start" onPress={getStartHandler} />
+        <Button onPress={getStartHandler} title="Let's start" />
       </View>
     </SafeAreaView>
   );
