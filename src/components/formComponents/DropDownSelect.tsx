@@ -10,33 +10,69 @@ interface PropsType {
   searchPlaceHolder?: string;
   defaultButtonText?: string;
   DropDownLabel?: string;
+  rowTextForSelection?: any;
+  buttonTextAfterSelection?: any;
 }
 const DropDownSelect: React.FC<PropsType> = ({
   DropDownLabel = 'Label',
   searchPlaceHolder = 'Search',
   defaultButtonText = 'Select an option',
+  rowTextForSelection = (item: any) => item?.exam_short_name,
+  buttonTextAfterSelection = (item: any) => item?.exam_short_name,
+
+  data,
 }) => {
   const [isSelected, setIsSelected] = React.useState(null);
-  const countries = [
+  const examNames = [
     {
-      id: 1,
-      name: 'Math',
+      exam_short_name: 'SSC CGL',
+      examName:
+        'Staff Selection Commission Combined Graduate Level Examination',
+      examType: 'competitive',
     },
     {
-      id: 2,
-      name: 'Physics',
+      exam_short_name: 'SSC CHSL',
+      examName:
+        'Staff Selection Commission Combined Higher Secondary Level Examination',
+      examType: 'competitive',
     },
     {
-      id: 3,
-      name: 'Bio',
+      exam_short_name: 'SSC JE',
+      examName: 'Staff Selection Commission Junior Engineer Examination',
+      examType: 'competitive',
     },
     {
-      id: 4,
-      name: 'Australia',
+      exam_short_name: 'SSC MTS',
+      examName: 'Staff Selection Commission Multi-Tasking Staff Examination',
+      examType: 'competitive',
     },
     {
-      id: 5,
-      name: 'Sri Lanka',
+      exam_short_name: 'SSC Steno',
+      examName:
+        "Staff Selection Commission Stenographer Grade 'C' and 'D' Examination",
+      examType: 'competitive',
+    },
+    {
+      exam_short_name: 'SSC CPO',
+      examName:
+        'Staff Selection Commission Central Police Organization Examination',
+      examType: 'competitive',
+    },
+    {
+      exam_short_name: 'SSC GD Constable',
+      examName: 'Staff Selection Commission Constable (GD) Examination',
+      examType: 'competitive',
+    },
+    {
+      exam_short_name: 'SSC JHT',
+      examName:
+        'Staff Selection Commission Junior Hindi Translator Examination',
+      examType: 'competitive',
+    },
+    {
+      exam_short_name: 'SSC Selection Post',
+      examName: 'Staff Selection Commission Selection Post Examinations',
+      examType: 'competitive',
     },
   ];
   const [viewWidth, setViewWidth] = useState(0);
@@ -68,14 +104,12 @@ const DropDownSelect: React.FC<PropsType> = ({
             styles.buttonTextStyle,
             {color: isSelected ? colors.black : colors.grey},
           ]}
-          data={countries}
+          data={data || examNames}
           onSelect={(selectedItem, index) => {
             setIsSelected(selectedItem);
+            console.log(index);
           }}
-          buttonTextAfterSelection={selectedItem => {
-            console.log(selectedItem);
-            return selectedItem.name;
-          }}
+          buttonTextAfterSelection={buttonTextAfterSelection}
           renderDropdownIcon={isopen => {
             return (
               <Image
@@ -91,9 +125,7 @@ const DropDownSelect: React.FC<PropsType> = ({
               />
             );
           }}
-          rowTextForSelection={item => {
-            return item.name;
-          }}
+          rowTextForSelection={rowTextForSelection}
         />
       </View>
     </View>
@@ -108,7 +140,7 @@ const getStyles = (width: any) =>
     rowStyle: {
       backgroundColor: 'white',
       padding: 4,
-      height: 44,
+      height: 40,
       borderBottomWidth: 1,
       borderBottomColor: colors.light_grey,
     },

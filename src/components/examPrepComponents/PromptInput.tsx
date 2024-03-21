@@ -36,7 +36,10 @@ const PromptInput: React.FC<PropsTypes> = props => {
         placeholderTextColor={colors.grey}
       />
       <TouchableOpacity
-        onPress={onPress}
+        onPress={() => {
+          setInputValue('');
+          onPress && onPress();
+        }}
         style={[
           styles.sentBtn,
           {backgroundColor: inputValue ? colors.blue : colors.grey},

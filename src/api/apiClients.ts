@@ -1,4 +1,4 @@
-import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
+import axios, {AxiosRequestConfig} from 'axios';
 
 import {LLM_API_KEY, BACKEND_URL} from '@env';
 export const llmClient = axios.create({
@@ -9,12 +9,12 @@ export const llmClient = axios.create({
 });
 
 const client = axios.create({
-  baseURL: BACKEND_URL,
+  baseURL: `${BACKEND_URL}`,
 });
 
 export const makeRequest = async <T>(
   config: AxiosRequestConfig,
-): Promise<AxiosResponse<T>> => {
+): Promise<T> => {
   try {
     const response = await client.request<T>(config);
     return response;
