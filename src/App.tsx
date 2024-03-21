@@ -3,9 +3,9 @@ import GlobalState from './contexts/GlobalState';
 import AppNavigator from './navigation/AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Splash from './screens/Splash';
-import {Text} from 'react-native';
 import {getJwtToken} from './utils/commonServices';
 import LoginScreen from './screens/Auth/LoginScreen';
+import {StatusBar} from 'react-native';
 const App = () => {
   const [appLaunchedBefore, setAppLaunchedBefore] = useState(false);
 
@@ -36,6 +36,7 @@ const App = () => {
   console.log(isToaken);
   return (
     <>
+      <StatusBar barStyle="dark-content" backgroundColor={'white'} />
       <GlobalState>
         {appLaunchedBefore ? (
           <>{isToaken ? <AppNavigator /> : <LoginScreen />}</>

@@ -14,7 +14,6 @@ interface PropsType {
 const TestResult: React.FC<PropsType> = props => {
   const {navigation} = props;
   const {myesults, questionsWithUserSelected} = props.route.params;
-  console.log(questionsWithUserSelected);
   // Now you can use the title variable in the other screen
   const styles = getStylle();
   return (

@@ -15,12 +15,16 @@ const Home: React.FC<PropsType> = ({navigation}) => {
       type: 'comptv',
       dropdownLabel: 'Select your target exam?*',
       inputLabel: 'Type your exam subjects*',
+      examDetailsUrl: '/combinedCompetitiveExamAndInsertSubject',
+      actionType: 'fetchCompetitiveExams',
     },
     {
       title: 'College exam',
       type: 'clg',
       dropdownLabel: 'Select your course?*',
       inputLabel: 'Type your exam subjects*',
+      examDetailsUrl: '/combinedCollegeExamAndInsertSubject',
+      actionType: 'fetchCollegeExams',
     },
     {
       title: 'Academics exam',
@@ -28,6 +32,9 @@ const Home: React.FC<PropsType> = ({navigation}) => {
       dropdownLabel: 'Select board*',
       dropdownLabel2: 'Select class*',
       inputLabel: 'Type your exam subjects*',
+      examDetailsUrl: 'combinedAcademicExamAndInsertSubject',
+      actionType: 'fetchBoard',
+      classAction: 'fetchClass',
     },
   ];
   return (
