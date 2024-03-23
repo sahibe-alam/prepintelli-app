@@ -11,15 +11,25 @@ import {colors} from '../utils/commonStyle/colors';
 import Button from '../components/Button';
 import {fontSizes, spacing} from '../utils/commonStyle';
 import {usePrepContext} from '../contexts/GlobalState';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 interface Props {
   navigation?: any;
   route?: any;
   markAppLaunched?: any;
 }
-const Splash: React.FC<Props> = ({markAppLaunched}) => {
+const Splash: React.FC<Props> = ({navigation}) => {
   const {orientation} = usePrepContext();
+
+  const markAppLaunched = async () => {
+    try {
+      await AsyncStorage.setItem('appLaunchedBefore', 'true');
+    } catch (error) {
+      console.log('Error marking app as launched:', error);
+    }
+  };
   const getStartHandler = () => {
     markAppLaunched();
+    navigation.navigate('Main');
   };
 
   const styles = getStyle(orientation || ''); // Ensure orientation is always a string

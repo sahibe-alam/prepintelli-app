@@ -1,7 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
-import Splash from '../screens/Splash';
 import Main from './Main';
 import TargetExam from '../screens/ExamPreparation/TargetExam';
 import SelectExam from '../screens/ExamPreparation/SelectExam';
@@ -15,11 +14,23 @@ import StudyPlan from '../screens/ExamPreparation/StudyPlan';
 import PracticeTest from '../screens/ExamPreparation/PracticeTest';
 import TestResult from '../screens/ExamPreparation/TestResult';
 import AnswersSheet from '../screens/ExamPreparation/AnswersSheet';
+import StartApp from '../screens/StartApp';
+import Splash from '../screens/Splash';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen
+          name="Start App"
+          component={StartApp}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Splash"
+          component={Splash}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="Main"
           component={Main}
