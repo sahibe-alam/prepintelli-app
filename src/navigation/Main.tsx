@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
@@ -57,6 +56,19 @@ const CustomTabBarButton = ({
 };
 
 const Main = () => {
+  // useEffect(() => {
+  //   getJwtToken()
+  //     .then(token => {
+  //       const tokenPromise = token;
+  //       // Now you can use tokenPromise as needed
+  //       if (tokenPromise) {
+  //         navigation.navigate('Login');
+  //       }
+  //     })
+  //     .catch(error => {
+  //       console.error('Error occurred:', error);
+  //     });
+  // }, []);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <Bottom.Navigator
