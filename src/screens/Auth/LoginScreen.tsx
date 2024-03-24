@@ -6,23 +6,91 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React from 'react';
+import React, {useReducer, useState} from 'react';
 import {colors} from '../../utils/commonStyle/colors';
 import LogoTitle from '../../components/commonComponents/LogoTitle';
 import Button from '../../components/Button';
 import {spacing} from '../../utils/commonStyle';
 import InputField from '../../components/formComponents/InputField';
+import {isValidEmail} from '../../utils/validation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Props {
   navigation?: any;
   route?: any;
 }
+const reducer = (state: any, action: any) => {
+  switch (action.type) {
+    case 'EMAIL':
+      return {...state, email: action.payload};
+    case 'PASSWORD':
+      return {...state, password: action.payload};
+    default:
+      return state;
+  }
+};
+
+const initialState = {
+  email: '',
+  password: '',
+};
 const LoginScreen: React.FC<Props> = props => {
   const {navigation} = props;
-  const loginHandler = () => {
-    navigation.navigate('Main');
+  const [loginDate, dispatch] = useReducer(reducer, initialState);
+  const [errorMessage, setErrorMessage] = useState<{
+    email: string;
+    password: string;
+  }>({email: '', password: ''});
+
+  const isValid = () => {
+    let isError = false;
+    let errorObj: {email?: string; password?: string} = {};
+    const fieldsToValidate = [
+      {
+        field: 'email',
+        validation: (value: string) =>
+          value.trim() === ''
+            ? 'Email is required'
+            : '' || isValidEmail(value)
+            ? ''
+            : 'Enter valid email',
+      },
+      {
+        field: 'password',
+        validation: (value: string) =>
+          value.trim() === ''
+            ? 'Password is required'
+            : '' || value.length >= 6
+            ? ''
+            : 'Password must be at least 6 characters',
+      },
+    ];
+
+    fieldsToValidate.forEach(({field, validation}) => {
+      const error = validation(loginDate[field]);
+      if (error) {
+        isError = true;
+        errorObj = {
+          ...errorObj,
+          [field]: error,
+        };
+      }
+    });
+    setErrorMessage({
+      email: errorObj.email || '',
+      password: errorObj.password || '',
+    });
+    return isError;
+  };
+  const loginHandler = async () => {
+    const isError = isValid();
+    if (!isError) {
+      AsyncStorage.setItem('jwtToken', 'sdfsdfsfdds');
+      navigation.navigate('Main');
+    }
   };
   const styles = getStyles();
+  console.log(errorMessage);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -30,9 +98,25 @@ const LoginScreen: React.FC<Props> = props => {
         centerContent={true}>
         <View style={styles.wrapper}>
           <LogoTitle title="Login" />
-          <InputField label="Email" placeholder="Enter email id" />
+          <InputField
+            errorMsg={errorMessage.email}
+            value={loginDate.email.trim().toLowerCase()}
+            onChangeText={text =>
+              dispatch({type: 'EMAIL', payload: text.trim()})
+            }
+            label="Email"
+            placeholder="Enter email id"
+          />
           <View>
-            <InputField label="Password" placeholder="Enter password" />
+            <InputField
+              errorMsg={errorMessage.password}
+              value={loginDate.password.trim()}
+              onChangeText={text =>
+                dispatch({type: 'PASSWORD', payload: text.trim()})
+              }
+              label="Password"
+              placeholder="Enter password"
+            />
             <View style={styles.forgotBtnWrapper}>
               <TouchableOpacity
                 onPress={() => {
@@ -45,6 +129,7 @@ const LoginScreen: React.FC<Props> = props => {
           </View>
           <View style={styles.btnWrapper}>
             <Button title="Login" onPress={loginHandler} />
+
             <View style={styles.t_and_c_wrapper}>
               <Text style={styles.t_and_c}>Create new account?</Text>
               <TouchableOpacity

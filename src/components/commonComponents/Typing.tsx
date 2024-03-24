@@ -2,7 +2,13 @@ import React, {useState, useEffect} from 'react';
 import {Text} from 'react-native';
 import {colors} from '../../utils/commonStyle/colors';
 
-const Typing = () => {
+const Typing = ({
+  name = true,
+  fontSize,
+}: {
+  name?: boolean;
+  fontSize?: number;
+}) => {
   const [dots, setDots] = useState('');
 
   useEffect(() => {
@@ -20,7 +26,10 @@ const Typing = () => {
 
   return (
     <>
-      <Text style={{fontSize: 11, color: colors.black}}>Typing{dots}</Text>
+      <Text style={{fontSize: fontSize || 11, color: colors.black}}>
+        {name ? 'Typing' : ''}
+        {dots}
+      </Text>
     </>
   );
 };

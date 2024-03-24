@@ -12,6 +12,8 @@ import LogoTitle from '../../components/commonComponents/LogoTitle';
 import Button from '../../components/Button';
 import {spacing} from '../../utils/commonStyle';
 import InputField from '../../components/formComponents/InputField';
+import {isValidEmail, isValidIndianMobileNumber} from '../../utils/validation';
+import DateSelector from '../../components/commonComponents/DateSelector';
 
 interface Props {
   navigation?: any;
@@ -37,6 +39,7 @@ interface StateType {
   dob: string;
   password: string;
   cPassword: string;
+  [key: string]: string; // Add index signature
 }
 
 // Define reducer function
@@ -55,7 +58,7 @@ const reducer = (state: StateType, action: ActionType): StateType => {
     case 'PASSWORD':
       return {...state, password: action.payload};
     case 'CPASSWORD':
-      return {...state, password: action.payload};
+      return {...state, cPassword: action.payload};
     default:
       return state;
   }
@@ -83,7 +86,7 @@ const SignUp: React.FC<Props> = props => {
     cPassword: '',
   });
   let error = false;
-  let errorObj = {};
+  const errorObj: {[key: string]: string} = {};
   const isValidError = () => {
     const fieldsToValidate = [
       {
@@ -99,7 +102,43 @@ const SignUp: React.FC<Props> = props => {
       {
         field: 'email',
         validation: (value: string) =>
-          value.trim() === '' ? 'Email is required' : '',
+          value.trim() === ''
+            ? 'Email is required'
+            : '' || isValidEmail(value)
+            ? ''
+            : 'Enter valid email',
+      },
+      {
+        field: 'mobile',
+        validation: (value: string) =>
+          value.trim() === ''
+            ? 'Mobile is required'
+            : '' || isValidIndianMobileNumber(value)
+            ? ''
+            : 'Enter valid mobile number',
+      },
+      {
+        field: 'dob',
+        validation: (value: string) =>
+          value.trim() === '' ? 'Date of birth is required' : '',
+      },
+      {
+        field: 'password',
+        validation: (value: string) =>
+          value.trim() === ''
+            ? 'Password is required'
+            : '' || value.length < 6
+            ? 'Password should be at least 8 characters long'
+            : '',
+      },
+      {
+        field: 'cPassword',
+        validation: (value: string) =>
+          value.trim() === ''
+            ? 'Confirm password is required'
+            : '' || value !== state.password
+            ? 'Password does not match'
+            : '',
       },
     ];
 
@@ -114,10 +153,28 @@ const SignUp: React.FC<Props> = props => {
   };
   const registerUser = async () => {
     const isError = isValidError();
-    setErrorMessage(errorObj);
+    console.log(isError);
+    const errorMessageObj: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      mobile: string;
+      dob: string;
+      password: string;
+      cPassword: string;
+    } = {
+      firstName: errorObj.firstName || '',
+      lastName: errorObj.lastName || '',
+      email: errorObj.email || '',
+      mobile: errorObj.mobile || '',
+      dob: errorObj.dob || '',
+      password: errorObj.password || '',
+      cPassword: errorObj.cPassword || '',
+    };
+    setErrorMessage(errorMessageObj);
   };
-  console.log(errorMessage);
   const styles = getStyles();
+  console.log(errorMessage);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -126,6 +183,7 @@ const SignUp: React.FC<Props> = props => {
         <View style={styles.wrapper}>
           <LogoTitle title="Sign up" />
           <InputField
+            errorMsg={errorMessage.firstName}
             onChangeText={text => {
               dispatch({type: 'FNAME', payload: text});
             }}
@@ -134,6 +192,7 @@ const SignUp: React.FC<Props> = props => {
             placeholder="Enter first name"
           />
           <InputField
+            errorMsg={errorMessage.lastName}
             onChangeText={text => {
               dispatch({type: 'LNAME', payload: text});
             }}
@@ -142,6 +201,7 @@ const SignUp: React.FC<Props> = props => {
             placeholder="Enter last name"
           />
           <InputField
+            errorMsg={errorMessage.email}
             keyboardType="email-address"
             onChangeText={text => {
               dispatch({type: 'EMAIL', payload: text});
@@ -151,6 +211,7 @@ const SignUp: React.FC<Props> = props => {
             placeholder="Enter email id"
           />
           <InputField
+            errorMsg={errorMessage.mobile}
             keyboardType="number-pad"
             onChangeText={text => {
               dispatch({type: 'MOBILE', payload: text});
@@ -159,8 +220,16 @@ const SignUp: React.FC<Props> = props => {
             label="Mobile*"
             placeholder="Enter mobile number"
           />
-          <InputField label="Date of birth*" placeholder="Date" />
+          <DateSelector
+            errorMsg={errorMessage.dob}
+            onDateChange={date => {
+              const formattedDate = date.toString();
+              dispatch({type: 'DOB', payload: formattedDate});
+            }}
+          />
+
           <InputField
+            errorMsg={errorMessage.password}
             onChangeText={text => {
               dispatch({type: 'PASSWORD', payload: text});
             }}
@@ -169,14 +238,14 @@ const SignUp: React.FC<Props> = props => {
             placeholder="Enter password"
           />
           <InputField
-            label="Confirm password*"
+            errorMsg={errorMessage.cPassword}
             onChangeText={text => {
               dispatch({type: 'CPASSWORD', payload: text});
             }}
-            value={state.password}
+            value={state.cPassword}
+            label="Confirm password*"
             placeholder="Enter confirm password"
           />
-
           <View style={styles.btnWrapper}>
             <Button onPress={() => registerUser()} title="Sign up" />
             <View style={styles.t_and_c_wrapper}>
