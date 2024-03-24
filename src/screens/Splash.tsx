@@ -29,7 +29,7 @@ const Splash: React.FC<Props> = ({navigation}) => {
   };
   const getStartHandler = () => {
     markAppLaunched();
-    navigation.navigate('Main');
+    navigation.navigate('Login');
   };
 
   const styles = getStyle(orientation || ''); // Ensure orientation is always a string

@@ -4,17 +4,20 @@ import LinearGradient from 'react-native-linear-gradient';
 import {StyleSheet} from 'react-native';
 import {colors} from '../utils/commonStyle/colors';
 import {fontSizes} from '../utils/commonStyle';
+import ThreePulseDots from './commonComponents/ThreePulseDots';
 
 interface Props {
   onPress?: () => void;
   title?: string;
   outline?: boolean;
+  isLoading?: boolean;
   btnWidth?: ViewStyle['width'];
 }
 const Button: React.FC<Props> = ({
   onPress,
   title = 'Button',
   outline = false,
+  isLoading = false,
   btnWidth = '100%',
 }) => {
   return (
@@ -33,15 +36,20 @@ const Button: React.FC<Props> = ({
             {
               backgroundColor: outline ? colors.white : 'transparent',
               padding: outline ? 10 : 12,
+              height: outline ? 48 : 52,
             },
           ]}>
-          <Text
-            style={[
-              styles.buttonText,
-              {color: outline ? colors.blue : colors.white},
-            ]}>
-            {title}
-          </Text>
+          {isLoading ? (
+            <ThreePulseDots color={outline ? colors.purle : colors.white} />
+          ) : (
+            <Text
+              style={[
+                styles.buttonText,
+                {color: outline ? colors.blue : colors.white},
+              ]}>
+              {title}
+            </Text>
+          )}
         </View>
       </LinearGradient>
     </TouchableOpacity>
@@ -53,6 +61,8 @@ const styles = StyleSheet.create({
   btnTextWrapper: {
     borderRadius: 16,
     color: colors.white,
+    alignContent: 'center',
+    justifyContent: 'center',
   },
   btn: {
     width: '100%',

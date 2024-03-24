@@ -7,6 +7,7 @@ interface PropsType {
   placeholder?: string;
   value?: string;
   label?: string;
+  errorMsg?: string;
   onChangeText?: (text: string) => void;
   keyboardType?:
     | 'default'
@@ -21,19 +22,20 @@ const InputField: React.FC<PropsType> = ({
   placeholder = 'Enter text here',
   keyboardType = 'default',
   onChangeText,
+  errorMsg,
   value,
   label,
 }) => {
   // Define styles for the component
   const styles = getStyles();
-  const inputHandle = text => {
+  const inputHandle = (text: string) => {
     if (onChangeText) {
       onChangeText(text);
     }
   };
   // Render the component
   return (
-    <View>
+    <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         style={styles.input}
@@ -43,6 +45,7 @@ const InputField: React.FC<PropsType> = ({
         value={value} // Value of the input is controlled by the state variable text
         keyboardType={keyboardType}
       />
+      {errorMsg && <Text style={styles.errorMsg}>{errorMsg}</Text>}
     </View>
   );
 };
@@ -50,6 +53,13 @@ const InputField: React.FC<PropsType> = ({
 // Function to get styles for the component
 const getStyles = () =>
   StyleSheet.create({
+    errorMsg: {
+      color: colors.red,
+      fontSize: fontSizes.p3,
+    },
+    container: {
+      position: 'relative',
+    },
     label: {
       fontSize: fontSizes.p2,
       color: colors.black,
