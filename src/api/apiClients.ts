@@ -11,7 +11,6 @@ export const llmClient = axios.create({
 const client = axios.create({
   baseURL: `${BACKEND_URL}`,
 });
-
 export const makeRequest = async <T>(
   config: AxiosRequestConfig,
 ): Promise<T> => {

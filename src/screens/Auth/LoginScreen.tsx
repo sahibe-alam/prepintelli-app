@@ -13,7 +13,7 @@ import Button from '../../components/Button';
 import {spacing} from '../../utils/commonStyle';
 import InputField from '../../components/formComponents/InputField';
 import {isValidEmail} from '../../utils/validation';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {setLoginToken} from '../../utils/commonServices';
 
 interface Props {
   navigation?: any;
@@ -84,13 +84,13 @@ const LoginScreen: React.FC<Props> = props => {
   };
   const loginHandler = async () => {
     const isError = isValid();
+    setLoginToken(loginDate.password);
+
     if (!isError) {
-      AsyncStorage.setItem('jwtToken', 'sdfsdfsfdds');
       navigation.navigate('Main');
     }
   };
   const styles = getStyles();
-  console.log(errorMessage);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView

@@ -5,21 +5,46 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import LogoTitle from '../../components/commonComponents/LogoTitle';
 import OTPTextInput from 'react-native-otp-textinput';
 import {fontSizes, spacing} from '../../utils/commonStyle';
 import {colors} from '../../utils/commonStyle/colors';
 import Button from '../../components/Button';
+import {useToast} from 'react-native-toast-notifications';
+import {makeRequest} from '../../api/apiClients';
 interface PropsType {
   navigation: any;
 }
-const OtpVerification: React.FC<PropsType> = ({navigation}) => {
-  const styles = getSyles();
+const OtpVerification: React.FC<PropsType> = () => {
+  const [otp, setOtp] = useState('');
+  const [isLoading, setLoading] = useState(false);
+  const toast = useToast();
 
   const hadleSubmit = () => {
-    navigation.navigate('Main');
+    if (otp.length === 4) {
+      setLoading(true);
+      makeRequest({
+        url: '/verifyOtpAndSaveUser',
+        method: 'POST',
+        data: {
+          otp: otp,
+        },
+      })
+        .then((res: any) => {
+          setLoading(false);
+          toast.show(res.data.msg, {type: 'success'});
+        })
+        .catch((err: any) => {
+          setLoading(false);
+          toast.show(err.response.data.msg, {type: 'danger'});
+        });
+    } else {
+      toast.show('Please enter 4 digit otp', {type: 'danger'});
+    }
   };
+
+  const styles = getSyles();
   return (
     <SafeAreaView style={styles.safeview}>
       <View style={styles.wrapper}>
@@ -28,6 +53,7 @@ const OtpVerification: React.FC<PropsType> = ({navigation}) => {
           An email has been sent to your address with a verification code.
         </Text>
         <OTPTextInput
+          handleTextChange={text => setOtp(text)}
           tintColor={colors.purle}
           containerStyle={styles.container}
           textInputStyle={styles.input}
@@ -38,7 +64,7 @@ const OtpVerification: React.FC<PropsType> = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <View style={styles.submitBtnWrapper}>
-          <Button onPress={hadleSubmit} title="Sunmit" />
+          <Button isLoading={isLoading} onPress={hadleSubmit} title="Verify" />
         </View>
       </View>
     </SafeAreaView>

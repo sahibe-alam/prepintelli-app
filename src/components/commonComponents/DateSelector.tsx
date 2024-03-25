@@ -58,7 +58,7 @@ const DateSelector: React.FC<props> = ({
           setDate(pickedDate);
           setUserSelectDate(formatDate(pickedDate));
           if (onDateChange) {
-            formatDate(new Date(pickedDate));
+            onDateChange(formatDate(pickedDate));
           }
         }}
         onCancel={() => {
