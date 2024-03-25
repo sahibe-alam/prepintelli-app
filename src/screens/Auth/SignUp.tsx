@@ -14,6 +14,8 @@ import {spacing} from '../../utils/commonStyle';
 import InputField from '../../components/formComponents/InputField';
 import {isValidEmail, isValidIndianMobileNumber} from '../../utils/validation';
 import DateSelector from '../../components/commonComponents/DateSelector';
+import {makeRequest} from '../../api/apiClients';
+import {useToast} from 'react-native-toast-notifications';
 
 interface Props {
   navigation?: any;
@@ -37,6 +39,7 @@ interface StateType {
   email: string;
   mobile: string;
   dob: string;
+  education: string;
   password: string;
   cPassword: string;
   [key: string]: string; // Add index signature
@@ -71,11 +74,13 @@ const initialState: StateType = {
   mobile: '',
   dob: '',
   password: '',
+  education: 'school student',
   cPassword: '',
 };
 const SignUp: React.FC<Props> = props => {
   const {navigation} = props;
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState({
     firstName: '',
     lastName: '',
@@ -87,6 +92,7 @@ const SignUp: React.FC<Props> = props => {
   });
   let error = false;
   const errorObj: {[key: string]: string} = {};
+  const toast = useToast();
   const isValidError = () => {
     const fieldsToValidate = [
       {
@@ -152,7 +158,12 @@ const SignUp: React.FC<Props> = props => {
     return error;
   };
   const registerUser = async () => {
+    setLoading(true);
     const isError = isValidError();
+    if (isError) {
+      setLoading(false);
+      toast.show('Please enter valid details', {type: 'danger'});
+    }
     console.log(isError);
     const errorMessageObj: {
       firstName: string;
@@ -172,16 +183,48 @@ const SignUp: React.FC<Props> = props => {
       cPassword: errorObj.cPassword || '',
     };
     setErrorMessage(errorMessageObj);
+    if (!isError) {
+      makeRequest({
+        url: '/register',
+        method: 'POST',
+        data: {
+          email: state.email,
+          firstname: state.firstName,
+          lastname: state.lastName,
+          mobile: state.mobile,
+          education: state.education,
+          dateofbirth: state.dob,
+          password: state.password,
+          confirmpassword: state.cPassword,
+        },
+      })
+        .then((response: any) => {
+          setLoading(false);
+          if (response.status === 200) {
+            navigation.navigate('OTP', {
+              email: state.email,
+              password: state.password,
+            });
+          }
+        })
+        .catch((error: any) => {
+          setLoading(false);
+          toast.show(error.response.data?.msg, {
+            type: 'danger',
+          });
+          console.log('error ', error.response.data);
+        });
+    }
   };
   const styles = getStyles();
-  console.log(errorMessage);
   return (
     <SafeAreaView style={styles.container}>
+      <LogoTitle title="Sign up" />
+
       <ScrollView
         contentContainerStyle={styles.scrollWrapper}
         centerContent={true}>
         <View style={styles.wrapper}>
-          <LogoTitle title="Sign up" />
           <InputField
             errorMsg={errorMessage.firstName}
             onChangeText={text => {
@@ -204,9 +247,9 @@ const SignUp: React.FC<Props> = props => {
             errorMsg={errorMessage.email}
             keyboardType="email-address"
             onChangeText={text => {
-              dispatch({type: 'EMAIL', payload: text});
+              dispatch({type: 'EMAIL', payload: text.toLocaleLowerCase()});
             }}
-            value={state.email}
+            value={state.email.toLocaleLowerCase()}
             label="Email*"
             placeholder="Enter email id"
           />
@@ -224,6 +267,7 @@ const SignUp: React.FC<Props> = props => {
             errorMsg={errorMessage.dob}
             onDateChange={date => {
               const formattedDate = date.toString();
+              console.log(date);
               dispatch({type: 'DOB', payload: formattedDate});
             }}
           />
@@ -247,7 +291,11 @@ const SignUp: React.FC<Props> = props => {
             placeholder="Enter confirm password"
           />
           <View style={styles.btnWrapper}>
-            <Button onPress={() => registerUser()} title="Sign up" />
+            <Button
+              isLoading={isLoading}
+              onPress={() => registerUser()}
+              title="Sign up"
+            />
             <View style={styles.t_and_c_wrapper}>
               <Text style={styles.t_and_c}>Already have an account?</Text>
               <TouchableOpacity

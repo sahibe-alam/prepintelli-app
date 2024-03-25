@@ -1,15 +1,22 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import GlobalState from './contexts/GlobalState';
 import AppNavigator from './navigation/AppNavigator';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Splash from './screens/Splash';
+import {ToastProvider} from 'react-native-toast-notifications';
+
 import {StatusBar} from 'react-native';
+import {colors} from './utils/commonStyle/colors';
 const App = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor={'white'} />
       <GlobalState>
-        <AppNavigator />
+        <ToastProvider
+          placement="top"
+          successColor={colors.green}
+          dangerColor={colors.red}
+          warningColor="orange">
+          <AppNavigator />
+        </ToastProvider>
       </GlobalState>
     </>
   );
