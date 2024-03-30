@@ -7,13 +7,16 @@ import {fontSizes} from '../utils/commonStyle';
 
 const DpWrapper = () => {
   const {deviceWidth} = usePrepContext();
+  const {user} = usePrepContext();
   const styles = getSyle(deviceWidth || 0);
   return (
     <View style={styles.gradientWrapper}>
       <View style={styles.borderRadius}>
         <Gradient>
           <View style={styles.gradient}>
-            <Text style={styles.userName}>Sahibe alam</Text>
+            <Text style={styles.userName}>
+              {user?.firstname} {user?.lastname}
+            </Text>
           </View>
         </Gradient>
       </View>

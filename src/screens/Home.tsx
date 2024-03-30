@@ -37,6 +37,7 @@ const Home: React.FC<PropsType> = ({navigation}) => {
       classAction: 'fetchClass',
     },
   ];
+
   return (
     <View style={styles.container}>
       <ScrollView>

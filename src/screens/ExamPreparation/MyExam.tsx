@@ -19,6 +19,7 @@ import CustomModal from '../../components/commonComponents/CustomModal';
 import DropDownSelect from '../../components/formComponents/DropDownSelect';
 import InputField from '../../components/formComponents/InputField';
 import Button from '../../components/Button';
+import {usePrepContext} from '../../contexts/GlobalState';
 
 interface PropsType {
   navigation: any;
@@ -53,6 +54,7 @@ const MyExam: React.FC<PropsType> = ({navigation}) => {
   const styles = getStyles();
   const {width} = useWindowDimensions();
   const [isModalVisible, setModalVisible] = useState(false);
+  const {user} = usePrepContext();
   const [modalType, setModalType] = useState('');
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -63,11 +65,14 @@ const MyExam: React.FC<PropsType> = ({navigation}) => {
       modalType === 'practice' ? 'Practice test' : 'Ask doubt',
     );
   };
+  console.log(user?.exams[0]);
   return (
     <>
       <SafeAreaView style={styles.conatainer}>
         <BackHeader onPress={() => navigation.goBack()} title={'My exam'} />
-        <Text style={styles.title}>Prepare [xyz] exam with ai 🚀</Text>
+        <Text style={styles.title}>
+          Prepare {user?.exams[0]?.exam_short_name} exam with ai 🚀
+        </Text>
         <View style={styles.cardsWrapper}>
           <TouchableOpacity
             onPress={() => {
@@ -111,7 +116,8 @@ const MyExam: React.FC<PropsType> = ({navigation}) => {
         </View>
         <ScrollView>
           <View style={styles.accordionWrapper}>
-            <AccordionItem title="Road map for [xyz] exam">
+            <AccordionItem
+              title={`Road map for ${user?.exams[0]?.exam_short_name} exam`}>
               <RenderHtml source={source} contentWidth={width} />
             </AccordionItem>
           </View>

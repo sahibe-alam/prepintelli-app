@@ -9,7 +9,7 @@ export const llmClient = axios.create({
 });
 
 const client = axios.create({
-  baseURL: `${BACKEND_URL}`,
+  baseURL: `${BACKEND_URL}/api/`,
 });
 export const makeRequest = async <T>(
   config: AxiosRequestConfig,

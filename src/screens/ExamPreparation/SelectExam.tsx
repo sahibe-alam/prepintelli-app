@@ -7,9 +7,33 @@ import {spacing} from '../../utils/commonStyle';
 import Button from '../../components/Button';
 import SubjectSelector from '../../components/examPrepComponents/SubjectSelector';
 import {makeRequest} from '../../api/apiClients';
+import {usePrepContext} from '../../contexts/GlobalState';
+import {getUserID} from '../../utils/commonServices';
+import {getUserDetails} from '../../api/adapter/getUserDetails';
 interface PropsType {
   navigation: any;
   route: any;
+}
+
+const initialState = {
+  subjects: '',
+  class: '',
+  board: '',
+  examName: '',
+};
+function reducer(state: any, action: any) {
+  switch (action.type) {
+    case 'subject':
+      return {...state, subjects: action.payload};
+    case 'class':
+      return {...state, class: action.payload};
+    case 'board':
+      return {...state, board: action.payload};
+    case 'examName':
+      return {...state, examName: action.payload};
+    default:
+      return state;
+  }
 }
 const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
   const {
@@ -24,6 +48,9 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
   } = route.params;
   const [examName, setExamName] = React.useState(null);
   const [classes, setClasses] = React.useState(null);
+  const {user, setUser} = usePrepContext();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [targetExam, dispatch] = React.useReducer(reducer, initialState);
   const styles = getStyles();
   const getExamDetails = () => {
     makeRequest({
@@ -62,6 +89,33 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const insertExam = (examData: any) => {
+    setIsLoading(true);
+    makeRequest({
+      method: 'POST',
+      url: examDetailsUrl,
+      data: {
+        ...examData,
+      },
+    })
+      .then((response: any) => {
+        if (response.status === 200) {
+          getUserID().then((id: any) => {
+            getUserDetails(id).then((res: any) => {
+              setIsLoading(false);
+              console.log(res.data);
+              setUser && setUser(res.data[0]);
+              navigation.navigate('Exam Zone');
+            });
+          });
+        }
+      })
+      .catch(error => {
+        setIsLoading(false);
+        console.log(error);
+      });
+  };
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader onPress={() => navigation.goBack()} title={title} />
@@ -71,6 +125,9 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
         <View style={styles.inputsWrapper}>
           <View style={styles.formWrapper}>
             <DropDownSelect
+              onSelect={(item: any) => {
+                dispatch({type: 'examName', payload: item});
+              }}
               rowTextForSelection={(item: any) =>
                 actionType === 'fetchBoard'
                   ? item?.boardShortName
@@ -92,18 +149,44 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
                 }
                 data={classes}
                 DropDownLabel={dropdownLabel2}
+                onSelect={(item: any) => {
+                  dispatch({type: 'class', payload: item});
+                }}
               />
             )}
-            <SubjectSelector label={inputLabel} />
+            <SubjectSelector
+              getSubjects={targetExam => {
+                const sub = targetExam.map(subject =>
+                  subject.value ? subject.value : null,
+                );
+                dispatch({type: 'subject', payload: sub});
+              }}
+              label={inputLabel}
+            />
           </View>
           <View style={styles.btnWrapper}>
             <Button
+              isLoading={isLoading}
               title="Get start"
-              onPress={() =>
-                navigation.navigate('Exam Zone', {
-                  title: 'Exam prepration zone',
-                })
-              }
+              onPress={() => {
+                if (type === 'clg' || type === 'comptv') {
+                  insertExam({
+                    action: 'insertSubject',
+                    subjects: targetExam?.subjects,
+                    examid: targetExam.examName?._id,
+                    userid: user?._id,
+                  });
+                }
+                if (type === 'acdmc') {
+                  insertExam({
+                    action: 'insertSubject',
+                    academicsubjects: targetExam?.subjects,
+                    boardid: targetExam.examName?._id,
+                    classid: targetExam.class?._id,
+                    userid: user?._id,
+                  });
+                }
+              }}
             />
           </View>
         </View>

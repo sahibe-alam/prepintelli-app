@@ -164,7 +164,6 @@ const SignUp: React.FC<Props> = props => {
       setLoading(false);
       toast.show('Please enter valid details', {type: 'danger'});
     }
-    console.log(isError);
     const errorMessageObj: {
       firstName: string;
       lastName: string;
@@ -201,10 +200,7 @@ const SignUp: React.FC<Props> = props => {
         .then((response: any) => {
           setLoading(false);
           if (response.status === 200) {
-            navigation.navigate('OTP', {
-              email: state.email,
-              password: state.password,
-            });
+            navigation.navigate('OTP');
           }
         })
         .catch((error: any) => {

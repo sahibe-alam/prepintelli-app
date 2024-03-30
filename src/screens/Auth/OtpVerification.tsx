@@ -16,7 +16,7 @@ import {makeRequest} from '../../api/apiClients';
 interface PropsType {
   navigation: any;
 }
-const OtpVerification: React.FC<PropsType> = () => {
+const OtpVerification: React.FC<PropsType> = ({navigation}) => {
   const [otp, setOtp] = useState('');
   const [isLoading, setLoading] = useState(false);
   const toast = useToast();
@@ -34,6 +34,7 @@ const OtpVerification: React.FC<PropsType> = () => {
         .then((res: any) => {
           setLoading(false);
           toast.show(res.data.msg, {type: 'success'});
+          navigation.navigate('Login');
         })
         .catch((err: any) => {
           setLoading(false);

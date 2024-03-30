@@ -9,6 +9,7 @@ import Header from '../components/Header';
 import MyPerformance from '../screens/MyPerformance';
 import Profile from '../screens/Profile';
 import MyExam from '../screens/ExamPreparation/MyExam';
+import {usePrepContext} from '../contexts/GlobalState';
 
 const Bottom = createBottomTabNavigator();
 
@@ -56,19 +57,6 @@ const CustomTabBarButton = ({
 };
 
 const Main = () => {
-  // useEffect(() => {
-  //   getJwtToken()
-  //     .then(token => {
-  //       const tokenPromise = token;
-  //       // Now you can use tokenPromise as needed
-  //       if (tokenPromise) {
-  //         navigation.navigate('Login');
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.error('Error occurred:', error);
-  //     });
-  // }, []);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <Bottom.Navigator
