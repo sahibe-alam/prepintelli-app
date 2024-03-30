@@ -13,7 +13,11 @@ import Button from '../../components/Button';
 import {spacing} from '../../utils/commonStyle';
 import InputField from '../../components/formComponents/InputField';
 import {isValidEmail} from '../../utils/validation';
-import {setLoginToken} from '../../utils/commonServices';
+import {setLoginToken, setUserID} from '../../utils/commonServices';
+import {makeRequest} from '../../api/apiClients';
+import {useToast} from 'react-native-toast-notifications';
+import {getUserDetails} from '../../api/adapter/getUserDetails';
+import {usePrepContext} from '../../contexts/GlobalState';
 
 interface Props {
   navigation?: any;
@@ -37,6 +41,9 @@ const initialState = {
 const LoginScreen: React.FC<Props> = props => {
   const {navigation} = props;
   const [loginDate, dispatch] = useReducer(reducer, initialState);
+  const [isLoading, setLoading] = useState(false);
+  const {setUser} = usePrepContext();
+  const toast = useToast();
   const [errorMessage, setErrorMessage] = useState<{
     email: string;
     password: string;
@@ -83,14 +90,44 @@ const LoginScreen: React.FC<Props> = props => {
     return isError;
   };
   const loginHandler = async () => {
-    const isError = isValid();
-    setLoginToken(loginDate.password);
-
+    let isError: boolean = isValid();
+    setLoading(true);
+    if (isError) {
+      setLoading(false);
+    }
     if (!isError) {
-      navigation.navigate('Main');
+      makeRequest({
+        url: '/login',
+        method: 'POST',
+        data: {
+          email: loginDate.email.trim().toLowerCase(),
+          password: loginDate.password.trim(),
+        },
+      })
+        .then((res: any) => {
+          if (res.data.success) {
+            setLoginToken(res.data.data.token);
+            setUserID(res.data.data._id);
+            getUserDetails(res.data.data._id).then((res: any) => {
+              console.log(res.data);
+              setUser && setUser(res.data[0]);
+              setLoading(false);
+              navigation.navigate('Main');
+            });
+          } else {
+            console.log(res?.data);
+            toast.show(res?.data.msg, {type: 'danger'});
+          }
+        })
+
+        .catch((err: any) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   };
   const styles = getStyles();
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -128,7 +165,11 @@ const LoginScreen: React.FC<Props> = props => {
             </View>
           </View>
           <View style={styles.btnWrapper}>
-            <Button title="Login" onPress={loginHandler} />
+            <Button
+              isLoading={isLoading}
+              title="Login"
+              onPress={loginHandler}
+            />
 
             <View style={styles.t_and_c_wrapper}>
               <Text style={styles.t_and_c}>Create new account?</Text>

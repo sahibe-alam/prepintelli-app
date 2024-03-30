@@ -2,8 +2,10 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import React from 'react';
 import {colors} from '../utils/commonStyle/colors';
 import {fontSizes} from '../utils/commonStyle';
+import {usePrepContext} from '../contexts/GlobalState';
 
 const Header = () => {
+  const {user} = usePrepContext();
   return (
     <View style={styles.header}>
       <View style={styles.userDetails}>
@@ -14,7 +16,7 @@ const Header = () => {
           />
         </View>
         <Text style={styles.userName} numberOfLines={1} ellipsizeMode="tail">
-          Hi, Sahibe
+          Hi, {user?.firstname}
         </Text>
       </View>
       <View style={styles.coinWrapper}>

@@ -17,6 +17,7 @@ const DropDownSelect: React.FC<PropsType> = ({
   DropDownLabel = 'Label',
   searchPlaceHolder = 'Search',
   defaultButtonText = 'Select an option',
+  onSelect,
   rowTextForSelection = (item: any) => item?.exam_short_name,
   buttonTextAfterSelection = (item: any) => item?.exam_short_name,
 
@@ -107,7 +108,9 @@ const DropDownSelect: React.FC<PropsType> = ({
           data={data || examNames}
           onSelect={(selectedItem, index) => {
             setIsSelected(selectedItem);
-            console.log(index);
+            if (onSelect) {
+              onSelect(selectedItem, index);
+            }
           }}
           buttonTextAfterSelection={buttonTextAfterSelection}
           renderDropdownIcon={isopen => {

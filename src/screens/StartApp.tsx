@@ -1,10 +1,13 @@
 import {View, StyleSheet, Image} from 'react-native';
 import React, {useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getJwtToken} from '../utils/commonServices';
+import {getJwtToken, getUserID} from '../utils/commonServices';
 import LoadingDots from 'react-native-loading-dots';
 import {colors} from '../utils/commonStyle/colors';
+import {getUserDetails} from '../api/adapter/getUserDetails';
+import {usePrepContext} from '../contexts/GlobalState';
 const StartApp = ({navigation}: any) => {
+  const {setUser} = usePrepContext();
   const checkIfAppLaunchedBefore = async () => {
     try {
       const value = await AsyncStorage.getItem('appLaunchedBefore');
@@ -16,7 +19,13 @@ const StartApp = ({navigation}: any) => {
   const isLogin = () => {
     getJwtToken().then(token => {
       if (token) {
-        navigation.navigate('Main');
+        getUserID().then((id: any) => {
+          getUserDetails(id).then((res: any) => {
+            console.log(res.data);
+            setUser && setUser(res.data[0]);
+            navigation.navigate('Main');
+          });
+        });
       } else {
         navigation.navigate('Login');
       }

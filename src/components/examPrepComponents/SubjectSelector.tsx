@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {colors} from '../../utils/commonStyle/colors';
 import {fontSizes, spacing} from '../../utils/commonStyle';
@@ -6,9 +7,10 @@ import InputField from '../formComponents/InputField';
 
 interface PropsType {
   label?: string;
+  getSubjects?: (inputs: {id: string; value: string}[]) => void;
 }
 
-const SubjectSelector: React.FC<PropsType> = ({label}) => {
+const SubjectSelector: React.FC<PropsType> = ({label, getSubjects}) => {
   const [inputs, setInputs] = useState<{id: string; value: string}[]>([
     {id: Date.now().toString(), value: ''},
   ]);
@@ -32,6 +34,9 @@ const SubjectSelector: React.FC<PropsType> = ({label}) => {
     setInputs(newInputs);
   };
 
+  useEffect(() => {
+    getSubjects && getSubjects(inputs);
+  }, [inputs]);
   return (
     <View style={styles.wrapper}>
       <View>

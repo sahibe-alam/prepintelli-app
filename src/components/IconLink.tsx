@@ -2,23 +2,23 @@ import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {fontSizes, spacing} from '../utils/commonStyle';
 import {colors} from '../utils/commonStyle/colors';
+import Gradient from './Gradient';
 
 interface IconLinkProps {
   icon?: string;
   linkText?: string;
-  onPress?: () => void;
+  onPress?: any;
 }
-const IconLink: React.FC<IconLinkProps> = item => {
-  const {icon, linkText, onPress} = item;
+const IconLink: React.FC<IconLinkProps> = ({icon, linkText, onPress}) => {
   const styles = getSyle();
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
-      <View style={styles.iconWrapper}>
+      <Gradient style={styles.iconWrapper}>
         <Image
           style={styles.icon}
           source={icon || require('../assets/img/dp.png')}
         />
-      </View>
+      </Gradient>
       <View style={styles.linkWrapper}>
         <Text style={styles.text}>{linkText || 'IconLink'}</Text>
         <Image
@@ -36,6 +36,7 @@ const getSyle = () =>
       width: 24,
       height: 24,
       resizeMode: 'contain',
+      tintColor: colors.white,
     },
     iconWrapper: {
       backgroundColor: colors.blue,

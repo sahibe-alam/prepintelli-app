@@ -6,6 +6,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import DpWrapper from '../components/DpWrapper';
 import IconLink from '../components/IconLink';
 import {spacing} from '../utils/commonStyle';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface PropsType {
   navigation: any;
@@ -13,39 +14,44 @@ interface PropsType {
 
 const Profile: React.FC<PropsType> = ({navigation}) => {
   const styles = getSyle();
-
+  const logoutHandler = async () => {
+    await AsyncStorage.removeItem('jwtToken');
+    await AsyncStorage.removeItem('userID');
+    navigation.navigate('Login');
+  };
   const links = [
     {
-      icon: require('../assets/img/dp.png'),
+      icon: require('../assets/img/edit_profile.png'),
       linkText: 'Edit profile',
       onPress: () => navigation.navigate('Profile'),
     },
     {
-      icon: require('../assets/img/dp.png'),
+      icon: require('../assets/img/alarm_ic.png'),
       linkText: 'Practice reminder',
       onPress: () => navigation.navigate('Profile'),
     },
     {
-      icon: require('../assets/img/dp.png'),
+      icon: require('../assets/img/how_ic.png'),
       linkText: 'How it works',
       onPress: () => navigation.navigate('Profile'),
     },
     {
-      icon: require('../assets/img/dp.png'),
+      icon: require('../assets/img/about_ic.png'),
       linkText: 'About us',
       onPress: () => navigation.navigate('Profile'),
     },
     {
-      icon: require('../assets/img/dp.png'),
+      icon: require('../assets/img/faq_ic.png'),
       linkText: 'fAQs',
       onPress: () => navigation.navigate('Profile'),
     },
     {
-      icon: require('../assets/img/dp.png'),
+      icon: require('../assets/img/logout_ic.png'),
       linkText: 'Log out',
-      onPress: () => navigation.navigate('Profile'),
+      onPress: logoutHandler,
     },
   ];
+
   return (
     <View style={styles.container}>
       <BackHeader title="My profile" onPress={() => navigation.goBack()} />
@@ -53,7 +59,7 @@ const Profile: React.FC<PropsType> = ({navigation}) => {
         <DpWrapper />
         <View style={styles.iconLinkWrapper}>
           {links.map((item, index) => (
-            <IconLink key={index} {...item} />
+            <IconLink key={index} {...item} onPress={item.onPress} />
           ))}
         </View>
       </ScrollView>

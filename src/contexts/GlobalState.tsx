@@ -14,6 +14,8 @@ interface GlobalStateProps {
 interface PrepContextProps {
   colorScheme?: ColorSchemeName;
   isFirstLaunch?: boolean;
+  setUser?: (value: any) => void;
+  user?: any;
   setIsFirstLaunch?: (value: boolean) => void;
   orientation?: 'PORTRAIT' | 'LANDSCAPE';
 }
@@ -32,6 +34,7 @@ const GlobalState: React.FC<GlobalStateProps> = ({
   // STATES DEFINE HERE
   const colorScheme = Appearance.getColorScheme();
   const [isFirstLaunch, setIsFirstLaunch] = useState(true);
+  const [user, setUser] = useState({}); // Provide a default value of empty object
   const deviceWidth = Dimensions.get('window').width;
   const [orientation, setOrientation] = useState<'PORTRAIT' | 'LANDSCAPE'>(
     'PORTRAIT',
@@ -55,6 +58,7 @@ const GlobalState: React.FC<GlobalStateProps> = ({
       subscription.remove();
     };
   }, []);
+
   return (
     <PrepContext.Provider
       value={{
@@ -63,6 +67,8 @@ const GlobalState: React.FC<GlobalStateProps> = ({
         deviceWidth,
         isFirstLaunch,
         setIsFirstLaunch,
+        setUser,
+        user,
       }}>
       {children}
     </PrepContext.Provider>

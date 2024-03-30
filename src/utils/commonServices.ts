@@ -7,3 +7,12 @@ export const getJwtToken = async () => {
 export const setLoginToken = async (jwtToken: string) => {
   await AsyncStorage.setItem('jwtToken', jwtToken);
 };
+
+export const setUserID = async (userID: string) => {
+  await AsyncStorage.setItem('userID', userID);
+};
+
+export const getUserID = async () => {
+  const userID = await AsyncStorage.getItem('userID');
+  return userID;
+};
