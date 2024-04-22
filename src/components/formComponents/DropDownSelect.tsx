@@ -18,62 +18,20 @@ const DropDownSelect: React.FC<PropsType> = ({
   searchPlaceHolder = 'Search',
   defaultButtonText = 'Select an option',
   onSelect,
-  rowTextForSelection = (item: any) => item?.exam_short_name,
-  buttonTextAfterSelection = (item: any) => item?.exam_short_name,
+  rowTextForSelection = (item: any) => item?.label,
+  buttonTextAfterSelection = (item: any) => item?.label,
 
   data,
 }) => {
   const [isSelected, setIsSelected] = React.useState(null);
   const examNames = [
     {
-      exam_short_name: 'SSC CGL',
-      examName:
-        'Staff Selection Commission Combined Graduate Level Examination',
-      examType: 'competitive',
+      label: 'option 1',
+      value: 'option1',
     },
     {
-      exam_short_name: 'SSC CHSL',
-      examName:
-        'Staff Selection Commission Combined Higher Secondary Level Examination',
-      examType: 'competitive',
-    },
-    {
-      exam_short_name: 'SSC JE',
-      examName: 'Staff Selection Commission Junior Engineer Examination',
-      examType: 'competitive',
-    },
-    {
-      exam_short_name: 'SSC MTS',
-      examName: 'Staff Selection Commission Multi-Tasking Staff Examination',
-      examType: 'competitive',
-    },
-    {
-      exam_short_name: 'SSC Steno',
-      examName:
-        "Staff Selection Commission Stenographer Grade 'C' and 'D' Examination",
-      examType: 'competitive',
-    },
-    {
-      exam_short_name: 'SSC CPO',
-      examName:
-        'Staff Selection Commission Central Police Organization Examination',
-      examType: 'competitive',
-    },
-    {
-      exam_short_name: 'SSC GD Constable',
-      examName: 'Staff Selection Commission Constable (GD) Examination',
-      examType: 'competitive',
-    },
-    {
-      exam_short_name: 'SSC JHT',
-      examName:
-        'Staff Selection Commission Junior Hindi Translator Examination',
-      examType: 'competitive',
-    },
-    {
-      exam_short_name: 'SSC Selection Post',
-      examName: 'Staff Selection Commission Selection Post Examinations',
-      examType: 'competitive',
+      label: 'option 2',
+      value: 'option2',
     },
   ];
   const [viewWidth, setViewWidth] = useState(0);

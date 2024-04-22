@@ -3,7 +3,7 @@ import React from 'react';
 import BackHeader from '../../components/BackHeader';
 import {colors} from '../../utils/commonStyle/colors';
 import {fontSizes, spacing} from '../../utils/commonStyle';
-import CircleProgess from '../../components/commonComponents/CircleProgess';
+import CircleProgress from '../../components/commonComponents/CircleProgress';
 import Button from '../../components/Button';
 
 interface PropsType {
@@ -75,7 +75,7 @@ const TestResult: React.FC<PropsType> = props => {
                 />
               </View>
             </View>
-            <CircleProgess value={myesults?.scorePercentage || 0} />
+            <CircleProgress value={myesults?.scorePercentage || 0} />
           </View>
         </View>
         <View style={styles.btnWrapper}>
