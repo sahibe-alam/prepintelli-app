@@ -14,7 +14,7 @@ interface PropsType {
   value?: number;
   valueSuffix?: string;
 }
-const CircleProgess: React.FC<PropsType> = props => {
+const CircleProgress: React.FC<PropsType> = props => {
   const {activeStrokeColor, progressValueColor, value} = props;
   return (
     <View>
@@ -34,4 +34,4 @@ const CircleProgess: React.FC<PropsType> = props => {
   );
 };
 
-export default CircleProgess;
+export default CircleProgress;

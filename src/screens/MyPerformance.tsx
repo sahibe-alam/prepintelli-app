@@ -4,8 +4,9 @@ import {colors} from '../utils/commonStyle/colors';
 import BackHeader from '../components/BackHeader';
 import {LineChart} from 'react-native-chart-kit';
 import {Dimensions} from 'react-native';
-import CircleProgess from '../components/commonComponents/CircleProgess';
+import CircleProgress from '../components/commonComponents/CircleProgress';
 import {fontSizes, spacing} from '../utils/commonStyle';
+import Gradient from '../components/Gradient';
 const screenWidth = Dimensions.get('window').width;
 interface PropsType {
   navigation?: any;
@@ -98,7 +99,7 @@ const MyPerformance: React.FC<PropsType> = props => {
             </Text>
           </View>
           <View>
-            <CircleProgess />
+            <CircleProgress />
           </View>
         </View>
         <View style={styles.subjectWrapper}>
@@ -108,10 +109,10 @@ const MyPerformance: React.FC<PropsType> = props => {
               <View key={index} style={styles.subjectResult}>
                 <Text style={styles.subjectName}>{item.name}</Text>
                 <View style={styles.subjectProgress}>
-                  <View
-                    style={[styles.fillProgress, {width: `${item.progress}%`}]}>
+                  <Gradient
+                    style={(styles.fillProgress, {width: `${item.progress}%`})}>
                     <Text style={styles.percent}>{item.progress}%</Text>
-                  </View>
+                  </Gradient>
                 </View>
               </View>
             );

@@ -60,12 +60,14 @@ const MyExam: React.FC<PropsType> = ({navigation}) => {
     setModalVisible(!isModalVisible);
   };
   const handleStart = () => {
-    setModalVisible(false);
-    navigation.navigate(
-      modalType === 'practice' ? 'Practice test' : 'Ask doubt',
-    );
+    // navigation.navigate(
+    //   modalType === 'practice' ? 'Practice test' : 'Ask doubt',
+    //   {
+    //     examId: user?.exams[0]?.id,
+    //   },
+    // );
   };
-  console.log(user?.exams[0]);
+  console.log(user?.exams[0]?.subjects);
   return (
     <>
       <SafeAreaView style={styles.conatainer}>
@@ -127,7 +129,15 @@ const MyExam: React.FC<PropsType> = ({navigation}) => {
       {/* MODAL FOR PRACTICE  */}
       <CustomModal isModalVisible={isModalVisible} isModalHide={toggleModal}>
         <View style={styles.modalContent}>
-          <DropDownSelect DropDownLabel="Select subject" />
+          <DropDownSelect
+            DropDownLabel="Select subject"
+            data={user?.exams[0]?.subjects || []}
+            rowTextForSelection={(item: any) => item}
+            buttonTextAfterSelection={(item: any) => item}
+            onSelect={(item: any) => {
+              console.log(item);
+            }}
+          />
           {modalType === 'practice' && (
             <InputField
               label="Chapter or unit"

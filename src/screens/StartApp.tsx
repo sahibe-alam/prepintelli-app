@@ -21,7 +21,6 @@ const StartApp = ({navigation}: any) => {
       if (token) {
         getUserID().then((id: any) => {
           getUserDetails(id).then((res: any) => {
-            console.log(res.data);
             setUser && setUser(res.data[0]);
             navigation.navigate('Main');
           });
