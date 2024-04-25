@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import {fontSizes, spacing} from '../../utils/commonStyle';
 import {colors} from '../../utils/commonStyle/colors';
 
@@ -8,15 +8,22 @@ interface PropsTypes {
   totalQuestions?: number;
   currentQuestionNumber?: number;
   onOptionSelect?: (questionIndex: number, optionIndex: number) => void;
+  setSelectedOption?: (questionIndex: number, optionIndex: number) => void;
+  answers?: any;
+  currentQuestionIndex?: number;
 }
 const Questions: React.FC<PropsTypes> = props => {
-  const {question, currentQuestionNumber, onOptionSelect} = props;
-  const [selected, setSelected] = useState<number | null>(null);
+  const {
+    question,
+    currentQuestionNumber,
+    onOptionSelect,
+    answers,
+    currentQuestionIndex,
+  } = props;
   const styles = getStyles();
 
   const handleOption = (index: number) => {
     if (currentQuestionNumber !== undefined) {
-      setSelected(index);
       if (onOptionSelect) {
         onOptionSelect(currentQuestionNumber - 1, index);
       }
@@ -38,20 +45,29 @@ const Questions: React.FC<PropsTypes> = props => {
               styles.optionsWrapper,
               {
                 backgroundColor:
-                  selected === index ? colors.light_blue : colors.light_grey,
+                  answers?.[currentQuestionIndex || 0] === index
+                    ? colors.light_blue
+                    : colors.light_grey,
               },
             ]}>
             <View
               style={[
                 styles.radioWrapper,
-                {borderColor: selected === index ? colors.blue : colors.grey},
+                {
+                  borderColor:
+                    answers?.[currentQuestionIndex || 0] === index
+                      ? colors.blue
+                      : colors.grey,
+                },
               ]}>
               <View
                 style={[
                   styles.selected,
                   {
                     backgroundColor:
-                      selected === index ? colors.blue : colors.light_grey,
+                      answers?.[currentQuestionIndex || 0] === index
+                        ? colors.blue
+                        : colors.light_grey,
                   },
                 ]}
               />
@@ -60,7 +76,10 @@ const Questions: React.FC<PropsTypes> = props => {
               style={[
                 styles.optionText,
                 {
-                  color: selected === index ? colors.blue : colors.black,
+                  color:
+                    answers?.[currentQuestionIndex || 0] === index
+                      ? colors.blue
+                      : colors.black,
                 },
               ]}>
               {item}

@@ -13,7 +13,8 @@ interface PropsType {
 }
 const TestResult: React.FC<PropsType> = props => {
   const {navigation} = props;
-  const {myesults, questionsWithUserSelected} = props.route.params;
+  const {myResults, questionsWithUserSelected, subjectName, chapterName} =
+    props.route.params;
   // Now you can use the title variable in the other screen
   const styles = getStylle();
   return (
@@ -25,11 +26,11 @@ const TestResult: React.FC<PropsType> = props => {
           <View style={styles.scoresCardWrapper}>
             <View style={styles.cardTextWrapper}>
               <Text style={styles.cardText}>
-                <Text style={styles.boldText}>Subject:</Text> Physics
+                <Text style={styles.boldText}>Subject:</Text> {subjectName}
               </Text>
               <Text style={styles.cardText}>
-                <Text style={styles.boldText}>Chapter or unit:</Text> Law of
-                motion
+                <Text style={styles.boldText}>Chapter or unit:</Text>{' '}
+                {chapterName}
               </Text>
               <Text style={styles.cardText}>
                 <Text style={styles.boldText}>Time spend:</Text> 8m 20s
@@ -47,7 +48,7 @@ const TestResult: React.FC<PropsType> = props => {
                   {backgroundColor: colors.light_green},
                 ]}>
                 <Text style={styles.correctText}>
-                  Correct answers {myesults?.correctAnswers}
+                  Correct answers {myResults?.correctAnswers}
                 </Text>
                 <Image
                   style={styles.resultIc}
@@ -57,7 +58,7 @@ const TestResult: React.FC<PropsType> = props => {
               <View
                 style={[styles.resultBar, {backgroundColor: colors.light_red}]}>
                 <Text style={[styles.correctText, {color: colors.red}]}>
-                  Wrong answers {myesults?.wrongAnswers}
+                  Wrong answers {myResults?.wrongAnswers}
                 </Text>
                 <Image
                   style={styles.resultIc}
@@ -65,17 +66,17 @@ const TestResult: React.FC<PropsType> = props => {
                 />
               </View>
               <View
-                style={[styles.resultBar, {backgroundColor: colors.light_red}]}>
-                <Text style={[styles.correctText, {color: colors.red}]}>
-                  Not attempt {myesults?.notAttempted}
+                style={[
+                  styles.resultBar,
+                  {backgroundColor: colors.light_yellow},
+                ]}>
+                <Text style={[styles.correctText, {color: colors.yellow}]}>
+                  Not attempt {myResults?.notAttempted}
                 </Text>
-                <Image
-                  style={styles.resultIc}
-                  source={require('../../assets/img/wrong_ic.png')}
-                />
+                <Text>☹️</Text>
               </View>
             </View>
-            <CircleProgress value={myesults?.scorePercentage || 0} />
+            <CircleProgress value={myResults?.scorePercentage || 0} />
           </View>
         </View>
         <View style={styles.btnWrapper}>

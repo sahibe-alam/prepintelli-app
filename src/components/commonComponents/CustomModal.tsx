@@ -89,6 +89,8 @@ const getStyles = () =>
       marginLeft: 'auto',
       alignItems: 'center',
       justifyContent: 'center',
+      top: 6,
+      right: 6,
     },
     contentWrapper: {
       margin: 1.5,

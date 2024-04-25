@@ -12,6 +12,7 @@ interface PropsType {
   DropDownLabel?: string;
   rowTextForSelection?: any;
   buttonTextAfterSelection?: any;
+  errorMsg?: string;
 }
 const DropDownSelect: React.FC<PropsType> = ({
   DropDownLabel = 'Label',
@@ -20,7 +21,7 @@ const DropDownSelect: React.FC<PropsType> = ({
   onSelect,
   rowTextForSelection = (item: any) => item?.label,
   buttonTextAfterSelection = (item: any) => item?.label,
-
+  errorMsg,
   data,
 }) => {
   const [isSelected, setIsSelected] = React.useState(null);
@@ -89,11 +90,16 @@ const DropDownSelect: React.FC<PropsType> = ({
           rowTextForSelection={rowTextForSelection}
         />
       </View>
+      {errorMsg && <Text style={styles.errorMsg}>{errorMsg}</Text>}
     </View>
   );
 };
 const getStyles = (width: any) =>
   StyleSheet.create({
+    errorMsg: {
+      color: colors.red,
+      fontSize: fontSizes.p3,
+    },
     label: {
       fontSize: fontSizes.p2,
       color: colors.black,
