@@ -6,6 +6,8 @@ import LoadingDots from 'react-native-loading-dots';
 import {colors} from '../utils/commonStyle/colors';
 import {getUserDetails} from '../api/adapter/getUserDetails';
 import {usePrepContext} from '../contexts/GlobalState';
+import {useFocusEffect} from '@react-navigation/native';
+
 const StartApp = ({navigation}: any) => {
   const {setUser} = usePrepContext();
   const checkIfAppLaunchedBefore = async () => {
@@ -13,7 +15,7 @@ const StartApp = ({navigation}: any) => {
       const value = await AsyncStorage.getItem('appLaunchedBefore');
       return value;
     } catch (error) {
-      console.log('Error checking if app launched before:', error);
+      console.log('Error checking if app launched before :', error);
     }
   };
   const isLogin = () => {
@@ -30,7 +32,9 @@ const StartApp = ({navigation}: any) => {
       }
     });
   };
-  useEffect(() => {
+  useEffect(() => {}, []);
+
+  useFocusEffect(() => {
     checkIfAppLaunchedBefore().then(value => {
       if (value) {
         isLogin();
@@ -38,8 +42,11 @@ const StartApp = ({navigation}: any) => {
         navigation.navigate('Splash');
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+    return () => {
+      // Clean up the effect when the component is unmounted
+    };
+  });
   return (
     <View style={styles.container}>
       <View>

@@ -20,12 +20,26 @@ import DropDownSelect from '../../components/formComponents/DropDownSelect';
 import InputField from '../../components/formComponents/InputField';
 import Button from '../../components/Button';
 import {usePrepContext} from '../../contexts/GlobalState';
+import {questionGeneratorLlm} from '../../api/adapter/questionGeneratorLlm';
+import {useToast} from 'react-native-toast-notifications';
+import SVGComponent from '../../components/commonComponents/svgviewer-react-native-output';
+import ThreePulseDots from '../../components/commonComponents/ThreePulseDots';
 
 interface PropsType {
   navigation: any;
   route: any;
 }
 const MyExam: React.FC<PropsType> = ({navigation}) => {
+  const [isLoading, setLoading] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [subject, setSubject] = useState('');
+  const [chapter, setChapter] = useState('');
+  const [modalType, setModalType] = useState('');
+  const [errorMsg, setErrorMsg] = useState({
+    subject: '',
+    chapter: '',
+  });
+  const toast = useToast();
   const source = {
     html: `
     <div>
@@ -53,21 +67,95 @@ const MyExam: React.FC<PropsType> = ({navigation}) => {
   };
   const styles = getStyles();
   const {width} = useWindowDimensions();
-  const [isModalVisible, setModalVisible] = useState(false);
   const {user} = usePrepContext();
-  const [modalType, setModalType] = useState('');
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
+
+  // Prompt for question generation
+  const prompt = `
+Generate 10 multiple-choice questions (MCQs) in JSON format for the ${
+    user?.exams?.[0]?.exam_short_name || ''
+  } exam, ${subject}, focusing on the ${chapter}.
+
+Each question should have the following structure:
+- "q": The question itself.
+- "options": An array containing four options for the answer.
+- "correctIndex": The index (0-based) of the correct answer within the "options" array.
+
+Ensure that the questions are relevant to the specified exam, subject, and chapter or unit.
+
+Return the JSON output without any additional text.
+
+{
+  "exam": ${user?.exams?.[0]?.exam_short_name || ''},
+  "subject": ${subject}",
+  "chapter": ${chapter},
+  "questions": 3
+}
+
+Note: 10 mcq should be complete in max_tokens: 2500, model: gpt-3.5-turbo
+`;
+
   const handleStart = () => {
-    // navigation.navigate(
-    //   modalType === 'practice' ? 'Practice test' : 'Ask doubt',
-    //   {
-    //     examId: user?.exams[0]?.id,
-    //   },
-    // );
+    setLoading(true);
+    if (!subject || !chapter) {
+      setLoading(false);
+      setErrorMsg({
+        subject: !subject ? 'Please select subject' : '',
+        chapter: !chapter ? 'Please type chapter or unit name' : '',
+      });
+      return;
+    } else {
+      setErrorMsg({
+        subject: '',
+        chapter: '',
+      });
+    }
+    if (subject && chapter) {
+      questionGeneratorLlm([
+        {
+          role: 'system',
+          content:
+            'You are a MCQ generator for the CHSL exam. Generate 10 high-quality multiple-choice questions (MCQs) in JSON format covering various topics relevant to the exam.',
+        },
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ])
+        .then((res: any) => {
+          setChapter('');
+          setModalVisible(false);
+          setLoading(false);
+          const jsonQuestions = JSON.parse(res?.data);
+          if ('questions' in jsonQuestions) {
+            navigation.navigate(
+              modalType === 'practice' ? 'Practice test' : 'Ask doubt',
+              {
+                generativeAiData: jsonQuestions,
+                subjectName: subject,
+                chapterName: chapter,
+              },
+            );
+          } else {
+            toast.show('Something went wrong', {
+              type: 'danger',
+            });
+          }
+        })
+        .catch((err: any) => {
+          setLoading(false);
+          console.log(err);
+          toast.show('Something went wrong', {
+            type: 'danger',
+          });
+        });
+    } else {
+      setLoading(false);
+    }
   };
-  console.log(user?.exams[0]?.subjects);
+
   return (
     <>
       <SafeAreaView style={styles.conatainer}>
@@ -129,25 +217,49 @@ const MyExam: React.FC<PropsType> = ({navigation}) => {
       {/* MODAL FOR PRACTICE  */}
       <CustomModal isModalVisible={isModalVisible} isModalHide={toggleModal}>
         <View style={styles.modalContent}>
-          <DropDownSelect
-            DropDownLabel="Select subject"
-            data={user?.exams[0]?.subjects || []}
-            rowTextForSelection={(item: any) => item}
-            buttonTextAfterSelection={(item: any) => item}
-            onSelect={(item: any) => {
-              console.log(item);
-            }}
-          />
-          {modalType === 'practice' && (
-            <InputField
-              label="Chapter or unit"
-              placeholder="Type chapter or unit"
-            />
+          {!isLoading ? (
+            <>
+              <DropDownSelect
+                DropDownLabel="Select subject"
+                data={user?.exams[0]?.subjects || []}
+                rowTextForSelection={(item: any) => item}
+                buttonTextAfterSelection={(item: any) => item}
+                errorMsg={errorMsg?.subject}
+                onSelect={(item: any) => {
+                  setSubject(item);
+                }}
+              />
+              {modalType === 'practice' && (
+                <InputField
+                  label="Chapter or unit"
+                  placeholder="Type chapter or unit"
+                  errorMsg={errorMsg?.chapter}
+                  onChangeText={text => {
+                    setChapter(text);
+                  }}
+                  value={chapter}
+                />
+              )}
+              <Button
+                isLoading={isLoading}
+                onPress={handleStart}
+                title={
+                  modalType === 'practice' ? 'Start' : 'Chat with ai teacher'
+                }
+              />
+            </>
+          ) : (
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <SVGComponent />
+              <Text style={styles.loadingText}>
+                Your Ai teacher creating some question 😍
+              </Text>
+              <View
+                style={{marginTop: 10, alignItems: 'center', marginBottom: 20}}>
+                <ThreePulseDots color={colors.blue} />
+              </View>
+            </View>
           )}
-          <Button
-            onPress={handleStart}
-            title={modalType === 'practice' ? 'Start' : 'Chat with ai teacher'}
-          />
         </View>
       </CustomModal>
     </>
@@ -156,6 +268,10 @@ const MyExam: React.FC<PropsType> = ({navigation}) => {
 
 const getStyles = () =>
   StyleSheet.create({
+    loadingText: {
+      fontSize: fontSizes.p2,
+      textAlign: 'center',
+    },
     modalContent: {gap: 16},
     accordionWrapper: {
       flex: 1,

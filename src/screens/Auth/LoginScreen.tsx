@@ -109,7 +109,6 @@ const LoginScreen: React.FC<Props> = props => {
             setLoginToken(res.data.data.token);
             setUserID(res.data.data._id);
             getUserDetails(res.data.data._id).then((res: any) => {
-              console.log(res.data);
               setUser && setUser(res.data[0]);
               setLoading(false);
               navigation.navigate('Main');
@@ -117,6 +116,7 @@ const LoginScreen: React.FC<Props> = props => {
           } else {
             console.log(res?.data);
             toast.show(res?.data.msg, {type: 'danger'});
+            setLoading(false);
           }
         })
 

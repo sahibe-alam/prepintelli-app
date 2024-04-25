@@ -4,11 +4,12 @@ import {colors} from '../../utils/commonStyle/colors';
 import BackHeader from '../../components/BackHeader';
 import Button from '../../components/Button';
 import {spacing} from '../../utils/commonStyle';
-import QuestionsProgreeBar from '../../components/examPrepComponents/QuestionsProgreeBar';
 import Questions from '../../components/examPrepComponents/Questions';
+import QuestionsProgressBar from '../../components/examPrepComponents/QuestionsProgressBar';
 
 interface PropsType {
   navigation?: any;
+  route?: any;
 }
 
 interface Question {
@@ -19,7 +20,8 @@ interface Question {
 }
 
 const PracticeTest: React.FC<PropsType> = props => {
-  const {navigation} = props;
+  const {navigation, route} = props;
+  const {generativeAiData, subjectName, chapterName} = route.params;
   const styles = getStyles();
   const [answers, setAnswers] = useState<number[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -34,79 +36,80 @@ const PracticeTest: React.FC<PropsType> = props => {
   >(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [questionsArray, setQuestionsArray] = useState<Question[] | null>([
-    {
-      q: "What is the output of 2 + '2' in JavaScript?",
-      options: ['4', '22', 'TypeError', 'None of the above'],
-      correctIndex: 1,
-    },
-    {
-      q: 'Which keyword is used to declare a variable in JavaScript?',
-      options: ['var', 'let', 'const', 'all of the above'],
-      correctIndex: 3,
-    },
-    {
-      q: 'What does DOM stand for in the context of web development?',
-      options: [
-        'Document Object Model',
-        'Data Object Model',
-        'Dynamic Object Management',
-        'None of the above',
-      ],
-      correctIndex: 0,
-    },
-    {
-      q: 'How do you comment in JavaScript?',
-      options: [
-        '// This is a comment',
-        '/* This is a comment */',
-        '# This is a comment',
-        'None of the above',
-      ],
-      correctIndex: 0,
-    },
-    // {
-    //   q: 'What is the correct way to write an IF statement in JavaScript?',
-    //   options: [
-    //     'if (x == 5) { // code here }',
-    //     'if x = 5 then { // code here }',
-    //     'if x == 5 then // code here',
-    //     'if x == 5 { // code here }',
-    //   ],
-    //   correctIndex: 0,
-    // },
-    // {
-    //   q: 'Which operator is used for strict equality in JavaScript?',
-    //   options: ['===', '==', '!=', '=!'],
-    //   correctIndex: 0,
-    // },
-    // {
-    //   q: 'What function is used to parse a JSON string into a JavaScript object?',
-    //   options: ['eval()', 'parse()', 'JSON.parse()', 'decode()'],
-    //   correctIndex: 2,
-    // },
-    // {
-    //   q: "What does the 'this' keyword refer to in JavaScript?",
-    //   options: [
-    //     'Global scope',
-    //     'Current function',
-    //     'Enclosing object',
-    //     'None of the above',
-    //   ],
-    //   correctIndex: 2,
-    // },
-    // {
-    //   q: 'Which method is used to add an element to the end of an array in JavaScript?',
-    //   options: ['push()', 'append()', 'insert()', 'concat()'],
-    //   correctIndex: 0,
-    // },
-    // {
-    //   q: "What is the result of '5' + 3 in JavaScript?",
-    //   options: ['53', '8', 'Error', 'NaN'],
-    //   correctIndex: 0,
-    // },
-  ]);
-
+  const [questionsArray, setQuestionsArray] = useState<Question[] | null>(
+    generativeAiData?.questions || [
+      {
+        q: "What is the output of 2 + '2' in JavaScript?",
+        options: ['4', '22', 'TypeError', 'None of the above'],
+        correctIndex: 1,
+      },
+      {
+        q: 'Which keyword is used to declare a variable in JavaScript?',
+        options: ['var', 'let', 'const', 'all of the above'],
+        correctIndex: 3,
+      },
+      {
+        q: 'What does DOM stand for in the context of web development?',
+        options: [
+          'Document Object Model',
+          'Data Object Model',
+          'Dynamic Object Management',
+          'None of the above',
+        ],
+        correctIndex: 0,
+      },
+      {
+        q: 'How do you comment in JavaScript?',
+        options: [
+          '// This is a comment',
+          '/* This is a comment */',
+          '# This is a comment',
+          'None of the above',
+        ],
+        correctIndex: 0,
+      },
+      // {
+      //   q: 'What is the correct way to write an IF statement in JavaScript?',
+      //   options: [
+      //     'if (x == 5) { // code here }',
+      //     'if x = 5 then { // code here }',
+      //     'if x == 5 then // code here',
+      //     'if x == 5 { // code here }',
+      //   ],
+      //   correctIndex: 0,
+      // },
+      // {
+      //   q: 'Which operator is used for strict equality in JavaScript?',
+      //   options: ['===', '==', '!=', '=!'],
+      //   correctIndex: 0,
+      // },
+      // {
+      //   q: 'What function is used to parse a JSON string into a JavaScript object?',
+      //   options: ['eval()', 'parse()', 'JSON.parse()', 'decode()'],
+      //   correctIndex: 2,
+      // },
+      // {
+      //   q: "What does the 'this' keyword refer to in JavaScript?",
+      //   options: [
+      //     'Global scope',
+      //     'Current function',
+      //     'Enclosing object',
+      //     'None of the above',
+      //   ],
+      //   correctIndex: 2,
+      // },
+      // {
+      //   q: 'Which method is used to add an element to the end of an array in JavaScript?',
+      //   options: ['push()', 'append()', 'insert()', 'concat()'],
+      //   correctIndex: 0,
+      // },
+      // {
+      //   q: "What is the result of '5' + 3 in JavaScript?",
+      //   options: ['53', '8', 'Error', 'NaN'],
+      //   correctIndex: 0,
+      // },
+    ],
+  );
   const handleOptionClick = (questionIndex: number, selectedOption: number) => {
     setAnswers(prevAnswers => {
       const newAnswers = [...prevAnswers];
@@ -151,13 +154,18 @@ const PracticeTest: React.FC<PropsType> = props => {
 
     // Update results state
     // setResults({correctAnswers, wrongAnswers, scorePercentage, notAttempted});
-    let myesults = {
+    let myResults = {
       correctAnswers: correctAnswers,
       wrongAnswers: wrongAnswers,
       scorePercentage: scorePercentage,
       notAttempted: notAttempted,
     };
-    navigation.navigate('Test Result', {myesults, questionsWithUserSelected});
+    navigation.navigate('Test Result', {
+      myResults,
+      questionsWithUserSelected,
+      subjectName,
+      chapterName,
+    });
   };
 
   const handleNext = (questionIndex: number) => {
@@ -196,7 +204,7 @@ const PracticeTest: React.FC<PropsType> = props => {
         title={`${currentQuestionIndex + 1}/${questionsArray?.length || 0}`}
         isTimer={true}
       />
-      <QuestionsProgreeBar
+      <QuestionsProgressBar
         totalQuestions={questionsArray?.length || 0}
         currentQuestionNumber={currentQuestionIndex + 1}
       />
@@ -207,6 +215,8 @@ const PracticeTest: React.FC<PropsType> = props => {
             totalQuestions={questionsArray?.length || 0}
             currentQuestionNumber={currentQuestionIndex + 1}
             question={questionsArray[currentQuestionIndex]}
+            currentQuestionIndex={currentQuestionIndex}
+            answers={answers}
           />
         )}
       </View>
@@ -239,7 +249,7 @@ const PracticeTest: React.FC<PropsType> = props => {
               handleSubmit(currentQuestionIndex);
             }}
             btnWidth="40%"
-            title="Sunmit test"
+            title="Submit test"
           />
         )}
       </View>
