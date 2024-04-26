@@ -12,7 +12,7 @@ const Gradient: React.FC<GradientProps> = ({children, style}) => {
       start={{x: 0, y: 0}}
       end={{x: 1, y: 0}}
       style={style}
-      colors={[colors.purle, colors.blue]}>
+      colors={[colors.purple, colors.blue]}>
       {children}
     </LinearGradient>
   );

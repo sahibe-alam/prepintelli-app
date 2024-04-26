@@ -52,7 +52,7 @@ const getstyles = () =>
       resizeMode: 'contain',
     },
     counterText: {
-      color: colors.purle,
+      color: colors.purple,
       fontSize: fontSizes.p,
     },
     counterWrapper: {

@@ -4,7 +4,7 @@ import {colors} from '../../utils/commonStyle/colors';
 
 const PulseDot = ({
   delay,
-  color = colors.purle,
+  color = colors.purple,
 }: {
   delay: number;
   color?: string;
@@ -47,7 +47,7 @@ const PulseDot = ({
     <Animated.View style={[styles.dot, {transform: [{scale: pulseScale}]}]} />
   );
 };
-const ThreePulseDots = ({color = colors.purle}: {color?: string}) => {
+const ThreePulseDots = ({color = colors.purple}: {color?: string}) => {
   const styles = getStyles();
   return (
     <View style={styles.container}>

@@ -55,7 +55,7 @@ const OtpVerification: React.FC<PropsType> = ({navigation}) => {
         </Text>
         <OTPTextInput
           handleTextChange={text => setOtp(text)}
-          tintColor={colors.purle}
+          tintColor={colors.purple}
           containerStyle={styles.container}
           textInputStyle={styles.input}
         />

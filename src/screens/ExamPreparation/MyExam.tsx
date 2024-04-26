@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import BackHeader from '../../components/BackHeader';
 import {colors} from '../../utils/commonStyle/colors';
 import {fontSizes, spacing} from '../../utils/commonStyle';
@@ -94,31 +94,38 @@ Return the JSON output without any additional text.
   "questions": 3
 }
 
-Note: 10 mcq should be complete in max_tokens: 2500, model: gpt-3.5-turbo
 `;
 
-  const handleStart = () => {
-    setLoading(true);
-    if (!subject || !chapter) {
-      setLoading(false);
-      setErrorMsg({
-        subject: !subject ? 'Please select subject' : '',
-        chapter: !chapter ? 'Please type chapter or unit name' : '',
-      });
-      return;
+  const validations = () => {
+    if (!subject) {
+      setErrorMsg(prev => ({...prev, subject: 'Subject is required'}));
     } else {
+      setErrorMsg(prev => ({...prev, subject: ''}));
+    }
+
+    if (!chapter) {
+      setErrorMsg(prev => ({...prev, chapter: 'Chapter is required'}));
+    } else {
+      setErrorMsg(prev => ({...prev, chapter: ''}));
+    }
+  };
+
+  useEffect(() => {
+    if (isModalVisible) {
+      setSubject('');
+      setChapter('');
       setErrorMsg({
         subject: '',
         chapter: '',
       });
     }
+  }, [isModalVisible]);
+
+  const handleStart = () => {
+    validations();
+    setLoading(true);
     if (subject && chapter) {
       questionGeneratorLlm([
-        {
-          role: 'system',
-          content:
-            'You are a MCQ generator for the CHSL exam. Generate 10 high-quality multiple-choice questions (MCQs) in JSON format covering various topics relevant to the exam.',
-        },
         {
           role: 'user',
           content: prompt,
@@ -128,18 +135,15 @@ Note: 10 mcq should be complete in max_tokens: 2500, model: gpt-3.5-turbo
           setChapter('');
           setModalVisible(false);
           setLoading(false);
-          const jsonQuestions = JSON.parse(res?.data);
+          const jsonQuestions = JSON.parse(res.data);
           if ('questions' in jsonQuestions) {
-            navigation.navigate(
-              modalType === 'practice' ? 'Practice test' : 'Ask doubt',
-              {
-                generativeAiData: jsonQuestions,
-                subjectName: subject,
-                chapterName: chapter,
-              },
-            );
+            navigation.navigate('Practice test', {
+              generativeAiData: jsonQuestions,
+              subjectName: subject,
+              chapterName: chapter,
+            });
           } else {
-            toast.show('Something went wrong', {
+            toast.show('Something went wrong 😔', {
               type: 'danger',
             });
           }

@@ -127,7 +127,7 @@ const getStylle = () =>
     },
     cardText: {
       fontSize: fontSizes.p3,
-      color: colors.purle,
+      color: colors.purple,
     },
     boldText: {
       fontWeight: '600',

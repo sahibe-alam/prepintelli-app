@@ -46,7 +46,7 @@ const MyPerformance: React.FC<PropsType> = props => {
     propsForDots: {
       r: '4',
       strokeWidth: '1',
-      stroke: colors.purle,
+      stroke: colors.purple,
     },
     color: () => colors.light_purple,
     strokeWidth: 2, // optional, default 3
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   fillProgress: {
     width: '40%',
     justifyContent: 'center',
-    backgroundColor: colors.purle,
+    backgroundColor: colors.purple,
   },
   subjectProgress: {
     marginTop: 4,
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
   subjectName: {
     fontSize: fontSizes.p2,
-    color: colors.purle,
+    color: colors.purple,
   },
   subjectResult: {
     padding: spacing.m,
