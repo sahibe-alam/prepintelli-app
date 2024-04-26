@@ -29,7 +29,7 @@ const Button: React.FC<Props> = ({
         style={[styles.linearGradient, outline && {padding: 2}]}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
-        colors={[colors.purle, colors.blue]}>
+        colors={[colors.purple, colors.blue]}>
         <View
           style={[
             styles.btnTextWrapper,
@@ -40,7 +40,7 @@ const Button: React.FC<Props> = ({
             },
           ]}>
           {isLoading ? (
-            <ThreePulseDots color={outline ? colors.purle : colors.white} />
+            <ThreePulseDots color={outline ? colors.purple : colors.white} />
           ) : (
             <Text
               style={[

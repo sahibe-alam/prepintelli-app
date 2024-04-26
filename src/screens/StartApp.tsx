@@ -56,7 +56,7 @@ const StartApp = ({navigation}: any) => {
         />
         <View style={styles.loader}>
           <LoadingDots
-            colors={[colors.purle, colors.blue, colors.purle, colors.blue]}
+            colors={[colors.purple, colors.blue, colors.purple, colors.blue]}
             bounceHeight={10}
             size={14}
           />

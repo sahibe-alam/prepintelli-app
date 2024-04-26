@@ -34,7 +34,7 @@ const QuestionsProgressBar: React.FC<QuestionsProgressBarProps> = ({
         <Animated.View
           style={{
             height: 10,
-            backgroundColor: colors.purle,
+            backgroundColor: colors.purple,
             width: widthInterpolate,
           }}
         />

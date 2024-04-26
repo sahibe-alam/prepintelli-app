@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderWidth: 1,
-    borderColor: colors.purle,
+    borderColor: colors.purple,
     position: 'relative',
   },
   dp: {

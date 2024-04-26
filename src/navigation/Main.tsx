@@ -9,7 +9,6 @@ import Header from '../components/Header';
 import MyPerformance from '../screens/MyPerformance';
 import Profile from '../screens/Profile';
 import MyExam from '../screens/ExamPreparation/MyExam';
-import {usePrepContext} from '../contexts/GlobalState';
 
 const Bottom = createBottomTabNavigator();
 
@@ -38,7 +37,7 @@ const CustomTabBarButton = ({
           style={[
             styles.icon,
             {
-              tintColor: isFocused ? colors.purle : colors.grey,
+              tintColor: isFocused ? colors.purple : colors.grey,
             },
           ]}
         />
@@ -46,7 +45,7 @@ const CustomTabBarButton = ({
           style={[
             styles.label,
             {
-              color: isFocused ? colors.purle : colors.grey,
+              color: isFocused ? colors.purple : colors.grey,
             },
           ]}>
           {labelName}

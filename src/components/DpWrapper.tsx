@@ -93,7 +93,7 @@ const getSyle = (deviceWidth: number) =>
       position: 'absolute',
       bottom: -40,
       alignSelf: 'center',
-      backgroundColor: colors.purle,
+      backgroundColor: colors.purple,
     },
   });
 export default DpWrapper;
