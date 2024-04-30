@@ -121,7 +121,7 @@ Return the JSON output without any additional text.
     }
   }, [isModalVisible]);
 
-  const handleStart = () => {
+  const handlePractice = () => {
     validations();
     setLoading(true);
     if (subject && chapter) {
@@ -159,7 +159,16 @@ Return the JSON output without any additional text.
       setLoading(false);
     }
   };
-
+  const handleStart = () => {
+    if (modalType === 'practice') {
+      handlePractice();
+    }
+    if (modalType === 'doubt') {
+      setModalVisible(false);
+      navigation.navigate('Ask doubt', {subject: subject});
+    }
+  };
+  console.log(subject);
   return (
     <>
       <SafeAreaView style={styles.conatainer}>
@@ -275,6 +284,7 @@ const getStyles = () =>
     loadingText: {
       fontSize: fontSizes.p2,
       textAlign: 'center',
+      color: colors.blue,
     },
     modalContent: {gap: 16},
     accordionWrapper: {

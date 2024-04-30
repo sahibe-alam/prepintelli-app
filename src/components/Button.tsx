@@ -8,7 +8,7 @@ import ThreePulseDots from './commonComponents/ThreePulseDots';
 
 interface Props {
   onPress?: () => void;
-  title?: string;
+  title?: string | any;
   outline?: boolean;
   isLoading?: boolean;
   btnWidth?: ViewStyle['width'];
@@ -35,8 +35,8 @@ const Button: React.FC<Props> = ({
             styles.btnTextWrapper,
             {
               backgroundColor: outline ? colors.white : 'transparent',
-              padding: outline ? 10 : 12,
-              height: outline ? 48 : 52,
+              padding: outline ? 8 : 10,
+              height: outline ? 44 : 48,
             },
           ]}>
           {isLoading ? (
@@ -59,7 +59,7 @@ const Button: React.FC<Props> = ({
 export default Button;
 const styles = StyleSheet.create({
   btnTextWrapper: {
-    borderRadius: 16,
+    borderRadius: 12,
     color: colors.white,
     alignContent: 'center',
     justifyContent: 'center',
@@ -68,12 +68,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   linearGradient: {
-    borderRadius: 16,
+    borderRadius: 12,
     overflow: 'hidden',
   },
   buttonText: {
     fontSize: fontSizes.p,
-    fontWeight: '600',
+    fontWeight: '400',
     textAlign: 'center',
     color: colors.white,
   },

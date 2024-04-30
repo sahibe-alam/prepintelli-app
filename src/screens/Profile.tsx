@@ -7,7 +7,6 @@ import DpWrapper from '../components/DpWrapper';
 import IconLink from '../components/IconLink';
 import {spacing} from '../utils/commonStyle';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 interface PropsType {
   navigation: any;
 }

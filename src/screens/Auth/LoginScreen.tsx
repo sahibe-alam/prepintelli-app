@@ -171,14 +171,16 @@ const LoginScreen: React.FC<Props> = props => {
               onPress={loginHandler}
             />
 
-            <View style={styles.t_and_c_wrapper}>
-              <Text style={styles.t_and_c}>Create new account?</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Sign Up');
-                }}>
-                <Text style={styles.linkText}>Sign up</Text>
-              </TouchableOpacity>
+            <View>
+              <View style={{paddingVertical: spacing.s}}>
+                <Text style={styles.t_and_c}>OR</Text>
+              </View>
+
+              <Button
+                title="Create new account"
+                outline={true}
+                onPress={() => navigation.navigate('Sign Up')}
+              />
             </View>
           </View>
         </View>

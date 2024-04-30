@@ -12,6 +12,39 @@ interface propsType {
 const ResponseCard: React.FC<propsType> = props => {
   const {isLeft = true, content, forLoader} = props;
   const styles = getStyles();
+  const renderTextWithKeywords = (text: string) => {
+    // Regular expression to match keywords wrapped in double stars
+    const regex = /\*\*(.*?)\*\*/g;
+    let result = [];
+    let currentIndex = 0;
+    let match;
+
+    // Iterate through matches
+    while ((match = regex.exec(text)) !== null) {
+      // Push plain text before the match
+      result.push(
+        <Text key={currentIndex++}>
+          {text.substring(currentIndex, match.index)}
+        </Text>,
+      );
+
+      // Push matched keyword in bold
+      result.push(
+        <Text key={currentIndex++} style={{fontWeight: 'bold'}}>
+          {match[1]}
+        </Text>,
+      );
+
+      // Update current index
+      currentIndex = match.index + match[0].length;
+    }
+
+    // Push remaining plain text
+    result.push(<Text key={currentIndex}>{text.substring(currentIndex)}</Text>);
+
+    return result;
+  };
+
   return (
     <View
       style={[
@@ -45,7 +78,9 @@ const ResponseCard: React.FC<propsType> = props => {
               styles.resWrapper,
               {backgroundColor: isLeft ? '#efe1f5' : '#ecebed'},
             ]}>
-            <Text style={styles.responseText}>{content}</Text>
+            <Text style={styles.responseText}>
+              {renderTextWithKeywords(content)}
+            </Text>
           </View>
         )}
       </View>
