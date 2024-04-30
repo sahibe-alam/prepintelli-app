@@ -115,7 +115,7 @@ const getStyles = () =>
     optionsWrapper: {
       padding: spacing.s,
       borderRadius: 10,
-      marginBottom: spacing.xl,
+      marginBottom: spacing.m,
       flexDirection: 'row',
       gap: 6,
     },

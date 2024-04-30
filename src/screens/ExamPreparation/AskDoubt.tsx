@@ -6,22 +6,29 @@ import PromptInput from '../../components/examPrepComponents/PromptInput';
 import {spacing} from '../../utils/commonStyle';
 import ResponseCard from '../../components/commonComponents/ResponseCard';
 import {llmApiCall} from '../../api/adapter/llmTutor';
+import {usePrepContext} from '../../contexts/GlobalState';
 interface propsType {
   navigation: any;
+  route: any;
 }
 interface IMessage {
   role: string;
   content: string;
 }
 const AskDoubt: React.FC<propsType> = props => {
+  const {navigation, route} = props;
+  const {user} = usePrepContext();
+  const {subject} = route.params;
+  const systemPrompt = `You are prepIntelli developed by Sahibe alam a software engineer. here you will be helpful ${subject} tutor. explain step by step in easy to understand language. if user ask anything out of ${subject} just reply please ask about ${subject} only.`;
+  const assistantPrompt = `Hello ${user?.firstname}, how can I help you about ${subject}😍?`;
   const [conversationList, setConversationList] = React.useState<any>([
     {
       role: 'system',
-      content: 'You are a helpful math tutor.',
+      content: systemPrompt,
     },
     {
       role: 'assistant',
-      content: 'Hello Sahibe, how can I help you about math?',
+      content: assistantPrompt,
     },
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -29,21 +36,18 @@ const AskDoubt: React.FC<propsType> = props => {
   const scrollViewRef = useRef<ScrollView | null>(null);
 
   const styles = getStyles();
-  const {navigation} = props;
   const handleInputValue = (value: string) => {
     setInputValue(value);
   };
   const handleSend = () => {
     let newMsgArray: IMessage[] = [...conversationList];
-
     if (inputValue.length > 0) {
       newMsgArray.push({role: 'user', content: inputValue});
       setConversationList(newMsgArray);
+      setLoading(true);
     }
-
-    setLoading(true);
     // setMsg('');
-    llmApiCall(newMsgArray).then(res => {
+    llmApiCall(newMsgArray, 1000).then(res => {
       if (res.success) {
         if ('data' in res) {
           setLoading(false);
@@ -53,15 +57,18 @@ const AskDoubt: React.FC<propsType> = props => {
     });
   };
   useEffect(() => {
-    scrollViewRef.current?.scrollToEnd({animated: true});
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({animated: true});
+    }, 50);
   }, [conversationList]);
+  console.log(conversationList);
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader
         onPress={() => {
           navigation.goBack();
         }}
-        title="Ask about [xyz subject]"
+        title={`Ask about ${subject}`}
       />
       <View style={styles.wrapper}>
         <ScrollView

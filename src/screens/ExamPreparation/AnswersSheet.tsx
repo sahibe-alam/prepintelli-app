@@ -98,10 +98,10 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
                   item.correctIndex,
                   item.userSelected,
                 );
-                console.log(optionIcon, 'optionIcon');
                 return (
                   <TouchableOpacity
                     key={optionIndex}
+                    activeOpacity={1}
                     style={[styles.optionWrapper, {backgroundColor}]}>
                     {optionIcon && (
                       <View style={styles.optionIconWrapper}>
@@ -189,7 +189,7 @@ const getStyles = () =>
       flexDirection: 'row',
       alignItems: 'flex-start',
       gap: 4,
-      marginBottom: spacing.xl,
+      marginBottom: spacing.m,
     },
     optionText: {
       fontSize: fontSizes.p2,
