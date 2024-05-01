@@ -1,15 +1,24 @@
-import {SafeAreaView, StyleSheet, View, ScrollView} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  ScrollView,
+  Image,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import BackHeader from '../../components/BackHeader';
 import {colors} from '../../utils/commonStyle/colors';
 import PromptInput from '../../components/examPrepComponents/PromptInput';
-import {spacing} from '../../utils/commonStyle';
+import {fontSizes, spacing} from '../../utils/commonStyle';
 import ResponseCard from '../../components/commonComponents/ResponseCard';
 import {llmApiCall} from '../../api/adapter/llmTutor';
 import {usePrepContext} from '../../contexts/GlobalState';
 import {fileDownloader} from '../../utils/fileDownloader';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
-import Button from '../../components/Button';
+import Images from '../../resources/Images';
+import {useToast} from 'react-native-toast-notifications';
 
 interface propsType {
   navigation: any;
@@ -23,43 +32,44 @@ const StudyPlan: React.FC<propsType> = props => {
   const {navigation} = props;
   const {user} = usePrepContext();
   const [html, setHtml] = useState<null | string>(null);
+  const toast = useToast();
+  const prompt = `You are Students study planner developed by Sahibe alam.
 
-  const prompt = `you are an exam planner assisting students in creating personalized study plans. Begin by asking the user about their upcoming exam in a step-by-step manner,.
-  ask following question or any question related to students exam in details to students.
-  1-Exam duration?
-  2-Exam format?
-  3-Exam mode?
-  4-Exam marks?
-  5-Strengths and weaknesses?
-  6-Time available for per day study?
-  7-Learning style?
-  8-Study schedule preference?
-  9-Available resources?
-  10-Practice materials?
-  11-Exam goals?
-  12-Study session breakdown?
-  13-Motivation strategies?
+    ask following question or any question related to students exam in details to students.
+    1-Exam duration?
+    2-Exam format?
+    3-Exam mode?
+    4-Exam marks?
+    5-Strengths and weaknesses?
+    6-Time available for per day study?
+    7-Learning style?
+    8-Study schedule preference?
+    9-Available resources?
+    10-Practice materials?
+    11-Exam score goals?
+    12-Study session breakdown?
+    13-Motivation strategies?
 
-  Based on above question you need to suggest best study plan to students for upcoming ${user?.exams[0]?.exam_short_name} and divide student time for each subject according to their weakness and strengths.
-  note: You need to ask question in plan text but make sure when you generate study plan it should be only in HTML code format without any plan text in it.
-`;
+    Based on students answer create a study plan and create best time table for students.
 
-  const userPrompt = `
-Hello! I'm ${user?.firstname}, give a personalized study plan for my upcoming ${user?.exams[0]?.exam_short_name} exam. The subjects I'll be tackling include ${user?.exams[0]?.subjects} .
-let me tell you what want to you for my study plan.
-1: give tips on how to study?
-2: what should i remember when i attend exam?
-3: what to handle my weakness?
-4: how get maximum score in exam?
-5: how to prepare for exam?
-6: give me additional tip and guidance for exam?
-7: how to prepare for exam?
+ Note: Make sure when you ask final question then generate study plan it should be only in HTML code format without any plan text in it.
+  `;
+
+  const userPrompt = `Hello! I'm ${user?.firstname}, give a personalized study plan for my upcoming ${user?.exams[0]?.exam_short_name} exam. The subjects I'll be tackling include ${user?.exams[0]?.subjects} .
+  
+I need these following things in study plan
+1: give tips on how to study
+2: what should i remember when i attend exam
+3: what to handle my weakness
+4: how get maximum score in exam
+5: how to prepare for exam
+6: give me additional tip and guidance for exam
+7: how to prepare for exam
 8: Create time table for study
-AND you suggest according to you about my exam 
+9: give best strategist for each subject in study plan
 
-these plan should we heading and bullet point format
-note: do not ask all question at once. ask one by one 
-`;
+Note: ask question in plan text and always ask single question at a time.
+  `;
 
   const [conversationList, setConversationList] = React.useState<any>([
     {
@@ -115,8 +125,13 @@ note: do not ask all question at once. ask one by one
     };
     await RNHTMLtoPDF.convert(options).then(file => {
       const localUrl = `file://${file.filePath}`;
-      fileDownloader(localUrl, null, 'pdf').then(res => {
+      fileDownloader(
+        localUrl,
+        `${user?.exams[0]?.exam_short_name} Study plan`,
+        'pdf',
+      ).then(res => {
         console.log('success', res);
+        toast.show('Study plan downloaded successfully', {type: 'success'});
       });
     });
   };
@@ -150,6 +165,7 @@ note: do not ask all question at once. ask one by one
     });
   }, [conversationList]);
 
+  const finalMsg = `Congratulations! 😍 I have created study plan for your upcoming ${user?.exams[0]?.exam_short_name} exam. You can download it in PDF format HAPPY STUDY 🥳.`;
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader
@@ -163,22 +179,39 @@ note: do not ask all question at once. ask one by one
           ref={scrollViewRef}
           contentContainerStyle={styles.scrollWrapper}>
           <View style={styles.responseWrapper}>
-            {conversationList.slice(2).map((item: any, index: number) => {
-              return (
-                <View key={index}>
-                  <ResponseCard
-                    isLeft={item?.role === 'user' ? false : true}
-                    content={item?.content}
-                    key={index}
-                  />
-                </View>
-              );
-            })}
+            {conversationList
+              .slice(2, html ? conversationList.length - 1 : undefined)
+              .map((item: any, index: number) => {
+                return (
+                  <View key={index}>
+                    <ResponseCard
+                      isLeft={item?.role === 'user' ? false : true}
+                      content={item?.content}
+                      key={index}
+                    />
+                  </View>
+                );
+              })}
             {html && (
-              <Button
-                title={'Download study plan'}
-                onPress={() => generatePdf(html)}
-              />
+              <>
+                <ResponseCard isLeft={true} content={finalMsg} />
+                <View style={styles.pdfContainer}>
+                  <View style={styles.pdfWrapper}>
+                    <Image style={styles.pdfIc} source={Images.pdfIc} />
+                    <Text style={styles.pdfFileName}>
+                      {user?.exams[0]?.exam_short_name} Study plan.pdf
+                    </Text>
+                  </View>
+                  <TouchableOpacity onPress={() => generatePdf(html)}>
+                    <View style={styles.downloadBtn}>
+                      <Image
+                        style={styles.downloadIc}
+                        source={Images.downloadIc}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </>
             )}
             {isLoading && <ResponseCard forLoader={true} isLeft={true} />}
           </View>
@@ -199,6 +232,45 @@ note: do not ask all question at once. ask one by one
 
 const getStyles = () =>
   StyleSheet.create({
+    downloadBtn: {
+      height: 40,
+      width: 40,
+      backgroundColor: colors.light_blue,
+      alignContent: 'center',
+      justifyContent: 'center',
+      borderRadius: 50,
+      alignItems: 'center',
+    },
+    downloadIc: {
+      width: 30,
+      height: 30,
+      objectFit: 'contain',
+      alignItems: 'center',
+      justifyContent: 'center',
+      tintColor: colors.blue,
+    },
+    pdfContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 16,
+    },
+    pdfWrapper: {
+      borderRadius: 10,
+      padding: spacing.s,
+      backgroundColor: colors.light_purple,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+    pdfFileName: {
+      color: colors.black,
+      fontSize: fontSizes.p2,
+    },
+    pdfIc: {
+      width: 22,
+      height: 22,
+      objectFit: 'contain',
+    },
     scrollWrapper: {},
     responseWrapper: {
       paddingTop: 6,
