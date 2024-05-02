@@ -19,14 +19,20 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 interface AccordionItemProps {
   title: string;
   children: ReactNode; // Define children as ReactNode type
+  isOpen?: () => void;
 }
 
-const AccordionItem: React.FC<AccordionItemProps> = ({title, children}) => {
+const AccordionItem: React.FC<AccordionItemProps> = ({
+  title,
+  children,
+  isOpen,
+}) => {
   const [expanded, setExpanded] = useState<boolean>(false);
 
   const toggleAccordion = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpanded(!expanded);
+    isOpen && !expanded && isOpen();
   };
 
   const styles = getStyles();

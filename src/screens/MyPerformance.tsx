@@ -1,5 +1,5 @@
 import {StyleSheet, SafeAreaView, Text, View, ScrollView} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {colors} from '../utils/commonStyle/colors';
 import BackHeader from '../components/BackHeader';
 import {LineChart} from 'react-native-chart-kit';
@@ -7,12 +7,17 @@ import {Dimensions} from 'react-native';
 import CircleProgress from '../components/commonComponents/CircleProgress';
 import {fontSizes, spacing} from '../utils/commonStyle';
 import Gradient from '../components/Gradient';
+import {usePrepContext} from '../contexts/GlobalState';
+import NoExamTarget from '../components/NoExamTarget';
 const screenWidth = Dimensions.get('window').width;
 interface PropsType {
   navigation?: any;
 }
 const MyPerformance: React.FC<PropsType> = props => {
   const {navigation} = props;
+  const {user} = usePrepContext();
+  const [subjectsPerformance, setSubjectsPerformance] = useState<any>([]);
+
   // Create a function to get the date in the format '2 Mar'
   function formatDate(date: Date) {
     const day = date.getDate();
@@ -53,79 +58,77 @@ const MyPerformance: React.FC<PropsType> = props => {
     useShadowColorFromDataset: false, // optional
   };
 
-  const subjectsArray = [
-    {
-      name: 'Maths',
-      progress: 80,
-    },
-    {
-      name: 'Science',
-      progress: 40,
-    },
-    {
-      name: 'English',
-      progress: 60,
-    },
-    {
-      name: 'Social Science',
-      progress: 80,
-    },
-    {
-      name: 'Hindi',
-      progress: 90,
-    },
-  ];
+  useEffect(() => {
+    const subjectsArray = user?.exams[0]?.subjects?.map((item: any) => {
+      return {
+        name: item,
+        progress: Math.floor(Math.random() * 100),
+      };
+    });
+
+    setSubjectsPerformance(subjectsArray);
+  }, [user]);
   return (
-    <SafeAreaView style={styles.container}>
-      <BackHeader
-        onPress={() => navigation.goBack()}
-        title="My exam performance"
-      />
-      <ScrollView>
-        <LineChart
-          data={data}
-          horizontalLabelRotation={0}
-          formatYLabel={value => value.slice(0, -3)}
-          width={screenWidth}
-          segments={6}
-          height={220}
-          chartConfig={chartConfig}
-          bezier
-        />
-        <View style={styles.resultWrapper}>
-          <View style={{flex: 1}}>
-            <Text style={styles.examName}>
-              Overall performance for [xyz] exam
-            </Text>
-          </View>
-          <View>
-            <CircleProgress />
-          </View>
-        </View>
-        <View style={styles.subjectWrapper}>
-          <Text style={styles.subjectsHeading}>Subject wise score</Text>
-          {subjectsArray.map((item, index) => {
-            return (
-              <View key={index} style={styles.subjectResult}>
-                <Text style={styles.subjectName}>{item.name}</Text>
-                <View style={styles.subjectProgress}>
-                  <Gradient
-                    style={(styles.fillProgress, {width: `${item.progress}%`})}>
-                    <Text style={styles.percent}>{item.progress}%</Text>
-                  </Gradient>
-                </View>
+    <>
+      {user?.exams.length > 0 ? (
+        <SafeAreaView style={styles.container}>
+          <BackHeader
+            onPress={() => navigation.goBack()}
+            title="My exam performance"
+          />
+          <ScrollView>
+            <LineChart
+              data={data}
+              horizontalLabelRotation={0}
+              formatYLabel={value => value.slice(0, -3)}
+              width={screenWidth}
+              segments={6}
+              height={220}
+              chartConfig={chartConfig}
+              bezier
+            />
+            <View style={styles.resultWrapper}>
+              <View style={{flex: 1}}>
+                <Text style={styles.examName}>
+                  Overall performance for {user?.exams[0]?.exam_short_name} exam
+                </Text>
               </View>
-            );
-          })}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+              <View>
+                <CircleProgress value={Math.floor(Math.random() * 100)} />
+              </View>
+            </View>
+            <View style={styles.subjectWrapper}>
+              <Text style={styles.subjectsHeading}>Subject wise score</Text>
+              {subjectsPerformance?.map((item: any, index: number) => {
+                return (
+                  <View key={index} style={styles.subjectResult}>
+                    <Text style={styles.subjectName}>{item.name}</Text>
+                    <View style={styles.subjectProgress}>
+                      <Gradient
+                        style={
+                          (styles.fillProgress, {width: `${item.progress}%`})
+                        }>
+                        <Text numberOfLines={1} style={styles.percent}>
+                          {item.progress}%
+                        </Text>
+                      </Gradient>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      ) : (
+        <NoExamTarget onPress={() => navigation.navigate('Home')} />
+      )}
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   percent: {
-    fontSize: fontSizes.p3,
+    fontSize: fontSizes.p4,
     textAlign: 'center',
     color: colors.white,
   },

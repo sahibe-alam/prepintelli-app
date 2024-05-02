@@ -20,7 +20,6 @@ export const fileDownloader = async (
       // const fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
       const sourcePath = fileUrl.substring(7); // Remove 'file://' prefix
       await RNFetchBlob.fs.cp(sourcePath, path); // Copy the file to the destination path
-      console.log('File copied to:', path);
       return Promise.resolve(path);
     } else {
       // If fileUrl is an HTTP URL
@@ -29,7 +28,6 @@ export const fileDownloader = async (
         fileCache: true,
       }).fetch('GET', fileUrl);
 
-      console.log('File downloaded to:', response.path());
       return Promise.resolve(response.path()); // Return the downloaded file path
     }
   } catch (error) {

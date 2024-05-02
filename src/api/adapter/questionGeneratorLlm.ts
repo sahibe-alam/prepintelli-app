@@ -10,7 +10,6 @@ export const questionGeneratorLlm = async (messages: any) => {
       response_format: {type: 'json_object'},
     });
     let answer = res.data.choices[0].message.content;
-    console.log(res.data.choices[0], 'answer');
     return Promise.resolve({success: true, data: answer});
   } catch (error: any) {
     return Promise.resolve({success: false, message: error.message});

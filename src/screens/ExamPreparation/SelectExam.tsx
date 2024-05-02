@@ -104,7 +104,6 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
           getUserID().then((id: any) => {
             getUserDetails(id).then((res: any) => {
               setIsLoading(false);
-              console.log(res.data);
               setUser && setUser(res.data[0]);
               navigation.navigate('Exam Zone');
             });
