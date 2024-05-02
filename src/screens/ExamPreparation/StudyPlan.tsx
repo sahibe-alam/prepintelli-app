@@ -129,8 +129,7 @@ Note: ask question in plan text and always ask single question at a time.
         localUrl,
         `${user?.exams[0]?.exam_short_name} Study plan`,
         'pdf',
-      ).then(res => {
-        console.log('success', res);
+      ).then(() => {
         toast.show('Study plan downloaded successfully', {type: 'success'});
       });
     });

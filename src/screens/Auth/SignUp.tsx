@@ -263,7 +263,6 @@ const SignUp: React.FC<Props> = props => {
             errorMsg={errorMessage.dob}
             onDateChange={date => {
               const formattedDate = date.toString();
-              console.log(date);
               dispatch({type: 'DOB', payload: formattedDate});
             }}
           />

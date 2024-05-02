@@ -114,7 +114,6 @@ const LoginScreen: React.FC<Props> = props => {
               navigation.navigate('Main');
             });
           } else {
-            console.log(res?.data);
             toast.show(res?.data.msg, {type: 'danger'});
             setLoading(false);
           }

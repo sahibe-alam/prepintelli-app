@@ -24,6 +24,8 @@ import {questionGeneratorLlm} from '../../api/adapter/questionGeneratorLlm';
 import {useToast} from 'react-native-toast-notifications';
 import SVGComponent from '../../components/commonComponents/svgviewer-react-native-output';
 import ThreePulseDots from '../../components/commonComponents/ThreePulseDots';
+import {llmApiCall} from '../../api/adapter/llmTutor';
+import NoExamTarget from '../../components/NoExamTarget';
 
 interface PropsType {
   navigation: any;
@@ -34,37 +36,13 @@ const MyExam: React.FC<PropsType> = ({navigation}) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [subject, setSubject] = useState('');
   const [chapter, setChapter] = useState('');
-  const [modalType, setModalType] = useState('');
+  const [roadMap, setRoadMap] = useState<any>(null);
+  const [modalType, setModalType] = useState<any>('');
   const [errorMsg, setErrorMsg] = useState({
     subject: '',
     chapter: '',
   });
   const toast = useToast();
-  const source = {
-    html: `
-    <div>
-  <p style="font-size: 26px; color: black;">Study Plan for Class 10th</p>
-  <p style="font-size: 18px; color: black;">Subjects:</p>
-  <ul style="font-size: 14px; color: black;">
-    <li>Mathematics</li>
-    <li>Science</li>
-    <li>English</li>
-    <li>Social Studies</li>
-    <li>Hindi</li>
-  </ul>
-  <p style="font-size: 18px; color: black;">Study Plan:</p>
-  <ul style="font-size: 14px; color: black;">
-    <li>Allocate specific time slots for each subject every day.</li>
-    <li>Focus on understanding concepts rather than rote memorization.</li>
-    <li>Take regular breaks to avoid burnout.</li>
-    <li>Practice previous years' question papers for each subject.</li>
-    <li>Seek help from teachers or classmates for difficult topics.</li>
-    <li>Maintain a healthy balance between study, rest, and recreation.</li>
-  </ul>
-</div>
-
-    `,
-  };
   const styles = getStyles();
   const {width} = useWindowDimensions();
   const {user} = usePrepContext();
@@ -109,17 +87,6 @@ Return the JSON output without any additional text.
       setErrorMsg(prev => ({...prev, chapter: ''}));
     }
   };
-
-  useEffect(() => {
-    if (isModalVisible) {
-      setSubject('');
-      setChapter('');
-      setErrorMsg({
-        subject: '',
-        chapter: '',
-      });
-    }
-  }, [isModalVisible]);
 
   const handlePractice = () => {
     validations();
@@ -168,64 +135,117 @@ Return the JSON output without any additional text.
       navigation.navigate('Ask doubt', {subject: subject});
     }
   };
-  console.log(subject);
+  const roadMapPrompt = [
+    {
+      role: 'system',
+      content: 'You are a tutor for any exam.',
+    },
+
+    {
+      role: 'user',
+      content: `Please provide a comprehensive roadmap for ${user?.exams?.[0]?.examname}: ${user?.exams?.[0]?.exam_short_name}. My subjects are ${user?.exams?.[0]?.subjects}. Your response should be in HTML code format with proper headings and bullet points. Utilize inline heading font size, with a maximum of 26px. Feel free to add emojis according to relevant keywords.,`,
+    },
+  ];
+  console.log(roadMap, 'roadMapPrompt');
+  const handleRoadMap = async () => {
+    llmApiCall(roadMapPrompt, 3000).then((res: any) => {
+      if (res.success) {
+        if ('data' in res) {
+          extractBodyHTML(res.data?.[2]?.content);
+        }
+      }
+    });
+  };
+  useEffect(() => {
+    if (isModalVisible) {
+      setSubject('');
+      setChapter('');
+      setErrorMsg({
+        subject: '',
+        chapter: '',
+      });
+    }
+  }, [isModalVisible]);
+  function extractBodyHTML(htmlString: string) {
+    const bodyStart = htmlString.indexOf('<body>');
+    const bodyEnd = htmlString.indexOf('</body>');
+    if (bodyStart !== -1 && bodyEnd !== -1) {
+      return setRoadMap(htmlString.substring(bodyStart, bodyEnd + 7));
+    } else {
+      return '';
+    }
+  }
   return (
     <>
-      <SafeAreaView style={styles.conatainer}>
-        <BackHeader onPress={() => navigation.goBack()} title={'My exam'} />
-        <Text style={styles.title}>
-          Prepare {user?.exams[0]?.exam_short_name} exam with ai 🚀
-        </Text>
-        <View style={styles.cardsWrapper}>
-          <TouchableOpacity
-            onPress={() => {
-              setModalType('practice');
-              toggleModal();
-            }}
-            activeOpacity={0.8}
-            style={styles.card}>
-            <Image
-              style={styles.cardImg}
-              source={require('../../assets/img/practice_img.png')}
-            />
-            <Text style={styles.cardTitle}>Practice test</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setModalType('doubt');
-              toggleModal();
-              // navigation.navigate('Ask doubt');
-            }}
-            activeOpacity={0.8}
-            style={styles.card}>
-            <Image
-              style={styles.cardImg}
-              source={require('../../assets/img/ask_img.png')}
-            />
-            <Text style={styles.cardTitle}>Ask doubt?</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('Study plan');
-            }}
-            activeOpacity={0.8}
-            style={styles.card}>
-            <Image
-              style={styles.cardImg}
-              source={require('../../assets/img/studyplan_img.png')}
-            />
-            <Text style={styles.cardTitle}>Study plan</Text>
-          </TouchableOpacity>
-        </View>
-        <ScrollView>
-          <View style={styles.accordionWrapper}>
-            <AccordionItem
-              title={`Road map for ${user?.exams[0]?.exam_short_name} exam`}>
-              <RenderHtml source={source} contentWidth={width} />
-            </AccordionItem>
+      {user?.exams.length > 0 ? (
+        <SafeAreaView style={styles.conatainer}>
+          <BackHeader onPress={() => navigation.goBack()} title={'My exam'} />
+          <Text style={styles.title}>
+            Prepare {user?.exams[0]?.exam_short_name} exam with ai 🚀
+          </Text>
+          <View style={styles.cardsWrapper}>
+            <TouchableOpacity
+              onPress={() => {
+                setModalType('practice');
+                toggleModal();
+              }}
+              activeOpacity={0.8}
+              style={styles.card}>
+              <Image
+                style={styles.cardImg}
+                source={require('../../assets/img/practice_img.png')}
+              />
+              <Text style={styles.cardTitle}>Practice test</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setModalType('doubt');
+                toggleModal();
+                // navigation.navigate('Ask doubt');
+              }}
+              activeOpacity={0.8}
+              style={styles.card}>
+              <Image
+                style={styles.cardImg}
+                source={require('../../assets/img/ask_img.png')}
+              />
+              <Text style={styles.cardTitle}>Ask doubt?</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Study plan');
+              }}
+              activeOpacity={0.8}
+              style={styles.card}>
+              <Image
+                style={styles.cardImg}
+                source={require('../../assets/img/studyplan_img.png')}
+              />
+              <Text style={styles.cardTitle}>Study plan</Text>
+            </TouchableOpacity>
           </View>
-        </ScrollView>
-      </SafeAreaView>
+          <ScrollView>
+            <View style={styles.accordionWrapper}>
+              <AccordionItem
+                isOpen={handleRoadMap}
+                title={`Road map for ${user?.exams[0]?.exam_short_name} exam`}>
+                {roadMap ? (
+                  <RenderHtml
+                    source={{
+                      html: roadMap,
+                    }}
+                    contentWidth={width}
+                  />
+                ) : (
+                  <ThreePulseDots color={colors.purple} />
+                )}
+              </AccordionItem>
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      ) : (
+        <NoExamTarget onPress={() => navigation.navigate('Home')} />
+      )}
 
       {/* MODAL FOR PRACTICE  */}
       <CustomModal isModalVisible={isModalVisible} isModalHide={toggleModal}>
