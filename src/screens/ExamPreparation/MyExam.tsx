@@ -146,7 +146,6 @@ Return the JSON output without any additional text.
       content: `Please provide a comprehensive roadmap for ${user?.exams?.[0]?.examname}: ${user?.exams?.[0]?.exam_short_name}. My subjects are ${user?.exams?.[0]?.subjects}. Your response should be in HTML code format with proper headings and bullet points. Utilize inline heading font size, with a maximum of 26px. Feel free to add emojis according to relevant keywords.,`,
     },
   ];
-  console.log(roadMap, 'roadMapPrompt');
   const handleRoadMap = async () => {
     llmApiCall(roadMapPrompt, 3000).then((res: any) => {
       if (res.success) {
