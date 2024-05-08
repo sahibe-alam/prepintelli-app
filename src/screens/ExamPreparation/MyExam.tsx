@@ -231,7 +231,7 @@ Return the JSON output without any additional text.
                 {roadMap ? (
                   <RenderHtml
                     source={{
-                      html: roadMap,
+                      html: `<div style="color: ${colors.black}">${roadMap} </div>`,
                     }}
                     contentWidth={width}
                   />
