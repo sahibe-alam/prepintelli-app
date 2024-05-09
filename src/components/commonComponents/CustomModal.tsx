@@ -16,14 +16,16 @@ interface Props {
   children?: React.ReactNode;
   title?: string;
   isModalHide?: () => void;
+  isFullHeight?: boolean;
 }
 
 const CustomModal: React.FC<Props> = ({
   isModalVisible,
   children,
   isModalHide,
+  isFullHeight = false,
 }) => {
-  const styles = getStyles();
+  const styles = getStyles(isFullHeight);
   const toggleModal = () => {
     if (isModalHide) {
       isModalHide();
@@ -39,7 +41,7 @@ const CustomModal: React.FC<Props> = ({
       style={styles.modalStyles}
       isVisible={isModalVisible}>
       <View style={styles.container}>
-        <Gradient>
+        <Gradient style={styles.gradient}>
           <View style={styles.contentWrapper}>
             <View style={styles.closeBtnWrapper}>
               <TouchableOpacity style={styles.closeBtn} onPress={toggleModal}>
@@ -52,7 +54,7 @@ const CustomModal: React.FC<Props> = ({
             <ScrollView
               showsVerticalScrollIndicator={false}
               contentContainerStyle={styles.scrollWrapper}>
-              <View>{children}</View>
+              <View style={styles.content}>{children}</View>
             </ScrollView>
           </View>
         </Gradient>
@@ -61,8 +63,14 @@ const CustomModal: React.FC<Props> = ({
   );
 };
 
-const getStyles = () =>
+const getStyles = (isFullHeight: boolean) =>
   StyleSheet.create({
+    content: {
+      flex: isFullHeight ? 1 : undefined,
+    },
+    gradient: {
+      padding: 1,
+    },
     closeBtnWrapper: {
       width: '100%',
       backgroundColor: colors.white,
@@ -77,6 +85,7 @@ const getStyles = () =>
       paddingTop: 34,
       paddingBottom: spacing.l,
       position: 'relative',
+      flex: isFullHeight ? 1 : undefined,
     },
     closeBtnIc: {
       width: 16,
@@ -93,9 +102,9 @@ const getStyles = () =>
       right: 6,
     },
     contentWrapper: {
-      margin: 1.5,
       borderRadius: 16,
       overflow: 'hidden',
+      height: isFullHeight ? '100%' : undefined,
       backgroundColor: colors.lightBg,
     },
     modalStyles: {
@@ -108,7 +117,8 @@ const getStyles = () =>
     },
     container: {
       marginHorizontal: spacing.l,
-      maxHeight: '90%',
+      maxHeight: '80%',
+      minHeight: isFullHeight ? '80%' : undefined,
       backgroundColor: 'rgba(0,0,0,0.5)',
       borderRadius: 16,
       overflow: 'hidden',

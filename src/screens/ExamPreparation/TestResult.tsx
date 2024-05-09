@@ -16,7 +16,7 @@ const TestResult: React.FC<PropsType> = props => {
   const {myResults, questionsWithUserSelected, subjectName, chapterName} =
     props.route.params;
   // Now you can use the title variable in the other screen
-  const styles = getStylle();
+  const styles = getStyle();
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader onPress={() => navigation.goBack()} title="Test Result" />
@@ -82,7 +82,11 @@ const TestResult: React.FC<PropsType> = props => {
         <View style={styles.btnWrapper}>
           <Button
             onPress={() =>
-              navigation.navigate('Answers Sheet', {questionsWithUserSelected})
+              navigation.navigate('Answers Sheet', {
+                questionsWithUserSelected,
+                subjectName,
+                chapterName,
+              })
             }
             title="View answers"
           />
@@ -91,7 +95,7 @@ const TestResult: React.FC<PropsType> = props => {
     </SafeAreaView>
   );
 };
-const getStylle = () =>
+const getStyle = () =>
   StyleSheet.create({
     wrapper: {
       flex: 1,
