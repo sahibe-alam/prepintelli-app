@@ -180,7 +180,8 @@ Return the JSON output without any additional text.
         <SafeAreaView style={styles.conatainer}>
           <BackHeader onPress={() => navigation.goBack()} title={'My exam'} />
           <Text style={styles.title}>
-            Prepare {user?.exams[0]?.exam_short_name} exam with ai 🚀
+            Prepare for {user?.exams[0]?.exam_short_name} exam with your
+            personalized ai teacher 🚀
           </Text>
           <View style={styles.cardsWrapper}>
             <TouchableOpacity
@@ -227,7 +228,7 @@ Return the JSON output without any additional text.
             <View style={styles.accordionWrapper}>
               <AccordionItem
                 isOpen={handleRoadMap}
-                title={`Road map for ${user?.exams[0]?.exam_short_name} exam`}>
+                title={`Roadmap for ${user?.exams[0]?.exam_short_name} exam`}>
                 {roadMap ? (
                   <RenderHtml
                     source={{
@@ -284,10 +285,14 @@ Return the JSON output without any additional text.
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <SVGComponent />
               <Text style={styles.loadingText}>
-                Your Ai teacher creating some question 😍
+                Your Ai teacher is creating some question for you 😍
               </Text>
               <View
-                style={{marginTop: 10, alignItems: 'center', marginBottom: 20}}>
+                style={{
+                  marginTop: 10,
+                  alignItems: 'center',
+                  marginBottom: 20,
+                }}>
                 <ThreePulseDots color={colors.blue} />
               </View>
             </View>
@@ -302,8 +307,10 @@ const getStyles = () =>
   StyleSheet.create({
     loadingText: {
       fontSize: fontSizes.p2,
+      lineHeight: 22,
       textAlign: 'center',
       color: colors.blue,
+      maxWidth: '80%',
     },
     modalContent: {gap: 16},
     accordionWrapper: {
