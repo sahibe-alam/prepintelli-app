@@ -91,6 +91,7 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
   }, []);
 
   const insertExam = (examData: any) => {
+    console.log(examDetailsUrl);
     setIsLoading(true);
     makeRequest({
       method: 'POST',
@@ -112,7 +113,7 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
       })
       .catch(error => {
         setIsLoading(false);
-        console.log(error);
+        console.log(error, 'SelectExam.tsx');
       });
   };
   return (

@@ -1,13 +1,17 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
-import {colors} from '../utils/commonStyle/colors';
-import {fontSizes, spacing} from '../utils/commonStyle';
+import { colors } from '../utils/commonStyle/colors';
+import { fontSizes, spacing } from '../utils/commonStyle';
 interface PropsType {
   onPress?: () => void;
   title?: string;
   isTimer?: boolean;
 }
-const BackHeader: React.FC<PropsType> = ({onPress, title, isTimer = false}) => {
+const BackHeader: React.FC<PropsType> = ({
+  onPress,
+  title,
+  isTimer = false,
+}) => {
   const styles = getstyles();
   return (
     <View style={styles.backHeader}>

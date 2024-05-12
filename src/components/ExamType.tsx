@@ -1,23 +1,24 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import React from 'react';
 import Gradient from './Gradient';
-import {fontSizes, spacing} from '../utils/commonStyle';
-import {colors} from '../utils/commonStyle/colors';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { fontSizes, spacing } from '../utils/commonStyle';
+import { colors } from '../utils/commonStyle/colors';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface ExamTypeProps {
   onPress?: () => void;
   title?: string;
   type?: string;
 }
-const ExamType: React.FC<ExamTypeProps> = ({title, type, onPress}) => {
+const ExamType: React.FC<ExamTypeProps> = ({ title, type, onPress }) => {
   const styles = getStyle();
   return (
     <View style={styles.container}>
       <TouchableOpacity
         onPress={onPress}
         style={styles.wrapper}
-        activeOpacity={0.9}>
+        activeOpacity={0.9}
+      >
         <Gradient>
           <View style={styles.examTypeWrapper}>
             <View style={styles.itemWrapper}>

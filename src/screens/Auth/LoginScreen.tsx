@@ -13,7 +13,11 @@ import Button from '../../components/Button';
 import {spacing} from '../../utils/commonStyle';
 import InputField from '../../components/formComponents/InputField';
 import {isValidEmail} from '../../utils/validation';
-import {setLoginToken, setUserID} from '../../utils/commonServices';
+import {
+  getJwtToken,
+  setLoginToken,
+  setUserID,
+} from '../../utils/commonServices';
 import {makeRequest} from '../../api/apiClients';
 import {useToast} from 'react-native-toast-notifications';
 import {getUserDetails} from '../../api/adapter/getUserDetails';
@@ -105,17 +109,29 @@ const LoginScreen: React.FC<Props> = props => {
         },
       })
         .then((res: any) => {
-          if (res.data.success) {
+          console.log(res?.data, 'res');
+          if (res.data?.success) {
             setLoginToken(res.data.data.token);
             setUserID(res.data.data._id);
-            getUserDetails(res.data.data._id).then((res: any) => {
-              setUser && setUser(res.data[0]);
-              setLoading(false);
-              navigation.navigate('Main');
+            getJwtToken().then(token => {
+              if (token) {
+                getUserDetails(res.data.data._id)
+                  .then((res: any) => {
+                    setUser && setUser(res.data[0]);
+                    setLoading(false);
+                    navigation.navigate('Main');
+                  })
+                  .catch((err: any) => {
+                    console.log(err, 'err');
+                    setLoading(false);
+                  });
+              }
             });
           } else {
-            toast.show(res?.data.msg, {type: 'danger'});
             setLoading(false);
+            toast.show(res.data.msg, {
+              type: 'danger',
+            });
           }
         })
 
