@@ -16,6 +16,7 @@ import TestResult from '../screens/ExamPreparation/TestResult';
 import AnswersSheet from '../screens/ExamPreparation/AnswersSheet';
 import StartApp from '../screens/StartApp';
 import Splash from '../screens/Splash';
+import FaQs from '../screens/staticsScreens/AboutPrepIntelli';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
   return (
@@ -94,6 +95,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Answers Sheet"
           component={AnswersSheet as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="FaQs"
+          component={FaQs as React.ComponentType}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

@@ -1,9 +1,9 @@
-import {StyleSheet, SafeAreaView, View} from 'react-native';
+import { StyleSheet, SafeAreaView, View } from 'react-native';
 import React from 'react';
-import {colors} from '../../utils/commonStyle/colors';
+import { colors } from '../../utils/commonStyle/colors';
 import BackHeader from '../../components/BackHeader';
 import ExamType from '../../components/ExamType';
-import {spacing} from '../../utils/commonStyle';
+import { spacing } from '../../utils/commonStyle';
 interface PropsType {
   navigation: any;
   route: any;
@@ -29,8 +29,8 @@ const typeExam = [
     inputLabel: 'Type your exam subjects*',
   },
 ];
-const TargetExam: React.FC<PropsType> = ({navigation, route}) => {
-  const {title} = route.params;
+const TargetExam: React.FC<PropsType> = ({ navigation, route }) => {
+  const { title } = route.params;
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader onPress={() => navigation.goBack()} title={title} />

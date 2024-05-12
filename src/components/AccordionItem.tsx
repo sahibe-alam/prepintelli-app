@@ -87,7 +87,7 @@ const getStyles = () =>
     },
     btnTitle: {
       color: 'white',
-      fontSize: fontSizes.p,
+      fontSize: fontSizes.p2,
       flex: 1,
     },
     btnTextwrapper: {

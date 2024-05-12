@@ -12,7 +12,7 @@ interface PropsType {
 }
 
 const Profile: React.FC<PropsType> = ({ navigation }) => {
-  const styles = getSyle();
+  const styles = getStyle();
   const logoutHandler = async () => {
     await AsyncStorage.removeItem('jwtToken');
     await AsyncStorage.removeItem('userID');
@@ -36,13 +36,13 @@ const Profile: React.FC<PropsType> = ({ navigation }) => {
     },
     {
       icon: require('../assets/img/about_ic.png'),
-      linkText: 'About us',
+      linkText: 'About prepIntelli',
       onPress: () => navigation.navigate('Profile'),
     },
     {
       icon: require('../assets/img/faq_ic.png'),
       linkText: 'fAQs',
-      onPress: () => navigation.navigate('Profile'),
+      onPress: () => navigation.navigate('FaQs'),
     },
     {
       icon: require('../assets/img/logout_ic.png'),
@@ -66,7 +66,7 @@ const Profile: React.FC<PropsType> = ({ navigation }) => {
   );
 };
 
-const getSyle = () =>
+const getStyle = () =>
   StyleSheet.create({
     iconLinkWrapper: {
       paddingHorizontal: spacing.l,
