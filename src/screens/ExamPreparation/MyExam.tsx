@@ -62,7 +62,7 @@ Each question should have the following structure:
 - "correctIndex": The index (0-based) of the correct answer within the "options" array.
 
 Ensure that the questions are relevant to the specified exam, subject, and chapter or unit.
-
+Note: always give new and unique questions.
 Return the JSON output without any additional text.
 
 {

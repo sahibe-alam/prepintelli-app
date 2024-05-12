@@ -1,32 +1,31 @@
-import {StyleSheet, SafeAreaView, Text, View, ScrollView} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {colors} from '../utils/commonStyle/colors';
+import { StyleSheet, SafeAreaView, Text, View, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { colors } from '../utils/commonStyle/colors';
 import BackHeader from '../components/BackHeader';
-import {LineChart} from 'react-native-chart-kit';
-import {Dimensions} from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
+import { Dimensions } from 'react-native';
 import CircleProgress from '../components/commonComponents/CircleProgress';
-import {fontSizes, spacing} from '../utils/commonStyle';
+import { fontSizes, spacing } from '../utils/commonStyle';
 import Gradient from '../components/Gradient';
-import {usePrepContext} from '../contexts/GlobalState';
+import { usePrepContext } from '../contexts/GlobalState';
 import NoExamTarget from '../components/NoExamTarget';
 const screenWidth = Dimensions.get('window').width;
 interface PropsType {
   navigation?: any;
 }
-const MyPerformance: React.FC<PropsType> = props => {
-  const {navigation} = props;
-  const {user} = usePrepContext();
+const MyPerformance: React.FC<PropsType> = (props) => {
+  const { navigation } = props;
+  const { user } = usePrepContext();
   const [subjectsPerformance, setSubjectsPerformance] = useState<any>([]);
 
   // Create a function to get the date in the format '2 Mar'
   function formatDate(date: Date) {
     const day = date.getDate();
-    const month = date.toLocaleString('default', {month: 'short'});
+    const month = date.toLocaleString('default', { month: 'short' });
     return `${day} ${month}`;
   }
 
   const dateArray: string[] = [];
-
   for (let i = 6; i >= 0; i--) {
     const date: Date = new Date();
     date.setDate(date.getDate() - i);
@@ -80,7 +79,7 @@ const MyPerformance: React.FC<PropsType> = props => {
             <LineChart
               data={data}
               horizontalLabelRotation={0}
-              formatYLabel={value => value.slice(0, -3)}
+              formatYLabel={(value) => value.slice(0, -3)}
               width={screenWidth}
               segments={6}
               height={220}
@@ -88,7 +87,7 @@ const MyPerformance: React.FC<PropsType> = props => {
               bezier
             />
             <View style={styles.resultWrapper}>
-              <View style={{flex: 1}}>
+              <View style={{ flex: 1 }}>
                 <Text style={styles.examName}>
                   Overall performance for {user?.exams[0]?.exam_short_name} exam
                 </Text>
@@ -106,8 +105,9 @@ const MyPerformance: React.FC<PropsType> = props => {
                     <View style={styles.subjectProgress}>
                       <Gradient
                         style={
-                          (styles.fillProgress, {width: `${item.progress}%`})
-                        }>
+                          (styles.fillProgress, { width: `${item.progress}%` })
+                        }
+                      >
                         <Text numberOfLines={1} style={styles.percent}>
                           {item.progress}%
                         </Text>
