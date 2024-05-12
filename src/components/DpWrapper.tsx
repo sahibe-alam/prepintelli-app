@@ -1,13 +1,13 @@
-import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
+import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
-import {colors} from '../utils/commonStyle/colors';
+import { colors } from '../utils/commonStyle/colors';
 import Gradient from '../components/Gradient';
-import {usePrepContext} from '../contexts/GlobalState';
-import {fontSizes} from '../utils/commonStyle';
+import { usePrepContext } from '../contexts/GlobalState';
+import { fontSizes } from '../utils/commonStyle';
 
 const DpWrapper = () => {
-  const {deviceWidth} = usePrepContext();
-  const {user} = usePrepContext();
+  const { deviceWidth } = usePrepContext();
+  const { user } = usePrepContext();
   const styles = getSyle(deviceWidth || 0);
   return (
     <View style={styles.gradientWrapper}>
@@ -69,7 +69,7 @@ const getSyle = (deviceWidth: number) =>
     gradientWrapper: {
       width: '100%',
       position: 'relative',
-      height: 140,
+      height: 130,
       marginBottom: 50,
     },
     scrollWrapper: {

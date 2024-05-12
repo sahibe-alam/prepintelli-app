@@ -1,4 +1,4 @@
-import { View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { View, StyleSheet, SafeAreaView, ScrollView, Text } from 'react-native';
 import React, { useEffect } from 'react';
 import DropDownSelect from '../../components/formComponents/DropDownSelect';
 import { colors } from '../../utils/commonStyle/colors';
@@ -165,6 +165,11 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
             />
           </View>
           <View style={styles.btnWrapper}>
+            <View style={styles.warnWrapper}>
+              <Text style={styles.warnText} numberOfLines={1}>
+                Ensure correct spelling as you type the subject name ⚠️
+              </Text>
+            </View>
             <Button
               isLoading={isLoading}
               title="Get start"
@@ -197,6 +202,17 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
 
 const getStyles = () =>
   StyleSheet.create({
+    warnWrapper: {
+      marginBottom: spacing.m,
+      backgroundColor: colors.light_yellow,
+      padding: 6,
+      borderRadius: 5,
+    },
+    warnText: {
+      fontSize: 11,
+      textAlign: 'center',
+      color: colors.yellow,
+    },
     inputsWrapper: {
       flex: 1,
     },
