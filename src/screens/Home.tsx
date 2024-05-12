@@ -1,14 +1,14 @@
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
-import {colors} from '../utils/commonStyle/colors';
-import {fontSizes, spacing} from '../utils/commonStyle';
+import { colors } from '../utils/commonStyle/colors';
+import { fontSizes, spacing } from '../utils/commonStyle';
 import HomeSlider from '../components/HomeSlider';
 import ExamType from '../components/ExamType';
 interface PropsType {
   navigation?: any;
   route?: any;
 }
-const Home: React.FC<PropsType> = ({navigation}) => {
+const Home: React.FC<PropsType> = ({ navigation }) => {
   const typeExam = [
     {
       title: 'Competitive exam',

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -9,12 +9,12 @@ import {
   Image,
 } from 'react-native';
 import BackHeader from '../../components/BackHeader';
-import {colors} from '../../utils/commonStyle/colors';
-import {fontSizes, spacing} from '../../utils/commonStyle';
+import { colors } from '../../utils/commonStyle/colors';
+import { fontSizes, spacing } from '../../utils/commonStyle';
 import CustomModal from '../../components/commonComponents/CustomModal';
 import PromptInput from '../../components/examPrepComponents/PromptInput';
 import ResponseCard from '../../components/commonComponents/ResponseCard';
-import {llmApiCall} from '../../api/adapter/llmTutor';
+import { llmApiCall } from '../../api/adapter/llmTutor';
 
 interface PropsType {
   navigation: any;
@@ -26,8 +26,8 @@ interface IMessage {
   content: string;
 }
 const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
-  const {navigation} = props;
-  const {questionsWithUserSelected, subjectName} = props.route.params;
+  const { navigation } = props;
+  const { questionsWithUserSelected, subjectName } = props.route.params;
   const [isModalVisible, setModalVisible] = useState(false);
   const [doubtQuestion, setDoubtQuestion] = useState<any>([]);
   const [inputValue, setInputValue] = useState('');
@@ -52,41 +52,40 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
       },
     ]);
   };
-  console.log(doubtQuestion, 'sa');
   const styles = getStyles();
   const getBackgroundColor = (
     index: number,
     correctIndex: number,
-    userSelected: number,
+    userSelected: number
   ) => {
     if (index === userSelected) {
       if (index === correctIndex) {
-        return {backgroundColor: colors.light_green, textColor: colors.green};
+        return { backgroundColor: colors.light_green, textColor: colors.green };
       } else {
-        return {backgroundColor: colors.light_red, textColor: colors.red};
+        return { backgroundColor: colors.light_red, textColor: colors.red };
       }
     } else if (index === correctIndex) {
-      return {backgroundColor: colors.light_green, textColor: colors.green};
+      return { backgroundColor: colors.light_green, textColor: colors.green };
     } else {
-      return {backgroundColor: colors.light_grey, textColor: colors.black};
+      return { backgroundColor: colors.light_grey, textColor: colors.black };
     }
   };
 
   const getOptionIcon = (
     index: number,
     correctIndex: number,
-    userSelected: number,
+    userSelected: number
   ) => {
     if (index === userSelected) {
       if (index === correctIndex) {
-        return {optionIcon: require('../../assets/img/correct_ic.png')};
+        return { optionIcon: require('../../assets/img/correct_ic.png') };
       } else {
-        return {optionIcon: require('../../assets/img/wrong_ic.png')};
+        return { optionIcon: require('../../assets/img/wrong_ic.png') };
       }
     } else if (index === correctIndex) {
-      return {optionIcon: require('../../assets/img/correct_ic.png')};
+      return { optionIcon: require('../../assets/img/correct_ic.png') };
     } else {
-      return {optionIcon: null};
+      return { optionIcon: null };
     }
   };
   const handleInputValue = (value: string) => {
@@ -95,12 +94,12 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
   const handleSend = () => {
     let newMsgArray: IMessage[] = [...conversationList];
     if (inputValue.trim().length > 0) {
-      newMsgArray.push({role: 'user', content: inputValue});
+      newMsgArray.push({ role: 'user', content: inputValue });
       setConversationList(newMsgArray);
       setLoading(true);
     }
     // setMsg('');
-    llmApiCall(newMsgArray, 1000).then(res => {
+    llmApiCall(newMsgArray, 1000).then((res) => {
       if (res.success) {
         if ('data' in res) {
           setLoading(false);
@@ -111,7 +110,7 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
   };
   useEffect(() => {
     setTimeout(() => {
-      scrollViewRef.current?.scrollToEnd({animated: true});
+      scrollViewRef.current?.scrollToEnd({ animated: true });
     }, 50);
   }, [conversationList]);
   return (
@@ -130,7 +129,8 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
                     borderBottomWidth: isLastIndex ? 0 : 1,
                   },
                 ]}
-                key={index}>
+                key={index}
+              >
                 <View style={styles.questionWrapper}>
                   <Text style={styles.questionNumber}>Q{index + 1}.</Text>
                   <Text style={styles.questionText}>{item?.q}</Text>
@@ -145,21 +145,22 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
                   </View>
                 )}
                 {item.options.map((option: string, optionIndex: number) => {
-                  const {backgroundColor, textColor} = getBackgroundColor(
+                  const { backgroundColor, textColor } = getBackgroundColor(
                     optionIndex,
                     item.correctIndex,
-                    item.userSelected,
+                    item.userSelected
                   );
-                  const {optionIcon} = getOptionIcon(
+                  const { optionIcon } = getOptionIcon(
                     optionIndex,
                     item.correctIndex,
-                    item.userSelected,
+                    item.userSelected
                   );
                   return (
                     <TouchableOpacity
                       key={optionIndex}
                       activeOpacity={1}
-                      style={[styles.optionWrapper, {backgroundColor}]}>
+                      style={[styles.optionWrapper, { backgroundColor }]}
+                    >
                       {optionIcon && (
                         <View style={styles.optionIconWrapper}>
                           <Image
@@ -169,7 +170,7 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
                           />
                         </View>
                       )}
-                      <Text style={[styles.optionText, {color: textColor}]}>
+                      <Text style={[styles.optionText, { color: textColor }]}>
                         {option}
                       </Text>
                     </TouchableOpacity>
@@ -177,7 +178,8 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
                 })}
                 <TouchableOpacity
                   style={styles.doubtBtn}
-                  onPress={() => toggleModal(item, index)}>
+                  onPress={() => toggleModal(item, index)}
+                >
                   <Text style={styles.doubtBtnText}>Ask doubt🤔</Text>
                 </TouchableOpacity>
               </View>
@@ -193,7 +195,8 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
         isModalHide={() => {
           toggleModal();
           setConversationList([]);
-        }}>
+        }}
+      >
         <View style={styles.modalWrapper}>
           {doubtQuestion && (
             <View style={styles.modalHeader}>
@@ -208,7 +211,8 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
           <ScrollView
             showsVerticalScrollIndicator={false}
             ref={scrollViewRef}
-            contentContainerStyle={styles.scrollWrapperModal}>
+            contentContainerStyle={styles.scrollWrapperModal}
+          >
             <View style={styles.responseWrapper}>
               {conversationList.slice(1).map((item: any, index: number) => (
                 <ResponseCard

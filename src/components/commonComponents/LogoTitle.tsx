@@ -1,9 +1,9 @@
-import {View, Text, Image, StyleSheet} from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import React from 'react';
-import {colors} from '../../utils/commonStyle/colors';
-import {fontSizes, spacing} from '../../utils/commonStyle';
+import { colors } from '../../utils/commonStyle/colors';
+import { fontSizes, spacing } from '../../utils/commonStyle';
 
-const LogoTitle = ({title}: {title: string}) => {
+const LogoTitle = ({ title }: { title: string }) => {
   const styles = getStyle();
   return (
     <View style={styles.wrapper}>

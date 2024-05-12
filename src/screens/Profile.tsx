@@ -1,17 +1,17 @@
-import {View, StyleSheet} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import React from 'react';
-import {colors} from '../utils/commonStyle/colors';
+import { colors } from '../utils/commonStyle/colors';
 import BackHeader from '../components/BackHeader';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import DpWrapper from '../components/DpWrapper';
 import IconLink from '../components/IconLink';
-import {spacing} from '../utils/commonStyle';
+import { spacing } from '../utils/commonStyle';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 interface PropsType {
   navigation: any;
 }
 
-const Profile: React.FC<PropsType> = ({navigation}) => {
+const Profile: React.FC<PropsType> = ({ navigation }) => {
   const styles = getSyle();
   const logoutHandler = async () => {
     await AsyncStorage.removeItem('jwtToken');

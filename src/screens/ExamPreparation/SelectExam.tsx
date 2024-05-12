@@ -1,15 +1,15 @@
-import {View, StyleSheet, SafeAreaView, ScrollView} from 'react-native';
-import React, {useEffect} from 'react';
+import { View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import React, { useEffect } from 'react';
 import DropDownSelect from '../../components/formComponents/DropDownSelect';
-import {colors} from '../../utils/commonStyle/colors';
+import { colors } from '../../utils/commonStyle/colors';
 import BackHeader from '../../components/BackHeader';
-import {spacing} from '../../utils/commonStyle';
+import { spacing } from '../../utils/commonStyle';
 import Button from '../../components/Button';
 import SubjectSelector from '../../components/examPrepComponents/SubjectSelector';
-import {makeRequest} from '../../api/apiClients';
-import {usePrepContext} from '../../contexts/GlobalState';
-import {getUserID} from '../../utils/commonServices';
-import {getUserDetails} from '../../api/adapter/getUserDetails';
+import { makeRequest } from '../../api/apiClients';
+import { usePrepContext } from '../../contexts/GlobalState';
+import { getUserID } from '../../utils/commonServices';
+import { getUserDetails } from '../../api/adapter/getUserDetails';
 interface PropsType {
   navigation: any;
   route: any;
@@ -24,18 +24,18 @@ const initialState = {
 function reducer(state: any, action: any) {
   switch (action.type) {
     case 'subject':
-      return {...state, subjects: action.payload};
+      return { ...state, subjects: action.payload };
     case 'class':
-      return {...state, class: action.payload};
+      return { ...state, class: action.payload };
     case 'board':
-      return {...state, board: action.payload};
+      return { ...state, board: action.payload };
     case 'examName':
-      return {...state, examName: action.payload};
+      return { ...state, examName: action.payload };
     default:
       return state;
   }
 }
-const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
+const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
   const {
     title,
     type,
@@ -48,7 +48,7 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
   } = route.params;
   const [examName, setExamName] = React.useState(null);
   const [classes, setClasses] = React.useState(null);
-  const {user, setUser} = usePrepContext();
+  const { user, setUser } = usePrepContext();
   const [isLoading, setIsLoading] = React.useState(false);
   const [targetExam, dispatch] = React.useReducer(reducer, initialState);
   const styles = getStyles();
@@ -63,7 +63,7 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
       .then((response: any) => {
         setExamName(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -78,7 +78,7 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
       .then((response: any) => {
         setClasses(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -91,7 +91,6 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
   }, []);
 
   const insertExam = (examData: any) => {
-    console.log(examDetailsUrl);
     setIsLoading(true);
     makeRequest({
       method: 'POST',
@@ -111,7 +110,7 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
           });
         }
       })
-      .catch(error => {
+      .catch((error) => {
         setIsLoading(false);
         console.log(error, 'SelectExam.tsx');
       });
@@ -121,12 +120,13 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
       <BackHeader onPress={() => navigation.goBack()} title={title} />
       <ScrollView
         contentContainerStyle={styles.scrollWrapper}
-        centerContent={true}>
+        centerContent={true}
+      >
         <View style={styles.inputsWrapper}>
           <View style={styles.formWrapper}>
             <DropDownSelect
               onSelect={(item: any) => {
-                dispatch({type: 'examName', payload: item});
+                dispatch({ type: 'examName', payload: item });
               }}
               rowTextForSelection={(item: any) =>
                 actionType === 'fetchBoard'
@@ -150,16 +150,16 @@ const SelectExam: React.FC<PropsType> = ({navigation, route}) => {
                 data={classes}
                 DropDownLabel={dropdownLabel2}
                 onSelect={(item: any) => {
-                  dispatch({type: 'class', payload: item});
+                  dispatch({ type: 'class', payload: item });
                 }}
               />
             )}
             <SubjectSelector
-              getSubjects={targetExam => {
-                const sub = targetExam.map(subject =>
-                  subject.value ? subject.value : null,
+              getSubjects={(targetExam) => {
+                const sub = targetExam.map((subject) =>
+                  subject.value ? subject.value : null
                 );
-                dispatch({type: 'subject', payload: sub});
+                dispatch({ type: 'subject', payload: sub });
               }}
               label={inputLabel}
             />

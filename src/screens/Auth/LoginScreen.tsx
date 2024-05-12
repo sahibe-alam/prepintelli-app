@@ -6,22 +6,22 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, {useReducer, useState} from 'react';
-import {colors} from '../../utils/commonStyle/colors';
+import React, { useReducer, useState } from 'react';
+import { colors } from '../../utils/commonStyle/colors';
 import LogoTitle from '../../components/commonComponents/LogoTitle';
 import Button from '../../components/Button';
-import {spacing} from '../../utils/commonStyle';
+import { spacing } from '../../utils/commonStyle';
 import InputField from '../../components/formComponents/InputField';
-import {isValidEmail} from '../../utils/validation';
+import { isValidEmail } from '../../utils/validation';
 import {
   getJwtToken,
   setLoginToken,
   setUserID,
 } from '../../utils/commonServices';
-import {makeRequest} from '../../api/apiClients';
-import {useToast} from 'react-native-toast-notifications';
-import {getUserDetails} from '../../api/adapter/getUserDetails';
-import {usePrepContext} from '../../contexts/GlobalState';
+import { makeRequest } from '../../api/apiClients';
+import { useToast } from 'react-native-toast-notifications';
+import { getUserDetails } from '../../api/adapter/getUserDetails';
+import { usePrepContext } from '../../contexts/GlobalState';
 
 interface Props {
   navigation?: any;
@@ -30,9 +30,9 @@ interface Props {
 const reducer = (state: any, action: any) => {
   switch (action.type) {
     case 'EMAIL':
-      return {...state, email: action.payload};
+      return { ...state, email: action.payload };
     case 'PASSWORD':
-      return {...state, password: action.payload};
+      return { ...state, password: action.payload };
     default:
       return state;
   }
@@ -42,20 +42,20 @@ const initialState = {
   email: '',
   password: '',
 };
-const LoginScreen: React.FC<Props> = props => {
-  const {navigation} = props;
+const LoginScreen: React.FC<Props> = (props) => {
+  const { navigation } = props;
   const [loginDate, dispatch] = useReducer(reducer, initialState);
   const [isLoading, setLoading] = useState(false);
-  const {setUser} = usePrepContext();
+  const { setUser } = usePrepContext();
   const toast = useToast();
   const [errorMessage, setErrorMessage] = useState<{
     email: string;
     password: string;
-  }>({email: '', password: ''});
+  }>({ email: '', password: '' });
 
   const isValid = () => {
     let isError = false;
-    let errorObj: {email?: string; password?: string} = {};
+    let errorObj: { email?: string; password?: string } = {};
     const fieldsToValidate = [
       {
         field: 'email',
@@ -77,7 +77,7 @@ const LoginScreen: React.FC<Props> = props => {
       },
     ];
 
-    fieldsToValidate.forEach(({field, validation}) => {
+    fieldsToValidate.forEach(({ field, validation }) => {
       const error = validation(loginDate[field]);
       if (error) {
         isError = true;
@@ -109,11 +109,10 @@ const LoginScreen: React.FC<Props> = props => {
         },
       })
         .then((res: any) => {
-          console.log(res?.data, 'res');
           if (res.data?.success) {
             setLoginToken(res.data.data.token);
             setUserID(res.data.data._id);
-            getJwtToken().then(token => {
+            getJwtToken().then((token) => {
               if (token) {
                 getUserDetails(res.data.data._id)
                   .then((res: any) => {
@@ -147,14 +146,15 @@ const LoginScreen: React.FC<Props> = props => {
     <SafeAreaView style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollWrapper}
-        centerContent={true}>
+        centerContent={true}
+      >
         <View style={styles.wrapper}>
           <LogoTitle title="Login" />
           <InputField
             errorMsg={errorMessage.email}
             value={loginDate.email.trim().toLowerCase()}
-            onChangeText={text =>
-              dispatch({type: 'EMAIL', payload: text.trim()})
+            onChangeText={(text) =>
+              dispatch({ type: 'EMAIL', payload: text.trim() })
             }
             label="Email"
             placeholder="Enter email id"
@@ -163,8 +163,8 @@ const LoginScreen: React.FC<Props> = props => {
             <InputField
               errorMsg={errorMessage.password}
               value={loginDate.password.trim()}
-              onChangeText={text =>
-                dispatch({type: 'PASSWORD', payload: text.trim()})
+              onChangeText={(text) =>
+                dispatch({ type: 'PASSWORD', payload: text.trim() })
               }
               label="Password"
               placeholder="Enter password"
@@ -174,7 +174,8 @@ const LoginScreen: React.FC<Props> = props => {
                 onPress={() => {
                   navigation.navigate('Forgot password');
                 }}
-                style={styles.forgotBtn}>
+                style={styles.forgotBtn}
+              >
                 <Text style={styles.forgotText}>Forgot password</Text>
               </TouchableOpacity>
             </View>
@@ -187,7 +188,7 @@ const LoginScreen: React.FC<Props> = props => {
             />
 
             <View>
-              <View style={{paddingVertical: spacing.s}}>
+              <View style={{ paddingVertical: spacing.s }}>
                 <Text style={styles.t_and_c}>OR</Text>
               </View>
 
