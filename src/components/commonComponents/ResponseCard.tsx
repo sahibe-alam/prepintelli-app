@@ -1,7 +1,7 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import React from 'react';
-import {colors} from '../../utils/commonStyle/colors';
-import {fontSizes, spacing} from '../../utils/commonStyle';
+import { colors } from '../../utils/commonStyle/colors';
+import { fontSizes, spacing } from '../../utils/commonStyle';
 import Typing from './Typing';
 
 interface propsType {
@@ -9,8 +9,8 @@ interface propsType {
   content?: string;
   forLoader?: boolean;
 }
-const ResponseCard: React.FC<propsType> = props => {
-  const {isLeft = true, content, forLoader} = props;
+const ResponseCard: React.FC<propsType> = (props) => {
+  const { isLeft = true, content, forLoader } = props;
   const styles = getStyles();
   const renderTextWithKeywords = (text: string) => {
     // Regular expression to match keywords wrapped in double stars
@@ -25,14 +25,14 @@ const ResponseCard: React.FC<propsType> = props => {
       result.push(
         <Text key={currentIndex++}>
           {text.substring(currentIndex, match.index)}
-        </Text>,
+        </Text>
       );
 
       // Push matched keyword in bold
       result.push(
-        <Text key={currentIndex++} style={{fontWeight: 'bold'}}>
+        <Text key={currentIndex++} style={{ fontWeight: 'bold' }}>
           {match[1]}
-        </Text>,
+        </Text>
       );
 
       // Update current index
@@ -49,18 +49,21 @@ const ResponseCard: React.FC<propsType> = props => {
     <View
       style={[
         styles.container,
-        {alignItems: isLeft ? 'flex-start' : 'flex-end'},
-      ]}>
+        { alignItems: isLeft ? 'flex-start' : 'flex-end' },
+      ]}
+    >
       <View
         style={[
           styles.wrapper,
-          {alignItems: isLeft ? 'flex-start' : 'flex-end'},
-        ]}>
+          { alignItems: isLeft ? 'flex-start' : 'flex-end' },
+        ]}
+      >
         <View
           style={[
             styles.resHeader,
-            {flexDirection: isLeft ? 'row' : 'row-reverse'},
-          ]}>
+            { flexDirection: isLeft ? 'row' : 'row-reverse' },
+          ]}
+        >
           <Image
             style={styles.resDp}
             source={require('../../assets/img/prepIntelliDp.png')}
@@ -76,8 +79,9 @@ const ResponseCard: React.FC<propsType> = props => {
           <View
             style={[
               styles.resWrapper,
-              {backgroundColor: isLeft ? '#efe1f5' : '#ecebed'},
-            ]}>
+              { backgroundColor: isLeft ? '#efe1f5' : '#ecebed' },
+            ]}
+          >
             <Text style={styles.responseText}>
               {renderTextWithKeywords(content)}
             </Text>

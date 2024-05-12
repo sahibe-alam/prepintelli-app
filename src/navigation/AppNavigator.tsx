@@ -1,6 +1,6 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import {NavigationContainer} from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 import Main from './Main';
 import TargetExam from '../screens/ExamPreparation/TargetExam';
 import SelectExam from '../screens/ExamPreparation/SelectExam';
@@ -24,77 +24,77 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Start App"
           component={StartApp}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Splash"
           component={Splash}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Main"
           component={Main}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Create Exam"
           component={TargetExam}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Select Exam"
           component={SelectExam}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Exam Zone"
           component={MyExam}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Login"
           component={LoginScreen}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Sign Up"
           component={SignUp}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="OTP"
           component={OtpVerification}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Forgot password"
           component={ForgotPassword}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Ask doubt"
           component={AskDoubt}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Study plan"
           component={StudyPlan}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Practice test"
           component={PracticeTest}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Test Result"
           component={TestResult}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Answers Sheet"
           component={AnswersSheet as React.ComponentType}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

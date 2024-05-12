@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import React from 'react';
 import Modal from 'react-native-modal';
-import {spacing} from '../../utils/commonStyle';
+import { spacing } from '../../utils/commonStyle';
 import Gradient from '../Gradient';
-import {colors} from '../../utils/commonStyle/colors';
+import { colors } from '../../utils/commonStyle/colors';
 interface Props {
   isModalVisible: boolean;
   children?: React.ReactNode;
@@ -39,7 +39,8 @@ const CustomModal: React.FC<Props> = ({
         </TouchableWithoutFeedback>
       }
       style={styles.modalStyles}
-      isVisible={isModalVisible}>
+      isVisible={isModalVisible}
+    >
       <View style={styles.container}>
         <Gradient style={styles.gradient}>
           <View style={styles.contentWrapper}>
@@ -53,7 +54,8 @@ const CustomModal: React.FC<Props> = ({
             </View>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.scrollWrapper}>
+              contentContainerStyle={styles.scrollWrapper}
+            >
               <View style={styles.content}>{children}</View>
             </ScrollView>
           </View>

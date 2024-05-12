@@ -1,10 +1,10 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
-import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {colors} from '../utils/commonStyle/colors';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors } from '../utils/commonStyle/colors';
 import Header from '../components/Header';
 import MyPerformance from '../screens/MyPerformance';
 import Profile from '../screens/Profile';
@@ -47,7 +47,8 @@ const CustomTabBarButton = ({
             {
               color: isFocused ? colors.purple : colors.grey,
             },
-          ]}>
+          ]}
+        >
           {labelName}
         </Text>
       </View>
@@ -57,13 +58,13 @@ const CustomTabBarButton = ({
 
 const Main = () => {
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <Bottom.Navigator
         screenOptions={{
           header: () => <Header />,
-          tabBarStyle: {backgroundColor: colors.white},
+          tabBarStyle: { backgroundColor: colors.white },
         }}
-        tabBar={props => (
+        tabBar={(props) => (
           <View style={[styles.tabBar]}>
             <CustomTabBarButton
               isFocused={props.state.routes[props.state.index].name === 'Home'}
@@ -96,13 +97,14 @@ const Main = () => {
               labelName="Profile"
             />
           </View>
-        )}>
+        )}
+      >
         <Bottom.Screen
           name="Home"
           component={Home}
           options={{
             tabBarLabel: () => null,
-            tabBarStyle: {backgroundColor: 'red'},
+            tabBarStyle: { backgroundColor: 'red' },
           }}
         />
         <Bottom.Screen
@@ -116,12 +118,12 @@ const Main = () => {
         <Bottom.Screen
           name="Performance"
           component={MyPerformance}
-          options={{tabBarLabel: () => null, headerShown: false}}
+          options={{ tabBarLabel: () => null, headerShown: false }}
         />
         <Bottom.Screen
           name="Profile"
           component={Profile}
-          options={{tabBarLabel: () => null, headerShown: false}}
+          options={{ tabBarLabel: () => null, headerShown: false }}
         />
       </Bottom.Navigator>
     </SafeAreaView>

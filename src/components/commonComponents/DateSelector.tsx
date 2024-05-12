@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, { useState } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import {colors} from '../../utils/commonStyle/colors';
-import {fontSizes} from '../../utils/commonStyle';
+import { colors } from '../../utils/commonStyle/colors';
+import { fontSizes } from '../../utils/commonStyle';
 interface props {
   label?: string;
   placeholder?: string;
@@ -33,12 +33,14 @@ const DateSelector: React.FC<props> = ({
         <TouchableOpacity
           activeOpacity={0.8}
           style={styles.datePickerWerapper}
-          onPress={() => setOpen(true)}>
+          onPress={() => setOpen(true)}
+        >
           <Text
             style={[
               styles.label,
-              {color: userSelectDate ? colors.black : colors.grey},
-            ]}>
+              { color: userSelectDate ? colors.black : colors.grey },
+            ]}
+          >
             {userSelectDate ? userSelectDate : placeholder}
           </Text>
           <Image
@@ -53,12 +55,12 @@ const DateSelector: React.FC<props> = ({
         mode="date"
         open={open}
         date={date}
-        onConfirm={pickedDate => {
+        onConfirm={(pickedDate) => {
           setOpen(false);
           setDate(pickedDate);
           setUserSelectDate(formatDate(pickedDate));
           if (onDateChange) {
-            onDateChange(formatDate(pickedDate));
+            onDateChange(formatDate(pickedDate) as any);
           }
         }}
         onCancel={() => {

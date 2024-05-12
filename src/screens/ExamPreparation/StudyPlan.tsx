@@ -7,18 +7,18 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import BackHeader from '../../components/BackHeader';
-import {colors} from '../../utils/commonStyle/colors';
+import { colors } from '../../utils/commonStyle/colors';
 import PromptInput from '../../components/examPrepComponents/PromptInput';
-import {fontSizes, spacing} from '../../utils/commonStyle';
+import { fontSizes, spacing } from '../../utils/commonStyle';
 import ResponseCard from '../../components/commonComponents/ResponseCard';
-import {llmApiCall} from '../../api/adapter/llmTutor';
-import {usePrepContext} from '../../contexts/GlobalState';
-import {fileDownloader} from '../../utils/fileDownloader';
+import { llmApiCall } from '../../api/adapter/llmTutor';
+import { usePrepContext } from '../../contexts/GlobalState';
+import { fileDownloader } from '../../utils/fileDownloader';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Images from '../../resources/Images';
-import {useToast} from 'react-native-toast-notifications';
+import { useToast } from 'react-native-toast-notifications';
 
 interface propsType {
   navigation: any;
@@ -28,9 +28,9 @@ interface IMessage {
   role: string;
   content: string;
 }
-const StudyPlan: React.FC<propsType> = props => {
-  const {navigation} = props;
-  const {user} = usePrepContext();
+const StudyPlan: React.FC<propsType> = (props) => {
+  const { navigation } = props;
+  const { user } = usePrepContext();
   const [html, setHtml] = useState<null | string>(null);
   const toast = useToast();
   const prompt = `You are Students study planner developed by Sahibe alam.
@@ -95,14 +95,14 @@ Note: ask question in plan text and always ask single question at a time.
     let newMsgArray: IMessage[] = [...conversationList];
 
     if (inputValue.length > 0) {
-      newMsgArray.push({role: 'user', content: inputValue});
+      newMsgArray.push({ role: 'user', content: inputValue });
       setConversationList(newMsgArray);
     }
 
     setLoading(true);
     // setMsg('');
     llmApiCall(newMsgArray, 4000)
-      .then(res => {
+      .then((res) => {
         if (res.success) {
           if ('data' in res) {
             setLoading(false);
@@ -110,7 +110,7 @@ Note: ask question in plan text and always ask single question at a time.
           }
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   };
@@ -123,14 +123,14 @@ Note: ask question in plan text and always ask single question at a time.
       directory: 'Documents',
       base64: false,
     };
-    await RNHTMLtoPDF.convert(options).then(file => {
+    await RNHTMLtoPDF.convert(options).then((file) => {
       const localUrl = `file://${file.filePath}`;
       fileDownloader(
         localUrl,
         `${user?.exams[0]?.exam_short_name} Study plan`,
-        'pdf',
+        'pdf'
       ).then(() => {
-        toast.show('Study plan downloaded successfully', {type: 'success'});
+        toast.show('Study plan downloaded successfully', { type: 'success' });
       });
     });
   };
@@ -138,7 +138,7 @@ Note: ask question in plan text and always ask single question at a time.
   // scroll bottom when new response added
   useEffect(() => {
     setTimeout(() => {
-      scrollViewRef.current?.scrollToEnd({animated: true});
+      scrollViewRef.current?.scrollToEnd({ animated: true });
     }, 50);
   }, [conversationList]);
 
@@ -176,7 +176,8 @@ Note: ask question in plan text and always ask single question at a time.
       <View style={styles.wrapper}>
         <ScrollView
           ref={scrollViewRef}
-          contentContainerStyle={styles.scrollWrapper}>
+          contentContainerStyle={styles.scrollWrapper}
+        >
           <View style={styles.responseWrapper}>
             {conversationList
               .slice(2, html ? conversationList.length - 1 : undefined)

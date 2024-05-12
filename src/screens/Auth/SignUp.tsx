@@ -6,16 +6,19 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, {useReducer, useState} from 'react';
-import {colors} from '../../utils/commonStyle/colors';
+import React, { useReducer, useState } from 'react';
+import { colors } from '../../utils/commonStyle/colors';
 import LogoTitle from '../../components/commonComponents/LogoTitle';
 import Button from '../../components/Button';
-import {spacing} from '../../utils/commonStyle';
+import { spacing } from '../../utils/commonStyle';
 import InputField from '../../components/formComponents/InputField';
-import {isValidEmail, isValidIndianMobileNumber} from '../../utils/validation';
+import {
+  isValidEmail,
+  isValidIndianMobileNumber,
+} from '../../utils/validation';
 import DateSelector from '../../components/commonComponents/DateSelector';
-import {makeRequest} from '../../api/apiClients';
-import {useToast} from 'react-native-toast-notifications';
+import { makeRequest } from '../../api/apiClients';
+import { useToast } from 'react-native-toast-notifications';
 
 interface Props {
   navigation?: any;
@@ -24,13 +27,13 @@ interface Props {
 
 // Define action types
 type ActionType =
-  | {type: 'FNAME'; payload: string}
-  | {type: 'LNAME'; payload: string}
-  | {type: 'EMAIL'; payload: string}
-  | {type: 'MOBILE'; payload: string}
-  | {type: 'DOB'; payload: string}
-  | {type: 'PASSWORD'; payload: string}
-  | {type: 'CPASSWORD'; payload: string};
+  | { type: 'FNAME'; payload: string }
+  | { type: 'LNAME'; payload: string }
+  | { type: 'EMAIL'; payload: string }
+  | { type: 'MOBILE'; payload: string }
+  | { type: 'DOB'; payload: string }
+  | { type: 'PASSWORD'; payload: string }
+  | { type: 'CPASSWORD'; payload: string };
 
 // Define initial state interface
 interface StateType {
@@ -49,19 +52,19 @@ interface StateType {
 const reducer = (state: StateType, action: ActionType): StateType => {
   switch (action.type) {
     case 'FNAME':
-      return {...state, firstName: action.payload};
+      return { ...state, firstName: action.payload };
     case 'LNAME':
-      return {...state, lastName: action.payload};
+      return { ...state, lastName: action.payload };
     case 'EMAIL':
-      return {...state, email: action.payload};
+      return { ...state, email: action.payload };
     case 'MOBILE':
-      return {...state, mobile: action.payload};
+      return { ...state, mobile: action.payload };
     case 'DOB':
-      return {...state, dob: action.payload};
+      return { ...state, dob: action.payload };
     case 'PASSWORD':
-      return {...state, password: action.payload};
+      return { ...state, password: action.payload };
     case 'CPASSWORD':
-      return {...state, cPassword: action.payload};
+      return { ...state, cPassword: action.payload };
     default:
       return state;
   }
@@ -77,8 +80,8 @@ const initialState: StateType = {
   education: 'school student',
   cPassword: '',
 };
-const SignUp: React.FC<Props> = props => {
-  const {navigation} = props;
+const SignUp: React.FC<Props> = (props) => {
+  const { navigation } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState({
@@ -91,7 +94,7 @@ const SignUp: React.FC<Props> = props => {
     cPassword: '',
   });
   let error = false;
-  const errorObj: {[key: string]: string} = {};
+  const errorObj: { [key: string]: string } = {};
   const toast = useToast();
   const isValidError = () => {
     const fieldsToValidate = [
@@ -148,7 +151,7 @@ const SignUp: React.FC<Props> = props => {
       },
     ];
 
-    fieldsToValidate.forEach(({field, validation}) => {
+    fieldsToValidate.forEach(({ field, validation }) => {
       const newErrorMessage = validation(state[field] || '');
       errorObj[field] = newErrorMessage;
       if (newErrorMessage !== '') {
@@ -162,7 +165,7 @@ const SignUp: React.FC<Props> = props => {
     const isError = isValidError();
     if (isError) {
       setLoading(false);
-      toast.show('Please enter valid details', {type: 'danger'});
+      toast.show('Please enter valid details', { type: 'danger' });
     }
     const errorMessageObj: {
       firstName: string;
@@ -219,12 +222,13 @@ const SignUp: React.FC<Props> = props => {
 
       <ScrollView
         contentContainerStyle={styles.scrollWrapper}
-        centerContent={true}>
+        centerContent={true}
+      >
         <View style={styles.wrapper}>
           <InputField
             errorMsg={errorMessage.firstName}
-            onChangeText={text => {
-              dispatch({type: 'FNAME', payload: text});
+            onChangeText={(text) => {
+              dispatch({ type: 'FNAME', payload: text });
             }}
             value={state.firstName}
             label="First name*"
@@ -232,8 +236,8 @@ const SignUp: React.FC<Props> = props => {
           />
           <InputField
             errorMsg={errorMessage.lastName}
-            onChangeText={text => {
-              dispatch({type: 'LNAME', payload: text});
+            onChangeText={(text) => {
+              dispatch({ type: 'LNAME', payload: text });
             }}
             value={state.lastName}
             label="Last name*"
@@ -242,8 +246,8 @@ const SignUp: React.FC<Props> = props => {
           <InputField
             errorMsg={errorMessage.email}
             keyboardType="email-address"
-            onChangeText={text => {
-              dispatch({type: 'EMAIL', payload: text.toLocaleLowerCase()});
+            onChangeText={(text) => {
+              dispatch({ type: 'EMAIL', payload: text.toLocaleLowerCase() });
             }}
             value={state.email.toLocaleLowerCase()}
             label="Email*"
@@ -252,8 +256,8 @@ const SignUp: React.FC<Props> = props => {
           <InputField
             errorMsg={errorMessage.mobile}
             keyboardType="number-pad"
-            onChangeText={text => {
-              dispatch({type: 'MOBILE', payload: text});
+            onChangeText={(text) => {
+              dispatch({ type: 'MOBILE', payload: text });
             }}
             value={state.mobile}
             label="Mobile*"
@@ -261,16 +265,16 @@ const SignUp: React.FC<Props> = props => {
           />
           <DateSelector
             errorMsg={errorMessage.dob}
-            onDateChange={date => {
+            onDateChange={(date) => {
               const formattedDate = date.toString();
-              dispatch({type: 'DOB', payload: formattedDate});
+              dispatch({ type: 'DOB', payload: formattedDate });
             }}
           />
 
           <InputField
             errorMsg={errorMessage.password}
-            onChangeText={text => {
-              dispatch({type: 'PASSWORD', payload: text});
+            onChangeText={(text) => {
+              dispatch({ type: 'PASSWORD', payload: text });
             }}
             value={state.password}
             label="Password*"
@@ -278,8 +282,8 @@ const SignUp: React.FC<Props> = props => {
           />
           <InputField
             errorMsg={errorMessage.cPassword}
-            onChangeText={text => {
-              dispatch({type: 'CPASSWORD', payload: text});
+            onChangeText={(text) => {
+              dispatch({ type: 'CPASSWORD', payload: text });
             }}
             value={state.cPassword}
             label="Confirm password*"
@@ -296,7 +300,8 @@ const SignUp: React.FC<Props> = props => {
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('Login');
-                }}>
+                }}
+              >
                 <Text style={styles.linkText}>Login</Text>
               </TouchableOpacity>
             </View>
