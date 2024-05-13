@@ -29,6 +29,7 @@ const StartApp = ({ navigation }: any) => {
             })
             .catch((err: any) => {
               console.log(err);
+              navigation.navigate('Login');
             });
         });
       } else {

@@ -72,6 +72,8 @@ const getStyles = (isFullHeight: boolean) =>
     },
     gradient: {
       padding: 1,
+      borderRadius: 16,
+      overflow: 'hidden',
     },
     closeBtnWrapper: {
       width: '100%',
@@ -79,7 +81,6 @@ const getStyles = (isFullHeight: boolean) =>
       alignItems: 'flex-end',
       position: 'absolute',
       zIndex: 1,
-      borderRadius: 16,
       paddingHorizontal: spacing.s,
     },
     scrollWrapper: {
@@ -111,18 +112,15 @@ const getStyles = (isFullHeight: boolean) =>
     },
     modalStyles: {
       margin: 0,
-      padding: 0,
+      padding: spacing.m,
     },
     backdrop: {
       flex: 1,
       backgroundColor: 'rgba(0,0,0,0.5)',
     },
     container: {
-      marginHorizontal: spacing.l,
       maxHeight: '80%',
       minHeight: isFullHeight ? '80%' : undefined,
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      borderRadius: 16,
       overflow: 'hidden',
     },
   });

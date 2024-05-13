@@ -32,12 +32,12 @@ const Profile: React.FC<PropsType> = ({ navigation }) => {
     {
       icon: require('../assets/img/how_ic.png'),
       linkText: 'How it works',
-      onPress: () => navigation.navigate('Profile'),
+      onPress: () => navigation.navigate('How its work'),
     },
     {
       icon: require('../assets/img/about_ic.png'),
       linkText: 'About prepIntelli',
-      onPress: () => navigation.navigate('Profile'),
+      onPress: () => navigation.navigate('About PrepIntelli'),
     },
     {
       icon: require('../assets/img/faq_ic.png'),
