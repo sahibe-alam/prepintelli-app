@@ -1,10 +1,10 @@
 import React from 'react';
 import GlobalState from './contexts/GlobalState';
 import AppNavigator from './navigation/AppNavigator';
-import {ToastProvider} from 'react-native-toast-notifications';
+import { ToastProvider } from 'react-native-toast-notifications';
 
-import {StatusBar} from 'react-native';
-import {colors} from './utils/commonStyle/colors';
+import { StatusBar } from 'react-native';
+import { colors } from './utils/commonStyle/colors';
 const App = () => {
   return (
     <>
@@ -14,7 +14,8 @@ const App = () => {
           placement="top"
           successColor={colors.green}
           dangerColor={colors.red}
-          warningColor="orange">
+          warningColor="orange"
+        >
           <AppNavigator />
         </ToastProvider>
       </GlobalState>
