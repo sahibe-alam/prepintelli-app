@@ -1,9 +1,9 @@
-import {View, SafeAreaView, StyleSheet} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {colors} from '../../utils/commonStyle/colors';
+import { View, SafeAreaView, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { colors } from '../../utils/commonStyle/colors';
 import BackHeader from '../../components/BackHeader';
 import Button from '../../components/Button';
-import {spacing} from '../../utils/commonStyle';
+import { spacing } from '../../utils/commonStyle';
 import Questions from '../../components/examPrepComponents/Questions';
 import QuestionsProgressBar from '../../components/examPrepComponents/QuestionsProgressBar';
 
@@ -19,9 +19,9 @@ interface Question {
   userSelected?: number;
 }
 
-const PracticeTest: React.FC<PropsType> = props => {
-  const {navigation, route} = props;
-  const {generativeAiData, subjectName, chapterName} = route.params;
+const PracticeTest: React.FC<PropsType> = (props) => {
+  const { navigation, route } = props;
+  const { generativeAiData, subjectName, chapterName } = route.params;
   const styles = getStyles();
   const [answers, setAnswers] = useState<number[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -37,10 +37,10 @@ const PracticeTest: React.FC<PropsType> = props => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [questionsArray, setQuestionsArray] = useState<Question[] | null>(
-    generativeAiData?.questions || [],
+    generativeAiData?.questions || []
   );
   const handleOptionClick = (questionIndex: number, selectedOption: number) => {
-    setAnswers(prevAnswers => {
+    setAnswers((prevAnswers) => {
       const newAnswers = [...prevAnswers];
       newAnswers[questionIndex] = selectedOption;
       return newAnswers;
@@ -157,7 +157,8 @@ const PracticeTest: React.FC<PropsType> = props => {
             justifyContent:
               currentQuestionIndex > 0 ? 'space-between' : 'flex-end',
           },
-        ]}>
+        ]}
+      >
         {currentQuestionIndex > 0 && (
           <Button
             onPress={handlePrev}

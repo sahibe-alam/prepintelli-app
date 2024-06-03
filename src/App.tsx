@@ -11,7 +11,8 @@ const App = () => {
       <StatusBar barStyle="dark-content" backgroundColor={'white'} />
       <GlobalState>
         <ToastProvider
-          placement="top"
+          placement="bottom"
+          offsetBottom={100}
           successColor={colors.green}
           dangerColor={colors.red}
           warningColor="orange"

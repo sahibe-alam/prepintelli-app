@@ -1,10 +1,10 @@
-import {Platform} from 'react-native';
+import { Platform } from 'react-native';
 import RNFetchBlob from 'react-native-blob-util';
 
 export const fileDownloader = async (
   fileUrl: string,
   fileName?: string | null,
-  fileType?: string,
+  fileType?: string
 ) => {
   const timeStamp = new Date().getTime(); // or any timestamp you prefer
   const file_Name = fileName || timeStamp;
