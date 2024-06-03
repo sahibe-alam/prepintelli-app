@@ -1,9 +1,9 @@
-import {Text, TouchableOpacity, View, ViewStyle} from 'react-native';
+import { Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {StyleSheet} from 'react-native';
-import {colors} from '../utils/commonStyle/colors';
-import {fontSizes} from '../utils/commonStyle';
+import { StyleSheet } from 'react-native';
+import { colors } from '../utils/commonStyle/colors';
+import { fontSizes } from '../utils/commonStyle';
 import ThreePulseDots from './commonComponents/ThreePulseDots';
 
 interface Props {
@@ -24,12 +24,14 @@ const Button: React.FC<Props> = ({
     <TouchableOpacity
       activeOpacity={0.9}
       onPress={onPress}
-      style={{width: btnWidth}}>
+      style={{ width: btnWidth }}
+    >
       <LinearGradient
-        style={[styles.linearGradient, outline && {padding: 2}]}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 0}}
-        colors={[colors.purple, colors.blue]}>
+        style={[styles.linearGradient, outline && { padding: 2 }]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        colors={[colors.purple, colors.blue]}
+      >
         <View
           style={[
             styles.btnTextWrapper,
@@ -38,15 +40,17 @@ const Button: React.FC<Props> = ({
               padding: outline ? 8 : 10,
               height: outline ? 44 : 48,
             },
-          ]}>
+          ]}
+        >
           {isLoading ? (
             <ThreePulseDots color={outline ? colors.purple : colors.white} />
           ) : (
             <Text
               style={[
                 styles.buttonText,
-                {color: outline ? colors.blue : colors.white},
-              ]}>
+                { color: outline ? colors.blue : colors.white },
+              ]}
+            >
               {title}
             </Text>
           )}

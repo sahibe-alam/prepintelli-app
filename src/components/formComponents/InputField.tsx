@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, TextInput, StyleSheet, View} from 'react-native';
-import {fontSizes} from '../../utils/commonStyle';
-import {colors} from '../../utils/commonStyle/colors';
+import { Text, TextInput, StyleSheet, View } from 'react-native';
+import { fontSizes } from '../../utils/commonStyle';
+import { colors } from '../../utils/commonStyle/colors';
 
 interface PropsType {
   placeholder?: string;
@@ -9,6 +9,7 @@ interface PropsType {
   label?: string;
   errorMsg?: string;
   onChangeText?: (text: string) => void;
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   keyboardType?:
     | 'default'
     | 'number-pad'
@@ -25,6 +26,7 @@ const InputField: React.FC<PropsType> = ({
   errorMsg,
   value,
   label,
+  autoCapitalize = 'none',
 }) => {
   // Define styles for the component
   const styles = getStyles();
@@ -38,6 +40,7 @@ const InputField: React.FC<PropsType> = ({
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
+        autoCapitalize={autoCapitalize}
         style={styles.input}
         placeholder={placeholder}
         placeholderTextColor={colors.grey}

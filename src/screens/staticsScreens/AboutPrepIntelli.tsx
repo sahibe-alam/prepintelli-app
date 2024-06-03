@@ -120,6 +120,7 @@ const getStyle = () =>
       flexGrow: 1,
       justifyContent: 'space-between',
       paddingBottom: spacing.l,
+      paddingHorizontal: spacing.l,
     },
     appVersionText: {
       color: colors.black,
@@ -188,7 +189,6 @@ const getStyle = () =>
     container: {
       flex: 1,
       backgroundColor: colors.lightBg,
-      paddingHorizontal: spacing.l,
     },
   });
 export default AboutPrepIntelli;

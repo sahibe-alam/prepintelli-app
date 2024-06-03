@@ -22,7 +22,7 @@ const Profile: React.FC<PropsType> = ({ navigation }) => {
     {
       icon: require('../assets/img/edit_profile.png'),
       linkText: 'Edit profile',
-      onPress: () => navigation.navigate('Profile'),
+      onPress: () => navigation.navigate('Edit Profile'),
     },
     {
       icon: require('../assets/img/alarm_ic.png'),

@@ -5,43 +5,66 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import LogoTitle from '../../components/commonComponents/LogoTitle';
 import OTPTextInput from 'react-native-otp-textinput';
-import {fontSizes, spacing} from '../../utils/commonStyle';
-import {colors} from '../../utils/commonStyle/colors';
+import { fontSizes, spacing } from '../../utils/commonStyle';
+import { colors } from '../../utils/commonStyle/colors';
 import Button from '../../components/Button';
-import {useToast} from 'react-native-toast-notifications';
-import {makeRequest} from '../../api/apiClients';
+import { useToast } from 'react-native-toast-notifications';
+import { makeRequest } from '../../api/apiClients';
 interface PropsType {
   navigation: any;
+  route: any;
 }
-const OtpVerification: React.FC<PropsType> = ({navigation}) => {
+const OtpVerification: React.FC<PropsType> = ({ navigation, route }) => {
+  const { isForgotPassword, email } = route.params || {};
   const [otp, setOtp] = useState('');
   const [isLoading, setLoading] = useState(false);
   const toast = useToast();
-
-  const hadleSubmit = () => {
+  console.log(isForgotPassword, 'isForgotPassword');
+  const handleSubmit = () => {
     if (otp.length === 4) {
       setLoading(true);
-      makeRequest({
-        url: '/verifyOtpAndSaveUser',
-        method: 'POST',
-        data: {
-          otp: otp,
-        },
-      })
-        .then((res: any) => {
-          setLoading(false);
-          toast.show(res.data.msg, {type: 'success'});
-          navigation.navigate('Login');
+      if (!isForgotPassword) {
+        makeRequest({
+          url: '/verifyOtpAndSaveUser',
+          method: 'POST',
+          data: {
+            otp: otp,
+          },
         })
-        .catch((err: any) => {
-          setLoading(false);
-          toast.show(err.response.data.msg, {type: 'danger'});
-        });
+          .then((res: any) => {
+            setLoading(false);
+            toast.show(res.data.msg, { type: 'success' });
+            navigation.navigate('Login');
+          })
+          .catch((err: any) => {
+            setLoading(false);
+            toast.show(err.response.data.msg, { type: 'danger' });
+          });
+      } else {
+        makeRequest({
+          url: '/verifyotp',
+          method: 'POST',
+          data: {
+            restotp: otp,
+          },
+        })
+          .then((res: any) => {
+            setLoading(false);
+            toast.show(res.data.msg, { type: 'success' });
+            navigation.navigate('Create new password', {
+              email: email,
+            });
+          })
+          .catch((err: any) => {
+            setLoading(false);
+            toast.show(err.response.data.msg, { type: 'danger' });
+          });
+      }
     } else {
-      toast.show('Please enter 4 digit otp', {type: 'danger'});
+      toast.show('Please enter 4 digit otp', { type: 'danger' });
     }
   };
 
@@ -54,7 +77,7 @@ const OtpVerification: React.FC<PropsType> = ({navigation}) => {
           An email has been sent to your address with a verification code.
         </Text>
         <OTPTextInput
-          handleTextChange={text => setOtp(text)}
+          handleTextChange={(text) => setOtp(text)}
           tintColor={colors.purple}
           containerStyle={styles.container}
           textInputStyle={styles.input}
@@ -65,7 +88,7 @@ const OtpVerification: React.FC<PropsType> = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <View style={styles.submitBtnWrapper}>
-          <Button isLoading={isLoading} onPress={hadleSubmit} title="Verify" />
+          <Button isLoading={isLoading} onPress={handleSubmit} title="Verify" />
         </View>
       </View>
     </SafeAreaView>

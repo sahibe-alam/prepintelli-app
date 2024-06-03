@@ -7,33 +7,83 @@ import {
   ScrollView,
 } from 'react-native';
 import React from 'react';
-import {colors} from '../../utils/commonStyle/colors';
+import { colors } from '../../utils/commonStyle/colors';
 import LogoTitle from '../../components/commonComponents/LogoTitle';
 import Button from '../../components/Button';
-import {spacing} from '../../utils/commonStyle';
+import { spacing } from '../../utils/commonStyle';
 import InputField from '../../components/formComponents/InputField';
+import { useToast } from 'react-native-toast-notifications';
+import { makeRequest } from '../../api/apiClients';
+import { isValidEmail } from '../../utils/validation';
 
 interface Props {
   navigation?: any;
   route?: any;
 }
-const ForgotPassword: React.FC<Props> = props => {
-  const {navigation} = props;
+const ForgotPassword: React.FC<Props> = (props) => {
+  const { navigation } = props;
+  const [email, setEmail] = React.useState('');
+  const [isLoading, setLoading] = React.useState(false);
+  const toast = useToast();
+  const [isEmailValid, setEmailValid] = React.useState('');
   const loginHandler = () => {
-    navigation.navigate('OTP');
+    // navigation.navigate('OTP');
+    const validEmail = isValidEmail(email);
+    if (email.trim() !== '') {
+      setEmailValid(validEmail ? '' : 'Enter valid email');
+    } else {
+      setEmailValid('Email is required');
+    }
+    if (email.trim() !== '' && validEmail) {
+      setLoading(true);
+      makeRequest({
+        method: 'POST',
+        url: 'resetsetotp',
+        data: {
+          email,
+        },
+      })
+        .then((res: any) => {
+          setLoading(false);
+          toast.show(res.data.msg, { type: 'success' });
+          if (res?.data?.success) {
+            navigation.navigate('OTP', {
+              email: email,
+              isForgotPassword: true,
+            });
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          console.log(err.response?.data, ': Forgot password error');
+        });
+    }
   };
   const styles = getStyles();
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollWrapper}
-        centerContent={true}>
+        centerContent={true}
+      >
         <View style={styles.wrapper}>
           <LogoTitle title="Forgot password" />
-          <InputField label="Email" placeholder="Enter email id" />
+          <InputField
+            label="Email"
+            autoCapitalize="none"
+            value={email}
+            keyboardType="default"
+            errorMsg={isEmailValid}
+            placeholder="Enter email id"
+            onChangeText={(text) => setEmail(text)}
+          />
 
           <View style={styles.btnWrapper}>
-            <Button title="Send OTP" onPress={loginHandler} />
+            <Button
+              isLoading={isLoading}
+              title="Get OTP"
+              onPress={loginHandler}
+            />
           </View>
         </View>
       </ScrollView>
@@ -43,7 +93,8 @@ const ForgotPassword: React.FC<Props> = props => {
           onPress={() => {
             navigation.navigate('Login');
           }}
-          style={styles.btnLink}>
+          style={styles.btnLink}
+        >
           <Text style={styles.linkText}>Login</Text>
         </TouchableOpacity>
       </View>

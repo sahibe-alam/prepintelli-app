@@ -5,7 +5,7 @@ import Gradient from '../components/Gradient';
 import { usePrepContext } from '../contexts/GlobalState';
 import { fontSizes } from '../utils/commonStyle';
 
-const DpWrapper = () => {
+const DpWrapper = ({ isPencil = false }: { isPencil?: boolean }) => {
   const { deviceWidth } = usePrepContext();
   const { user } = usePrepContext();
   const styles = getSyle(deviceWidth || 0);
@@ -25,12 +25,14 @@ const DpWrapper = () => {
           source={require('../assets//img/exam_ai_img.png')}
           style={styles.dp}
         />
-        <TouchableOpacity activeOpacity={0.7}>
-          <Image
-            source={require('../assets/img/pencil_ic.png')}
-            style={styles.editIcon}
-          />
-        </TouchableOpacity>
+        {isPencil && (
+          <TouchableOpacity activeOpacity={0.7}>
+            <Image
+              source={require('../assets/img/pencil_ic.png')}
+              style={styles.editIcon}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
