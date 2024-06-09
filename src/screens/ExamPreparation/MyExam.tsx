@@ -336,7 +336,7 @@ Return the JSON output without any additional text.
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
               <SVGComponent />
               <Text style={styles.loadingText}>
-                Your Ai teacher is creating some question for you 😍
+                Your Ai teacher is creating some questions for you 😍
               </Text>
               <View
                 style={{
