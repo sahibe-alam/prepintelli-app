@@ -36,6 +36,8 @@ const MyExam: React.FC<PropsType> = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [subject, setSubject] = useState('');
   const [chapter, setChapter] = useState('');
+  const [testTime, setTestTime] = useState(0);
+  const [subjectIndex, setSubjectIndex] = useState<number | null>(null);
   const [roadMap, setRoadMap] = useState<any>(null);
   const [modalType, setModalType] = useState<any>('');
   const [errorMsg, setErrorMsg] = useState({
@@ -48,6 +50,7 @@ const MyExam: React.FC<PropsType> = ({ navigation }) => {
   const { user } = usePrepContext();
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
+    setTestTime(0);
   };
 
   // Prompt for question generation
@@ -108,6 +111,8 @@ Return the JSON output without any additional text.
               generativeAiData: jsonQuestions,
               subjectName: subject,
               chapterName: chapter,
+              testTime: testTime,
+              subjectIndex: subjectIndex,
             });
           } else {
             toast.show('Something went wrong 😔', {
@@ -132,7 +137,9 @@ Return the JSON output without any additional text.
     }
     if (modalType === 'doubt') {
       setModalVisible(false);
-      navigation.navigate('Ask doubt', { subject: subject });
+      navigation.navigate('Ask doubt', {
+        subject: subject,
+      });
     }
   };
   const roadMapPrompt = [
@@ -144,6 +151,28 @@ Return the JSON output without any additional text.
     {
       role: 'user',
       content: `Please provide a comprehensive roadmap for ${user?.exams?.[0]?.examname}: ${user?.exams?.[0]?.exam_short_name}. My subjects are ${user?.exams?.[0]?.subjects}. Your response should be in HTML code format with proper headings and bullet points. Utilize inline heading font size, with a maximum of 26px. Feel free to add emojis according to relevant keywords.,`,
+    },
+  ];
+  const timeData = [
+    {
+      time: '10 minutes',
+      value: 10,
+    },
+    {
+      time: '15 minutes',
+      value: 15,
+    },
+    {
+      time: '20 minutes',
+      value: 20,
+    },
+    {
+      time: '25 minutes',
+      value: 25,
+    },
+    {
+      time: '30 minutes',
+      value: 30,
     },
   ];
   const handleRoadMap = async () => {
@@ -174,6 +203,7 @@ Return the JSON output without any additional text.
       return '';
     }
   }
+  console.log(subject);
   return (
     <>
       {user?.exams.length > 0 ? (
@@ -262,20 +292,37 @@ Return the JSON output without any additional text.
                 rowTextForSelection={(item: any) => item}
                 buttonTextAfterSelection={(item: any) => item}
                 errorMsg={errorMsg?.subject}
-                onSelect={(item: any) => {
+                onSelect={(item: any, index: number) => {
+                  setSubjectIndex(index);
                   setSubject(item);
                 }}
               />
               {modalType === 'practice' && (
-                <InputField
-                  label="Chapter or unit"
-                  placeholder="Type chapter or unit"
-                  errorMsg={errorMsg?.chapter}
-                  onChangeText={(text) => {
-                    setChapter(text);
-                  }}
-                  value={chapter}
-                />
+                <>
+                  <InputField
+                    label="Chapter or unit"
+                    placeholder="Type chapter or unit"
+                    errorMsg={errorMsg?.chapter}
+                    onChangeText={(text) => {
+                      setChapter(text);
+                    }}
+                    value={chapter}
+                  />
+                  <View>
+                    <View style={styles.timeWrapper}>
+                      <DropDownSelect
+                        DropDownLabel="Select time for 10 questions"
+                        defaultButtonText="Select time"
+                        data={timeData}
+                        rowTextForSelection={(item: any) => item.time}
+                        buttonTextAfterSelection={(item: any) => item.time}
+                        onSelect={(item: any) => {
+                          setTestTime(item.value);
+                        }}
+                      />
+                    </View>
+                  </View>
+                </>
               )}
               <Button
                 isLoading={isLoading}
@@ -310,6 +357,20 @@ Return the JSON output without any additional text.
 
 const getStyles = () =>
   StyleSheet.create({
+    timeWrapper: {
+      flexDirection: 'row',
+      gap: 16,
+    },
+    input: {
+      height: 48,
+      padding: 8,
+      fontSize: fontSizes.p2,
+      color: colors.black,
+      borderWidth: 1,
+      flex: 1,
+      borderRadius: 10,
+      borderColor: colors.grey,
+    },
     loadingText: {
       fontSize: fontSizes.p2,
       lineHeight: 22,

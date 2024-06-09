@@ -56,6 +56,7 @@ const ForgotPassword: React.FC<Props> = (props) => {
         .catch((err) => {
           setLoading(false);
           console.log(err.response?.data, ': Forgot password error');
+          toast.show(err.response.data.msg, { type: 'danger' });
         });
     }
   };

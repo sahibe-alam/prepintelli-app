@@ -1,6 +1,6 @@
-import React, {useRef, useEffect} from 'react';
-import {Animated, Easing, View, StyleSheet} from 'react-native';
-import {colors} from '../../utils/commonStyle/colors';
+import React, { useRef, useEffect } from 'react';
+import { Animated, Easing, View, StyleSheet } from 'react-native';
+import { colors } from '../../utils/commonStyle/colors';
 
 const PulseDot = ({
   delay,
@@ -26,7 +26,7 @@ const PulseDot = ({
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
         }),
-      ]),
+      ])
     ).start();
   };
 
@@ -44,10 +44,12 @@ const PulseDot = ({
   const styles = getStyles(color);
 
   return (
-    <Animated.View style={[styles.dot, {transform: [{scale: pulseScale}]}]} />
+    <Animated.View
+      style={[styles.dot, { transform: [{ scale: pulseScale }] }]}
+    />
   );
 };
-const ThreePulseDots = ({color = colors.purple}: {color?: string}) => {
+const ThreePulseDots = ({ color = colors.purple }: { color?: string }) => {
   const styles = getStyles();
   return (
     <View style={styles.container}>

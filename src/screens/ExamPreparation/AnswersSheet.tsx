@@ -15,6 +15,8 @@ import CustomModal from '../../components/commonComponents/CustomModal';
 import PromptInput from '../../components/examPrepComponents/PromptInput';
 import ResponseCard from '../../components/commonComponents/ResponseCard';
 import { llmApiCall } from '../../api/adapter/llmTutor';
+import { updateAskDoubt } from '../../api/adapter/studentPerformance';
+import { usePrepContext } from '../../contexts/GlobalState';
 
 interface PropsType {
   navigation: any;
@@ -33,7 +35,7 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setLoading] = useState(false);
   const scrollViewRef = useRef<ScrollView | null>(null);
-
+  const { user } = usePrepContext();
   const [conversationList, setConversationList] = React.useState<any>([]);
   const toggleModal = (question?: any, questionIndex?: number) => {
     setModalVisible(!isModalVisible);
@@ -105,6 +107,7 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
           setLoading(false);
           setConversationList([...res.data]);
         }
+        updateAskDoubt(user?._id);
       }
     });
   };

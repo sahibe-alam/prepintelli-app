@@ -109,7 +109,6 @@ const LoginScreen: React.FC<Props> = (props) => {
         },
       })
         .then((res: any) => {
-          console.log(res);
           if (res.data?.success) {
             setLoginToken(res.data.data.token);
             setUserID(res.data.data._id);

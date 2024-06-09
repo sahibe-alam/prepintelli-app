@@ -125,6 +125,7 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
         <View style={styles.inputsWrapper}>
           <View style={styles.formWrapper}>
             <DropDownSelect
+              isSearch={true}
               onSelect={(item: any) => {
                 dispatch({ type: 'examName', payload: item });
               }}
@@ -143,6 +144,7 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
             />
             {type === 'acdmc' && (
               <DropDownSelect
+                isSearch={true}
                 rowTextForSelection={(item: any) => item.classname}
                 buttonTextAfterSelection={(selectedItem: any) =>
                   selectedItem?.classname
