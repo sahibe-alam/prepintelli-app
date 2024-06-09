@@ -1,18 +1,48 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { colors } from '../utils/commonStyle/colors';
 import { fontSizes, spacing } from '../utils/commonStyle';
 interface PropsType {
   onPress?: () => void;
   title?: string;
   isTimer?: boolean;
+  testTime?: number;
+  isTimeUp?: () => void;
 }
 const BackHeader: React.FC<PropsType> = ({
   onPress,
   title,
   isTimer = false,
+  testTime = 0,
+  isTimeUp,
 }) => {
-  const styles = getstyles();
+  const [timeLeft, setTimeLeft] = useState(testTime * 60);
+
+  const styles = getStyles();
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      if (isTimeUp && testTime > 0) {
+        isTimeUp();
+      }
+    }
+
+    const intervalId = setInterval(() => {
+      if (timeLeft > 0) {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [timeLeft, isTimeUp, testTime]);
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${String(minutes).padStart(1, '0')}:${String(seconds).padStart(
+      2,
+      '0'
+    )}`;
+  };
   return (
     <View style={styles.backHeader}>
       <TouchableOpacity style={styles.backBtn} onPress={onPress}>
@@ -29,7 +59,7 @@ const BackHeader: React.FC<PropsType> = ({
               style={styles.timerIc}
               source={require('../assets/img/timer_ic.png')}
             />
-            <Text style={styles.counterText}>10:00</Text>
+            <Text style={styles.counterText}>{formatTime(timeLeft)}</Text>
           </View>
         </View>
       )}
@@ -37,7 +67,7 @@ const BackHeader: React.FC<PropsType> = ({
   );
 };
 
-const getstyles = () =>
+const getStyles = () =>
   StyleSheet.create({
     counter: {
       backgroundColor: colors.light_purple,

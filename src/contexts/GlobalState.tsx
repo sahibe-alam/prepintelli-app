@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Appearance,
   ColorSchemeName,
@@ -7,8 +7,6 @@ import {
 } from 'react-native';
 
 interface GlobalStateProps {
-  hello?: string;
-  setHello?: (value: string) => void;
   children: React.ReactNode;
 }
 interface PrepContextProps {
@@ -24,6 +22,8 @@ const PrepContext = React.createContext<PrepContextProps>({});
 export const usePrepContext = () => React.useContext(PrepContext);
 interface PrepContextProps {
   deviceWidth?: number;
+  setUserPerformance?: (value: any) => void;
+  userPerformance?: any;
 }
 
 const GlobalState: React.FC<GlobalStateProps> = ({
@@ -34,15 +34,16 @@ const GlobalState: React.FC<GlobalStateProps> = ({
   // STATES DEFINE HERE
   const colorScheme = Appearance.getColorScheme();
   const [isFirstLaunch, setIsFirstLaunch] = useState(true);
-  const [user, setUser] = useState({}); // Provide a default value of empty object
+  const [user, setUser] = useState({});
+  const [userPerformance, setUserPerformance] = useState<any>(null);
   const deviceWidth = Dimensions.get('window').width;
   const [orientation, setOrientation] = useState<'PORTRAIT' | 'LANDSCAPE'>(
-    'PORTRAIT',
+    'PORTRAIT'
   );
 
   useEffect(() => {
     const detectOrientation = ({
-      window: {width, height},
+      window: { width, height },
     }: {
       window: ScaledSize;
     }) => {
@@ -51,7 +52,7 @@ const GlobalState: React.FC<GlobalStateProps> = ({
 
     const subscription = Dimensions.addEventListener(
       'change',
-      detectOrientation,
+      detectOrientation
     );
 
     return () => {
@@ -69,7 +70,10 @@ const GlobalState: React.FC<GlobalStateProps> = ({
         setIsFirstLaunch,
         setUser,
         user,
-      }}>
+        userPerformance,
+        setUserPerformance,
+      }}
+    >
       {children}
     </PrepContext.Provider>
   );

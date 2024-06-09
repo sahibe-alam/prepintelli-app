@@ -5,59 +5,95 @@ import LogoTitle from '../../components/commonComponents/LogoTitle';
 import Button from '../../components/Button';
 import { spacing } from '../../utils/commonStyle';
 import InputField from '../../components/formComponents/InputField';
+import { makeRequest } from '../../api/apiClients';
+import { useToast } from 'react-native-toast-notifications';
 
 interface Props {
-  navigation?: any;
   route?: any;
+  navigation?: any;
 }
 const CreateNewPassword: React.FC<Props> = (props) => {
   const { navigation } = props;
-  const [password, setPassword] = React.useState({
+  const toast = useToast();
+  const [passwords, setPasswords] = React.useState({
     password: '',
     confirmPassword: '',
+    email: 'sahibe190@gmail.com',
   });
   const [errorMsg, setErrorMsg] = React.useState({
     password: '',
     confirmPassword: '',
   });
+
   const isPassValid = () => {
-    const { password, confirmPassword } = password;
+    const { password, confirmPassword } = passwords;
+    let valid = true;
+
     if (password.trim() === '') {
-      setErrorMsg({
-        ...errorMsg,
+      setErrorMsg((prevState) => ({
+        ...prevState,
         password: 'Password is required',
-      });
+      }));
+      valid = false;
     } else if (password.trim().length < 6) {
-      setErrorMsg({
-        ...errorMsg,
-        password: 'Password must be 6 character',
-      });
-    } else if (confirmPassword.trim() === '') {
-      setErrorMsg({
-        ...errorMsg,
-        confirmPassword: 'Confirm password is required',
-      });
-    } else if (password.trim() !== confirmPassword.trim()) {
-      setErrorMsg({
-        ...errorMsg,
-        confirmPassword: 'Password and confirm password should be same',
-      });
+      setErrorMsg((prevState) => ({
+        ...prevState,
+        password: 'Password must be 6 characters',
+      }));
+      valid = false;
     } else {
-      setErrorMsg({
-        ...errorMsg,
+      setErrorMsg((prevState) => ({
+        ...prevState,
         password: '',
-        confirmPassword: '',
-      });
-      return true;
+      }));
     }
+
+    if (confirmPassword.trim() === '') {
+      setErrorMsg((prevState) => ({
+        ...prevState,
+        confirmPassword: 'Confirm password is required',
+      }));
+      valid = false;
+    } else if (password.trim() !== confirmPassword.trim()) {
+      setErrorMsg((prevState) => ({
+        ...prevState,
+        confirmPassword: 'Password and confirm password should be the same',
+      }));
+      valid = false;
+    } else {
+      setErrorMsg((prevState) => ({
+        ...prevState,
+        confirmPassword: '',
+      }));
+    }
+
+    return valid;
   };
+
   const loginHandler = () => {
     const valid = isPassValid();
-    console.log(valid);
-    // navigation.navigate('OTP');
+    if (valid) {
+      makeRequest({
+        method: 'POST',
+        url: 'updatepassword',
+        data: {
+          password: passwords.password,
+          email: 'sahibe190@gmail.com',
+          confirmpassword: passwords.confirmPassword,
+        },
+      })
+        .then((res: any) => {
+          toast.show(res.data.msg, { type: 'success' });
+          navigation.navigate('Login');
+        })
+        .catch((err: any) => {
+          console.log(err);
+        });
+    }
   };
+
   const styles = getStyles();
-  console.log(password);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -67,15 +103,18 @@ const CreateNewPassword: React.FC<Props> = (props) => {
         <View style={styles.wrapper}>
           <LogoTitle title="Create new password" />
           <InputField
+            errorMsg={errorMsg.password}
             label="Password*"
             placeholder="Enter password"
-            onChangeText={(e) => setPassword({ ...password, password: e })}
+            onChangeText={(e) => setPasswords({ ...passwords, password: e })}
           />
+
           <InputField
+            errorMsg={errorMsg.confirmPassword}
             label="Confirm password*"
-            placeholder="Enter confirm  password"
+            placeholder="Enter confirm password"
             onChangeText={(e) =>
-              setPassword({ ...password, confirmPassword: e })
+              setPasswords({ ...passwords, confirmPassword: e })
             }
           />
 
@@ -136,5 +175,10 @@ const getStyles = () =>
       flex: 1,
       backgroundColor: colors.white,
     },
+    errorText: {
+      color: 'red',
+      marginTop: spacing.s,
+    },
   });
+
 export default CreateNewPassword;

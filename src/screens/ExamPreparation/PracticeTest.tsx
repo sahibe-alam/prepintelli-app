@@ -6,6 +6,8 @@ import Button from '../../components/Button';
 import { spacing } from '../../utils/commonStyle';
 import Questions from '../../components/examPrepComponents/Questions';
 import QuestionsProgressBar from '../../components/examPrepComponents/QuestionsProgressBar';
+import { storeSubjectScore } from '../../api/adapter/studentPerformance';
+import { usePrepContext } from '../../contexts/GlobalState';
 
 interface PropsType {
   navigation?: any;
@@ -21,9 +23,12 @@ interface Question {
 
 const PracticeTest: React.FC<PropsType> = (props) => {
   const { navigation, route } = props;
-  const { generativeAiData, subjectName, chapterName } = route.params;
+  const { generativeAiData, subjectName, chapterName, testTime, subjectIndex } =
+    route.params;
+  console.log(subjectIndex, 'subjectIndex');
   const styles = getStyles();
   const [answers, setAnswers] = useState<number[]>([]);
+  const { user } = usePrepContext();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [results, setResults] = useState<{
     correctAnswers: number;
@@ -94,7 +99,15 @@ const PracticeTest: React.FC<PropsType> = (props) => {
       questionsWithUserSelected,
       subjectName,
       chapterName,
+      subjectIndex,
     });
+    storeSubjectScore(
+      user?._id,
+      subjectName,
+      correctAnswers,
+      totalQuestions,
+      subjectIndex
+    ).catch((error) => console.log(error));
   };
 
   const handleNext = (questionIndex: number) => {
@@ -129,9 +142,11 @@ const PracticeTest: React.FC<PropsType> = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader
+        isTimeUp={() => handleSubmit(currentQuestionIndex)}
+        testTime={testTime}
         onPress={() => navigation.goBack()}
         title={`${currentQuestionIndex + 1}/${questionsArray?.length || 0}`}
-        isTimer={true}
+        isTimer={testTime > 0 ? true : false}
       />
       <QuestionsProgressBar
         totalQuestions={questionsArray?.length || 0}
