@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Button } from 'react-native';
 import React from 'react';
 import { colors } from '../utils/commonStyle/colors';
 import { fontSizes, spacing } from '../utils/commonStyle';
@@ -76,6 +76,10 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
               type={item.type}
             />
           ))}
+          <Button
+            title="Create Exam"
+            onPress={() => navigation.navigate('download')}
+          />
         </View>
       </ScrollView>
     </View>
