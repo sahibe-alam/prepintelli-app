@@ -21,7 +21,6 @@ import HowItsWork from '../screens/staticsScreens/HowItsWork';
 import AboutPrepIntelli from '../screens/staticsScreens/AboutPrepIntelli';
 import EditProfile from '../screens/Auth/EditProfile';
 import CreateNewPassword from '../screens/Auth/CreateNewPassword';
-import DownloadPDF from '../screens/DownloadPDF';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
   return (
@@ -125,11 +124,6 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Create new password"
           component={CreateNewPassword as React.ComponentType}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="download"
-          component={DownloadPDF as React.ComponentType}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

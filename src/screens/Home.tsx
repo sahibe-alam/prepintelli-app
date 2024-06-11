@@ -76,10 +76,6 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
               type={item.type}
             />
           ))}
-          <Button
-            title="Create Exam"
-            onPress={() => navigation.navigate('download')}
-          />
         </View>
       </ScrollView>
     </View>
