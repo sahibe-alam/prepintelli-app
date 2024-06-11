@@ -19,6 +19,7 @@ import { fileDownloader } from '../../utils/fileDownloader';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Images from '../../resources/Images';
 import { useToast } from 'react-native-toast-notifications';
+import downloadPDF from '../../utils/downloadPDF';
 
 interface propsType {
   navigation: any;
@@ -125,13 +126,7 @@ Note: ask question in plan text and always ask single question at a time.
     };
     await RNHTMLtoPDF.convert(options).then((file) => {
       const localUrl = `file://${file.filePath}`;
-      fileDownloader(
-        localUrl,
-        `${user?.exams[0]?.exam_short_name} Study plan`,
-        'pdf'
-      ).then(() => {
-        toast.show('Study plan downloaded successfully', { type: 'success' });
-      });
+      downloadPDF('sahibe.pdf', localUrl);
     });
   };
 
