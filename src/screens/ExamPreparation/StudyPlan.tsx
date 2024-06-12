@@ -15,8 +15,6 @@ import { fontSizes, spacing } from '../../utils/commonStyle';
 import ResponseCard from '../../components/commonComponents/ResponseCard';
 import { llmApiCall } from '../../api/adapter/llmTutor';
 import { usePrepContext } from '../../contexts/GlobalState';
-import { fileDownloader } from '../../utils/fileDownloader';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Images from '../../resources/Images';
 import { useToast } from 'react-native-toast-notifications';
 import downloadPDF from '../../utils/downloadPDF';
@@ -118,15 +116,11 @@ Note: ask question in plan text and always ask single question at a time.
 
   // Generate html to pdf handler
   const generatePdf = async (html_code: string) => {
-    const options = {
-      html: html_code,
-      fileName: 'Study Plan',
-      directory: 'Documents',
-      base64: false,
-    };
-    await RNHTMLtoPDF.convert(options).then((file) => {
-      const localUrl = `file://${file.filePath}`;
-      downloadPDF('sahibe.pdf', localUrl);
+    downloadPDF(
+      html_code,
+      `${user?.exams[0]?.exam_short_name} Study Plan.pdf`
+    ).then(() => {
+      toast.show('Study plan downloaded successfully', { type: 'success' });
     });
   };
 
