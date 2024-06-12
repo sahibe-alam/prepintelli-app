@@ -1,61 +1,73 @@
-import { Alert, Platform } from 'react-native';
-import RNBlobUtil from 'react-native-blob-util';
-const downloadPDF = (fileName: string, fileUrl: string) => {
-  const { config, fs } = RNBlobUtil;
-  const DownloadDir = fs.dirs.LegacyDownloadDir; // For Android
-  const DocumentDir = fs.dirs.DocumentDir; // For iOS
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import RNFS from 'react-native-fs';
+import { Platform } from 'react-native';
 
-  const localFilePath = fileUrl.replace('file://', '');
+const downloadPDF = async (html_code: string, file_name: string) => {
+  try {
+    // Add padding to the HTML content
+    const html_with_padding = `
+      <html>
+        <head>
+          <style>
+            body {
+              padding: 20px; /* Adjust the padding as needed */
+            }
+            .logo{
+            text-align: left;
+            background-color: lightgray;
+            padding: 8px;
+            }
+            .logo img{
+            width: 100px;
+            height: 80px;
+            object-fit: contain;
+            }
+          </style>
+        </head>
+        <body>
+        <div class="logo">
+        <img src="https://firebasestorage.googleapis.com/v0/b/prepintelli-c45bb.appspot.com/o/Logo.png?alt=media&token=0aa7872d-3079-4516-abdf-de2cba6576ce" width="100" height="50"/>
+        </div>
+          ${html_code}
+        </body>
+      </html>
+    `;
 
-  const targetPath =
-    Platform.OS === 'ios'
-      ? `${DocumentDir}/${fileName}`
-      : `${DownloadDir}/${fileName}`;
-
-  if (fileUrl.startsWith('file://')) {
-    fs.cp(localFilePath, targetPath)
-      .then(() => {
-        if (Platform.OS === 'ios') {
-          RNBlobUtil.ios.openDocument(targetPath);
-        } else {
-          Alert.alert(
-            'Success',
-            `PDF downloaded successfully to ${targetPath}!`
-          );
-        }
-      })
-      .catch((error) => {
-        Alert.alert('Error', 'Failed to copy PDF.');
-        console.error(error);
-      });
-  } else {
     const options = {
-      fileCache: true,
-      addAndroidDownloads: {
-        useDownloadManager: true,
-        notification: true,
-        path: targetPath,
-        description: 'Downloading PDF.',
-      },
-      path: Platform.OS === 'ios' ? targetPath : undefined,
+      html: html_with_padding,
+      fileName: file_name,
+      directory:
+        Platform.OS === 'ios'
+          ? RNFS.LibraryDirectoryPath
+          : RNFS.DownloadDirectoryPath,
+      base64: false,
     };
 
-    config(options)
-      .fetch('GET', fileUrl)
-      .then((res) => {
-        if (Platform.OS === 'ios') {
-          RNBlobUtil.ios.openDocument(res.path());
-        } else {
-          Alert.alert(
-            'Success',
-            `PDF downloaded successfully to ${targetPath}!`
-          );
-        }
-      })
-      .catch((error) => {
-        Alert.alert('Error', 'Failed to download PDF.');
-        console.error(error);
-      });
+    const file = await RNHTMLtoPDF.convert(options);
+    const localUrl = file.filePath;
+
+    let destPath;
+    let fileNameUnique = file_name;
+    let count = 0;
+    do {
+      destPath = `${
+        Platform.OS === 'ios'
+          ? RNFS.LibraryDirectoryPath
+          : RNFS.DownloadDirectoryPath
+      }/${fileNameUnique}`;
+      if (await RNFS.exists(destPath)) {
+        count++;
+        fileNameUnique = `${file_name}${count}.pdf`;
+      }
+    } while (await RNFS.exists(destPath));
+
+    await RNFS.copyFile(localUrl as string, destPath);
+    console.log(destPath);
+
+    return destPath; // Resolve with the path to the generated PDF
+  } catch (error) {
+    console.error(error);
+    throw error; // Reject with the error
   }
 };
 
