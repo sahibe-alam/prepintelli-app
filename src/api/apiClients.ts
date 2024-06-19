@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios';
-
 import { LLM_API_KEY, BACKEND_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { removeLoginToken } from '../utils/commonServices';
+
 export const llmClient = axios.create({
   headers: {
     Authorization: 'Bearer ' + LLM_API_KEY,
@@ -10,7 +10,7 @@ export const llmClient = axios.create({
   },
 });
 const client = axios.create({
-  baseURL: `${BACKEND_URL}/api`,
+  baseURL: `${'http://localhost:4000'}/api`,
 });
 export const makeRequest = async <T>(
   config: AxiosRequestConfig

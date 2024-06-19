@@ -104,7 +104,7 @@ const CreateNewPassword: React.FC<Props> = (props) => {
           <LogoTitle title="Create new password" />
           <InputField
             errorMsg={errorMsg.password}
-            label="Password*"
+            label="New password*"
             placeholder="Enter password"
             onChangeText={(e) => setPasswords({ ...passwords, password: e })}
           />

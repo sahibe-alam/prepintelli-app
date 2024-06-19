@@ -1,10 +1,9 @@
-import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native';
-import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Button } from 'react-native';
+import React from 'react';
 import { colors } from '../utils/commonStyle/colors';
 import { fontSizes, spacing } from '../utils/commonStyle';
 import HomeSlider from '../components/HomeSlider';
 import ExamType from '../components/ExamType';
-import requestMultipleHelper from '../utils/requestMultipleHelper';
 interface PropsType {
   navigation?: any;
   route?: any;
@@ -38,11 +37,7 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
       classAction: 'fetchClass',
     },
   ];
-  useEffect(() => {
-    if (Platform.OS === 'android') {
-      requestMultipleHelper();
-    }
-  }, []);
+
   return (
     <View style={styles.container}>
       <ScrollView>

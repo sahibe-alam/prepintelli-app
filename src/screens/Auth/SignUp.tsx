@@ -203,7 +203,9 @@ const SignUp: React.FC<Props> = (props) => {
         .then((response: any) => {
           setLoading(false);
           if (response.status === 200) {
-            navigation.navigate('OTP');
+            navigation.navigate('OTP', {
+              state,
+            });
           }
         })
         .catch((error: any) => {
