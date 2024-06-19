@@ -18,7 +18,8 @@ interface PropsType {
   route: any;
 }
 const OtpVerification: React.FC<PropsType> = ({ navigation, route }) => {
-  const { isForgotPassword, email } = route.params || {};
+  const { isForgotPassword, email, state } = route.params || {};
+  console.log(state);
   const [otp, setOtp] = useState('');
   const [isLoading, setLoading] = useState(false);
   const toast = useToast();
@@ -83,31 +84,52 @@ const OtpVerification: React.FC<PropsType> = ({ navigation, route }) => {
   };
 
   const resendOtp = () => {
-    setTimeLeft(60);
+    setTimeLeft(120);
+
     if (timeLeft === 0) {
-      setLoading(true);
-      makeRequest({
-        method: 'POST',
-        url: 'resetsetotp',
-        data: {
-          email,
-        },
-      })
-        .then((res: any) => {
-          setLoading(false);
-          toast.show(res.data.msg, { type: 'success' });
-          if (res?.data?.success) {
-            navigation.navigate('OTP', {
-              email: email,
-              isForgotPassword: true,
-            });
-          }
+      if (email) {
+        makeRequest({
+          method: 'POST',
+          url: 'resetsetotp',
+          data: {
+            email,
+          },
         })
-        .catch((err) => {
+          .then((res: any) => {
+            setLoading(false);
+            toast.show(res.data.msg, { type: 'success' });
+            if (res?.data?.success) {
+              navigation.navigate('OTP', {
+                email: email,
+                isForgotPassword: true,
+              });
+            }
+          })
+          .catch((err) => {
+            setLoading(false);
+            console.log(err.response?.data, ': Forgot password error');
+            toast.show(err.response.data.msg, { type: 'danger' });
+          });
+      }
+      if (state) {
+        makeRequest({
+          url: '/register',
+          method: 'POST',
+          data: {
+            email: state.email,
+            firstname: state.firstName,
+            lastname: state.lastName,
+            mobile: state.mobile,
+            education: state.education,
+            dateofbirth: state.dob,
+            password: state.password,
+            confirmpassword: state.cPassword,
+          },
+        }).then(() => {
+          toast.show('OTP resent successfully', { type: 'success' });
           setLoading(false);
-          console.log(err.response?.data, ': Forgot password error');
-          toast.show(err.response.data.msg, { type: 'danger' });
         });
+      }
     }
   };
 
@@ -133,7 +155,7 @@ const OtpVerification: React.FC<PropsType> = ({ navigation, route }) => {
           >
             <Text style={styles.resendBtn}>Resend OTP</Text>
           </TouchableOpacity>
-          <Text style={styles.resendBtn}>{timeLeft}s</Text>
+          {timeLeft > 0 && <Text style={styles.resendBtn}>{timeLeft}s</Text>}
         </View>
         <View style={styles.submitBtnWrapper}>
           <Button isLoading={isLoading} onPress={handleSubmit} title="Verify" />
