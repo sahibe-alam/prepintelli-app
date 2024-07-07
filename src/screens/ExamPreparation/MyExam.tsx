@@ -287,6 +287,23 @@ Return the JSON output without any additional text.
               />
               <Text style={styles.cardTitle}>Study plan</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                toast.show('Community feature coming soon 😍!');
+              }}
+              activeOpacity={0.8}
+              style={styles.card}
+            >
+              <Image
+                style={styles.cardImg}
+                source={require('../../assets/img/studyplan_img.png')}
+              />
+              <View style={styles.cardTitleWrapper}>
+                <Text style={styles.cardTitle}>
+                  Explore {user?.exams[0]?.exam_short_name} community
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
           <ScrollView>
             <View style={styles.accordionWrapper}>
@@ -403,6 +420,9 @@ Return the JSON output without any additional text.
 
 const getStyles = () =>
   StyleSheet.create({
+    cardTitleWrapper: {
+      flex: 1,
+    },
     timeWrapper: {
       flexDirection: 'row',
       gap: 16,
@@ -432,40 +452,42 @@ const getStyles = () =>
     cardTitle: {
       color: colors.blue,
       fontWeight: '600',
-      fontSize: fontSizes.p3,
+      fontSize: fontSizes.p4,
       textAlign: 'center',
-      paddingBottom: spacing.s,
     },
     cardImg: {
-      width: '100%',
-      height: 70,
+      height: 60,
+      width: 60,
       resizeMode: 'contain',
     },
     card: {
-      flex: 1,
       borderWidth: 1,
-      borderColor: colors.blue,
+      borderColor: colors.light_blue,
       borderRadius: 10,
-      backgroundColor: 'white',
+      flexDirection: 'row',
+      backgroundColor: colors.light_blue,
+      padding: 4,
       shadowColor: '#000',
+      alignItems: 'center',
+      width: '48%',
       shadowOffset: {
         width: 0,
         height: 2,
       },
       shadowOpacity: 0.13,
       shadowRadius: 1.62,
-      elevation: 4,
     },
     cardsWrapper: {
       flexDirection: 'row',
       paddingTop: spacing.l,
+      flexWrap: 'wrap',
       paddingHorizontal: spacing.l,
       paddingBottom: spacing.m,
       gap: spacing.l,
     },
     title: {
       color: colors.black,
-      fontSize: fontSizes.p,
+      fontSize: fontSizes.p2,
       paddingHorizontal: spacing.l,
       marginTop: spacing.l,
     },

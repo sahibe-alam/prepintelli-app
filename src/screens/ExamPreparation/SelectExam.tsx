@@ -10,13 +10,14 @@ import { makeRequest } from '../../api/apiClients';
 import { usePrepContext } from '../../contexts/GlobalState';
 import { getUserID } from '../../utils/commonServices';
 import { getUserDetails } from '../../api/adapter/getUserDetails';
+import { useToast } from 'react-native-toast-notifications';
 interface PropsType {
   navigation: any;
   route: any;
 }
 
 const initialState = {
-  subjects: '',
+  subjects: null,
   class: '',
   board: '',
   examName: '',
@@ -115,6 +116,8 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
         console.log(error, 'SelectExam.tsx');
       });
   };
+  const toast = useToast();
+  console.log(targetExam, 'targetExam');
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader onPress={() => navigation.goBack()} title={title} />
@@ -161,7 +164,11 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
                 const sub = targetExam.map((subject) =>
                   subject.value ? subject.value : null
                 );
-                dispatch({ type: 'subject', payload: sub });
+                console.log(sub, 'subjects');
+                dispatch({
+                  type: 'subject',
+                  payload: sub[0] === null ? null : sub,
+                });
               }}
               label={inputLabel}
             />
@@ -177,21 +184,35 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
               title="Get start"
               onPress={() => {
                 if (type === 'clg' || type === 'comptv') {
-                  insertExam({
-                    action: 'insertSubject',
-                    subjects: targetExam?.subjects,
-                    examid: targetExam.examName?._id,
-                    userid: user?._id,
-                  });
+                  if (targetExam?.subjects && targetExam?.examName?._id) {
+                    insertExam({
+                      action: 'insertSubject',
+                      subjects: targetExam?.subjects,
+                      examid: targetExam.examName?._id,
+                      userid: user?._id,
+                    });
+                  } else {
+                    toast.show('Please select exam and subject', {
+                      type: 'default',
+                      duration: 2000,
+                    });
+                  }
                 }
                 if (type === 'acdmc') {
-                  insertExam({
-                    action: 'insertSubject',
-                    academicsubjects: targetExam?.subjects,
-                    boardid: targetExam.examName?._id,
-                    classid: targetExam.class?._id,
-                    userid: user?._id,
-                  });
+                  if (targetExam?.subjects && targetExam?.class?._id) {
+                    insertExam({
+                      action: 'insertSubject',
+                      academicsubjects: targetExam?.subjects,
+                      boardid: targetExam.examName?._id,
+                      classid: targetExam.class?._id,
+                      userid: user?._id,
+                    });
+                  } else {
+                    toast.show('Please select exam, class and subject', {
+                      type: 'default',
+                      duration: 2000,
+                    });
+                  }
                 }
               }}
             />

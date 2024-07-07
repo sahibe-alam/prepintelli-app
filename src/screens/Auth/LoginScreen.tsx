@@ -47,6 +47,7 @@ const LoginScreen: React.FC<Props> = (props) => {
   const [loginDate, dispatch] = useReducer(reducer, initialState);
   const [isLoading, setLoading] = useState(false);
   const { setUser } = usePrepContext();
+  const [isShowPass, setIsShowPass] = useState(true);
   const toast = useToast();
   const [errorMessage, setErrorMessage] = useState<{
     email: string;
@@ -163,6 +164,9 @@ const LoginScreen: React.FC<Props> = (props) => {
             <InputField
               errorMsg={errorMessage.password}
               value={loginDate.password.trim()}
+              secureTextEntry={isShowPass}
+              isPassword={true}
+              onHidePassword={() => setIsShowPass(!isShowPass)}
               onChangeText={(text) =>
                 dispatch({ type: 'PASSWORD', payload: text.trim() })
               }

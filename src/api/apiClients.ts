@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { LLM_API_KEY } from '@env';
+import { LLM_API_KEY, BACKEND_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { removeLoginToken } from '../utils/commonServices';
 
@@ -10,7 +10,7 @@ export const llmClient = axios.create({
   },
 });
 const client = axios.create({
-  baseURL: 'http://192.168.1.2:4000/api',
+  baseURL: `${BACKEND_URL}/api`,
 });
 export const makeRequest = async <T>(
   config: AxiosRequestConfig
