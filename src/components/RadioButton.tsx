@@ -3,11 +3,9 @@ import React from 'react';
 import { colors } from '../utils/commonStyle/colors';
 import { fontSizes } from '../utils/commonStyle';
 
-const RadioButton = ({ radioList = [{}, {}], onChecked }: any) => {
-  const [checked, setChecked] = React.useState(0);
+const RadioButton = ({ radioList = [{}, {}], onChecked, checked }: any) => {
   const styles = getStyle();
   const onCheckedHandle = (index: number, item: any) => {
-    setChecked(index);
     onChecked && onChecked(item);
   };
   return (
@@ -20,7 +18,7 @@ const RadioButton = ({ radioList = [{}, {}], onChecked }: any) => {
             onPress={() => onCheckedHandle(index, item)}
           >
             <View style={styles.borderCircle}>
-              {checked === index && <View style={styles.checkedCircle} />}
+              {checked === item?.value && <View style={styles.checkedCircle} />}
             </View>
             <View>
               <Text numberOfLines={1} style={styles.labelText}>

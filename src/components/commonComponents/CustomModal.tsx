@@ -17,6 +17,7 @@ interface Props {
   title?: string;
   isModalHide?: () => void;
   isFullHeight?: boolean;
+  isForceModal?: boolean;
 }
 
 const CustomModal: React.FC<Props> = ({
@@ -24,6 +25,7 @@ const CustomModal: React.FC<Props> = ({
   children,
   isModalHide,
   isFullHeight = false,
+  isForceModal = true,
 }) => {
   const styles = getStyles(isFullHeight);
   const toggleModal = () => {
@@ -34,7 +36,9 @@ const CustomModal: React.FC<Props> = ({
   return (
     <Modal
       customBackdrop={
-        <TouchableWithoutFeedback onPress={toggleModal}>
+        <TouchableWithoutFeedback
+          onPress={isForceModal ? toggleModal : () => {}}
+        >
           <View style={styles.backdrop} />
         </TouchableWithoutFeedback>
       }
@@ -44,17 +48,22 @@ const CustomModal: React.FC<Props> = ({
       <View style={styles.container}>
         <Gradient style={styles.gradient}>
           <View style={styles.contentWrapper}>
-            <View style={styles.closeBtnWrapper}>
-              <TouchableOpacity style={styles.closeBtn} onPress={toggleModal}>
-                <Image
-                  style={styles.closeBtnIc}
-                  source={require('../../assets/img/close_ic.png')}
-                />
-              </TouchableOpacity>
-            </View>
+            {isForceModal && (
+              <View style={styles.closeBtnWrapper}>
+                <TouchableOpacity style={styles.closeBtn} onPress={toggleModal}>
+                  <Image
+                    style={styles.closeBtnIc}
+                    source={require('../../assets/img/close_ic.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
             <ScrollView
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.scrollWrapper}
+              contentContainerStyle={[
+                styles.scrollWrapper,
+                !isForceModal && { paddingTop: 16 },
+              ]}
             >
               <View style={styles.content}>{children}</View>
             </ScrollView>

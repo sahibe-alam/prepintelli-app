@@ -13,9 +13,12 @@ import { colors } from '../../utils/commonStyle/colors';
 import { fontSizes, spacing } from '../../utils/commonStyle';
 import BackHeader from '../../components/BackHeader';
 import Images from '../../resources/Images';
+import DeviceInfo from 'react-native-device-info';
 
 const AboutPrepIntelli = ({ navigation }: { navigation: any }) => {
   const styles = getStyle();
+  const appVersion = DeviceInfo.getVersion();
+
   const openLink = async (url: string) => {
     try {
       await Linking.openURL(url);
@@ -84,7 +87,9 @@ const AboutPrepIntelli = ({ navigation }: { navigation: any }) => {
                   <Image style={styles.socialIcon} source={Images.twitterIc} />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.appVersionText}>App Version: 1.0.0</Text>
+              <Text style={styles.appVersionText}>
+                App Version: {appVersion}
+              </Text>
             </View>
           </View>
           <Text style={styles.termsText}>

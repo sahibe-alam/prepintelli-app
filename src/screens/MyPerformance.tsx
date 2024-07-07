@@ -34,11 +34,41 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
     date.setDate(date.getDate() - i);
     dateArray.push(formatDate(date));
   }
+
+  function getLast7DaysData(doubtCount: any) {
+    const result = [];
+    const today = new Date();
+
+    // Helper function to format date as YYYY-MM-DD
+    function formatDate(date: Date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // Generate last 7 days data
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      const formattedDate = formatDate(date);
+
+      // Check if the date exists in the doubtCount object
+      if (doubtCount[formattedDate] !== undefined) {
+        result.push(doubtCount[formattedDate]);
+      } else {
+        result.push(0);
+      }
+    }
+
+    return result;
+  }
+  console.log(getLast7DaysData(userPerformance?.doubtCount || {}), 'data');
   const data = {
     labels: dateArray,
     datasets: [
       {
-        data: userPerformance?.totalDoubtCount || [0, 0, 0, 0, 0, 0, 0],
+        data: getLast7DaysData(userPerformance?.doubtCount || {}),
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
         strokeWidth: 2,
       },
@@ -135,7 +165,9 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
                 <View style={styles.resultWrapper}>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.examName}>
-                      Overall performance for {user?.exams[0]?.exam_short_name}{' '}
+                      Overall performance for{' '}
+                      {user?.exams[0]?.exam_short_name ||
+                        user?.exams[0].classname}{' '}
                       exam
                     </Text>
                   </View>

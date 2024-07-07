@@ -26,6 +26,8 @@ import SVGComponent from '../../components/commonComponents/svgviewer-react-nati
 import ThreePulseDots from '../../components/commonComponents/ThreePulseDots';
 import { llmApiCall } from '../../api/adapter/llmTutor';
 import NoExamTarget from '../../components/NoExamTarget';
+import { updateCredit } from '../../api/adapter/updateCredit';
+import NoCreditPopUp from '../../components/NoCreditPopUp';
 
 interface PropsType {
   navigation: any;
@@ -37,6 +39,8 @@ const MyExam: React.FC<PropsType> = ({ navigation }) => {
   const [subject, setSubject] = useState('');
   const [chapter, setChapter] = useState('');
   const [testTime, setTestTime] = useState(0);
+  const [isNoCredit, setIsNoCredit] = useState(false);
+
   const [subjectIndex, setSubjectIndex] = useState<number | null>(null);
   const [roadMap, setRoadMap] = useState<any>(null);
   const [modalType, setModalType] = useState<any>('');
@@ -47,9 +51,22 @@ const MyExam: React.FC<PropsType> = ({ navigation }) => {
   const toast = useToast();
   const styles = getStyles();
   const { width } = useWindowDimensions();
-  const { user } = usePrepContext();
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
+  const { user, getCredits, setGetCredits } = usePrepContext();
+  const toggleModal = (type: string) => {
+    if (type === 'doubt') {
+      if (getCredits > 0) {
+        setModalVisible(!isModalVisible);
+        setModalType(type);
+      } else {
+        setIsNoCredit(true);
+      }
+    } else {
+      if (getCredits > 1) {
+        setModalVisible(!isModalVisible);
+      } else {
+        setIsNoCredit(true);
+      }
+    }
     setTestTime(0);
   };
 
@@ -92,7 +109,6 @@ Return the JSON output without any additional text.
   };
 
   const handlePractice = () => {
-    validations();
     setLoading(true);
     if (subject && chapter) {
       questionGeneratorLlm([
@@ -119,6 +135,9 @@ Return the JSON output without any additional text.
               type: 'danger',
             });
           }
+          updateCredit(user?._id, 2).then((res: any) => {
+            setGetCredits && setGetCredits(res?.data?.remainingCredits);
+          });
         })
         .catch((err: any) => {
           setLoading(false);
@@ -133,9 +152,17 @@ Return the JSON output without any additional text.
   };
   const handleStart = () => {
     if (modalType === 'practice') {
-      handlePractice();
+      validations();
+
+      if (getCredits > 1) {
+        handlePractice();
+      } else {
+        console.log('You dont have credit ');
+      }
     }
     if (modalType === 'doubt') {
+      validations();
+
       setModalVisible(false);
       navigation.navigate('Ask doubt', {
         subject: subject,
@@ -150,7 +177,11 @@ Return the JSON output without any additional text.
 
     {
       role: 'user',
-      content: `Please provide a comprehensive roadmap for ${user?.exams?.[0]?.examname}: ${user?.exams?.[0]?.exam_short_name}. My subjects are ${user?.exams?.[0]?.subjects}. Your response should be in HTML code format with proper headings and bullet points. Utilize inline heading font size, with a maximum of 26px. Feel free to add emojis according to relevant keywords.,`,
+      content: `Please provide a comprehensive roadmap for ${
+        user?.exams?.[0]?.examname || user?.exams[0]?.classname
+      }: ${user?.exams?.[0]?.exam_short_name}. My subjects are ${
+        user?.exams?.[0]?.subjects
+      }. Your response should be in HTML code format with proper headings and bullet points. Utilize inline heading font size, with a maximum of 26px. Feel free to add emojis according to relevant keywords.,`,
     },
   ];
   const timeData = [
@@ -203,21 +234,21 @@ Return the JSON output without any additional text.
       return '';
     }
   }
-  console.log(subject);
   return (
     <>
       {user?.exams.length > 0 ? (
         <SafeAreaView style={styles.conatainer}>
           <BackHeader onPress={() => navigation.goBack()} title={'My exam'} />
           <Text style={styles.title}>
-            Prepare for {user?.exams[0]?.exam_short_name} exam with your
-            personalized ai teacher 🚀
+            Prepare for{' '}
+            {user?.exams[0]?.exam_short_name || user?.exams[0].classname} exam
+            with your personalized ai teacher 🚀
           </Text>
           <View style={styles.cardsWrapper}>
             <TouchableOpacity
               onPress={() => {
                 setModalType('practice');
-                toggleModal();
+                toggleModal('practice');
               }}
               activeOpacity={0.8}
               style={styles.card}
@@ -231,7 +262,7 @@ Return the JSON output without any additional text.
             <TouchableOpacity
               onPress={() => {
                 setModalType('doubt');
-                toggleModal();
+                toggleModal('doubt');
                 // navigation.navigate('Ask doubt');
               }}
               activeOpacity={0.8}
@@ -261,7 +292,11 @@ Return the JSON output without any additional text.
             <View style={styles.accordionWrapper}>
               <AccordionItem
                 isOpen={handleRoadMap}
-                title={`Roadmap for ${user?.exams[0]?.exam_short_name} exam`}
+                title={`Roadmap for ${
+                  user?.exams[0]?.exam_short_name ||
+                  user?.exams[0].classname ||
+                  ''
+                } exam`}
               >
                 {roadMap ? (
                   <RenderHtml
@@ -282,7 +317,10 @@ Return the JSON output without any additional text.
       )}
 
       {/* MODAL FOR PRACTICE  */}
-      <CustomModal isModalVisible={isModalVisible} isModalHide={toggleModal}>
+      <CustomModal
+        isModalVisible={isModalVisible}
+        isModalHide={() => setModalVisible(false)}
+      >
         <View style={styles.modalContent}>
           {!isLoading ? (
             <>
@@ -351,6 +389,14 @@ Return the JSON output without any additional text.
           )}
         </View>
       </CustomModal>
+      {isNoCredit && (
+        <CustomModal
+          isModalVisible={isNoCredit}
+          isModalHide={() => setIsNoCredit(false)}
+        >
+          <NoCreditPopUp />
+        </CustomModal>
+      )}
     </>
   );
 };

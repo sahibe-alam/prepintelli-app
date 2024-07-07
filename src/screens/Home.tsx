@@ -1,14 +1,22 @@
-import { View, Text, StyleSheet, ScrollView, Button } from 'react-native';
-import React from 'react';
+import { View, Text, StyleSheet, ScrollView, Linking } from 'react-native';
+import React, { useEffect } from 'react';
 import { colors } from '../utils/commonStyle/colors';
 import { fontSizes, spacing } from '../utils/commonStyle';
 import HomeSlider from '../components/HomeSlider';
 import ExamType from '../components/ExamType';
+import CustomModal from '../components/commonComponents/CustomModal';
+import { makeRequest } from '../api/apiClients';
+import Button from '../components/Button';
+import DeviceInfo from 'react-native-device-info';
 interface PropsType {
   navigation?: any;
   route?: any;
 }
 const Home: React.FC<PropsType> = ({ navigation }) => {
+  const [isUpdateModalVisible, setUpdateModalVisible] = React.useState(false);
+  const [appUpdate, setAppUpdate] = React.useState<any>();
+  const appVersion = DeviceInfo.getVersion();
+  const currentVersion = Number(appVersion).toFixed(1);
   const typeExam = [
     {
       title: 'Competitive exam',
@@ -38,14 +46,34 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
     },
   ];
 
+  useEffect(() => {
+    makeRequest({
+      method: 'GET',
+      url: '/app-update',
+    }).then((res: any) => {
+      console.log(res?.data);
+      if (res.data.length > 0) {
+        // get last object off array
+        setAppUpdate(res.data[res.data.length - 1]);
+        const newVersion = Number(
+          res.data[res?.data?.length - 1]?.appVersion
+        ).toFixed(1);
+        console.log(newVersion, currentVersion);
+        if (newVersion > currentVersion) {
+          setUpdateModalVisible(true);
+        }
+      }
+    });
+  }, [currentVersion]);
   return (
-    <View style={styles.container}>
-      <ScrollView>
-        <View style={styles.sliderWrapper}>
-          <HomeSlider />
-        </View>
-        <Text style={styles.modulesHeading}>Target your exam, With Ai </Text>
-        {/* <View style={styles.moduleWrapper}>
+    <>
+      <View style={styles.container}>
+        <ScrollView>
+          <View style={styles.sliderWrapper}>
+            <HomeSlider />
+          </View>
+          <Text style={styles.modulesHeading}>Target your exam, With Ai </Text>
+          {/* <View style={styles.moduleWrapper}>
           <ModuleCard
             onPress={() =>
               navigation.navigate('Create Exam', {
@@ -67,22 +95,81 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
             moduleType="lang"
           />
         </View> */}
-        <View style={styles.typeWrapper}>
-          {(typeExam as Array<any>).map((item, index) => (
-            <ExamType
-              onPress={() => navigation.navigate('Select Exam', item)}
-              key={index}
-              title={item.title}
-              type={item.type}
+          <View style={styles.typeWrapper}>
+            {(typeExam as Array<any>).map((item, index) => (
+              <ExamType
+                onPress={() => navigation.navigate('Select Exam', item)}
+                key={index}
+                title={item.title}
+                type={item.type}
+              />
+            ))}
+          </View>
+        </ScrollView>
+      </View>
+      {isUpdateModalVisible && (
+        <CustomModal isForceModal={false} isModalVisible={isUpdateModalVisible}>
+          <Text style={styles.app_update_heading}>{appUpdate?.heading}</Text>
+          <Text style={styles.app_update_desc}>{appUpdate?.descriptions}</Text>
+          <Text style={styles.whats_new}>What's New:</Text>
+          {appUpdate?.appFeature.map((item: any, index: number) => {
+            return (
+              <View key={index}>
+                <View style={styles.app_features_wrapper}>
+                  <Text>✨</Text>
+                  <Text style={styles.app_features}>{item}</Text>
+                </View>
+              </View>
+            );
+          })}
+          <View style={styles.updateBtn}>
+            <Button
+              onPress={() => {
+                Linking.openURL(appUpdate?.appLink).catch((err) =>
+                  console.error("Couldn't load page", err)
+                );
+              }}
+              title="Update Now"
             />
-          ))}
-        </View>
-      </ScrollView>
-    </View>
+          </View>
+        </CustomModal>
+      )}
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  updateBtn: {
+    marginTop: 20,
+  },
+  app_features: {
+    fontSize: fontSizes.p3,
+    marginBottom: 6,
+    flex: 1,
+    color: colors.black,
+  },
+  whats_new: {
+    fontSize: fontSizes.p2,
+    fontWeight: 'bold',
+    color: colors.black,
+    marginBottom: 4,
+  },
+  app_features_wrapper: {
+    flexDirection: 'row',
+    gap: 2,
+    paddingHorizontal: spacing.m,
+  },
+  app_update_desc: {
+    fontSize: fontSizes.p2,
+    marginVertical: spacing.m,
+    color: colors.black,
+    opacity: 0.7,
+  },
+  app_update_heading: {
+    fontSize: fontSizes.h4,
+    textAlign: 'center',
+    color: colors.black,
+  },
   typeWrapper: {
     marginTop: spacing.m,
   },
