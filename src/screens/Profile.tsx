@@ -24,11 +24,11 @@ const Profile: React.FC<PropsType> = ({ navigation }) => {
       linkText: 'Edit profile',
       onPress: () => navigation.navigate('Edit Profile'),
     },
-    {
-      icon: require('../assets/img/alarm_ic.png'),
-      linkText: 'Practice reminder',
-      onPress: () => navigation.navigate('Profile'),
-    },
+    // {
+    //   icon: require('../assets/img/alarm_ic.png'),
+    //   linkText: 'Practice reminder',
+    //   onPress: () => navigation.navigate('Study Alarm'),
+    // },
     {
       icon: require('../assets/img/how_ic.png'),
       linkText: 'How it works',
