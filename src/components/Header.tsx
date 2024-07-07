@@ -1,11 +1,26 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
-import React from 'react';
-import {colors} from '../utils/commonStyle/colors';
-import {fontSizes} from '../utils/commonStyle';
-import {usePrepContext} from '../contexts/GlobalState';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import React, { useCallback } from 'react';
+import { colors } from '../utils/commonStyle/colors';
+import { fontSizes } from '../utils/commonStyle';
+import { usePrepContext } from '../contexts/GlobalState';
+import { makeRequest } from '../api/apiClients';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Header = () => {
-  const {user} = usePrepContext();
+  const { user, getCredits, setGetCredits } = usePrepContext();
+  useFocusEffect(
+    useCallback(() => {
+      makeRequest({
+        url: 'get-credits',
+        method: 'POST',
+        data: {
+          userId: user?._id,
+        },
+      }).then((res: any) => {
+        setGetCredits && setGetCredits(res?.data?.remainingCredits);
+      });
+    }, [user, setGetCredits])
+  );
   return (
     <View style={styles.header}>
       <View style={styles.userDetails}>
@@ -24,7 +39,7 @@ const Header = () => {
           style={styles.coinIcon}
           source={require('../assets/img/coin_ic.png')}
         />
-        <Text style={styles.coinCount}>100</Text>
+        <Text style={styles.coinCount}>{getCredits}</Text>
       </View>
     </View>
   );

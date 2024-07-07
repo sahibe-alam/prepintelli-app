@@ -16,6 +16,12 @@ interface PrepContextProps {
   user?: any;
   setIsFirstLaunch?: (value: boolean) => void;
   orientation?: 'PORTRAIT' | 'LANDSCAPE';
+  setOrientation?: (value: 'PORTRAIT' | 'LANDSCAPE') => void;
+  getCredits?: any;
+  setGetCredits?: (value: any) => void;
+  deviceWidth?: number;
+  setUserPerformance?: (value: any) => void;
+  userPerformance?: any;
 }
 const PrepContext = React.createContext<PrepContextProps>({});
 
@@ -37,6 +43,7 @@ const GlobalState: React.FC<GlobalStateProps> = ({
   const [user, setUser] = useState({});
   const [userPerformance, setUserPerformance] = useState<any>(null);
   const deviceWidth = Dimensions.get('window').width;
+  const [getCredits, setGetCredits] = useState<any>(0);
   const [orientation, setOrientation] = useState<'PORTRAIT' | 'LANDSCAPE'>(
     'PORTRAIT'
   );
@@ -72,6 +79,8 @@ const GlobalState: React.FC<GlobalStateProps> = ({
         user,
         userPerformance,
         setUserPerformance,
+        getCredits,
+        setGetCredits,
       }}
     >
       {children}

@@ -17,6 +17,8 @@ import ResponseCard from '../../components/commonComponents/ResponseCard';
 import { llmApiCall } from '../../api/adapter/llmTutor';
 import { updateAskDoubt } from '../../api/adapter/studentPerformance';
 import { usePrepContext } from '../../contexts/GlobalState';
+import NoCreditPopUp from '../../components/NoCreditPopUp';
+import { updateCredit } from '../../api/adapter/updateCredit';
 
 interface PropsType {
   navigation: any;
@@ -33,9 +35,11 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [doubtQuestion, setDoubtQuestion] = useState<any>([]);
   const [inputValue, setInputValue] = useState('');
+  const [isNoCredit, setIsNoCredit] = useState(false);
+
   const [isLoading, setLoading] = useState(false);
   const scrollViewRef = useRef<ScrollView | null>(null);
-  const { user } = usePrepContext();
+  const { user, getCredits, setGetCredits } = usePrepContext();
   const [conversationList, setConversationList] = React.useState<any>([]);
   const toggleModal = (question?: any, questionIndex?: number) => {
     setModalVisible(!isModalVisible);
@@ -108,8 +112,18 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
           setConversationList([...res.data]);
         }
         updateAskDoubt(user?._id);
+        updateCredit(user?._id, 1).then((res: any) => {
+          setGetCredits && setGetCredits(res?.data?.remainingCredits);
+        });
       }
     });
+  };
+  const askDoubtHandler = (item: any, index: number) => {
+    if (getCredits > 0) {
+      toggleModal(item, index);
+    } else {
+      setIsNoCredit(true);
+    }
   };
   useEffect(() => {
     setTimeout(() => {
@@ -181,7 +195,7 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
                 })}
                 <TouchableOpacity
                   style={styles.doubtBtn}
-                  onPress={() => toggleModal(item, index)}
+                  onPress={() => askDoubtHandler(item, index)}
                 >
                   <Text style={styles.doubtBtnText}>Ask doubt🤔</Text>
                 </TouchableOpacity>
@@ -236,6 +250,15 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
           </View>
         </View>
       </CustomModal>
+
+      {isNoCredit && (
+        <CustomModal
+          isModalVisible={isNoCredit}
+          isModalHide={() => setIsNoCredit(false)}
+        >
+          <NoCreditPopUp />
+        </CustomModal>
+      )}
     </>
   );
 };

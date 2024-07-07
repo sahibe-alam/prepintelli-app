@@ -1,15 +1,15 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import React from 'react';
-import {fontSizes, spacing} from '../utils/commonStyle';
-import {colors} from '../utils/commonStyle/colors';
+import { fontSizes, spacing } from '../utils/commonStyle';
+import { colors } from '../utils/commonStyle/colors';
 import Gradient from './Gradient';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 interface Props {
   cardTitle?: string;
   moduleType?: string;
   onPress?: () => void;
 }
-const ModuleCard: React.FC<Props> = ({cardTitle, moduleType, onPress}) => {
+const ModuleCard: React.FC<Props> = ({ cardTitle, moduleType, onPress }) => {
   return (
     <View style={styles.cardWrapper}>
       <TouchableOpacity activeOpacity={0.9} onPress={onPress}>

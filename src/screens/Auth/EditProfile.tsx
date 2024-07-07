@@ -14,13 +14,26 @@ import { colors } from '../../utils/commonStyle/colors';
 import InputField from '../../components/formComponents/InputField';
 import Button from '../../components/Button';
 import RadioButton from '../../components/RadioButton';
+import { usePrepContext } from '../../contexts/GlobalState';
+import { makeRequest } from '../../api/apiClients';
+import { useToast } from 'react-native-toast-notifications';
 interface PropsType {
   navigation: any;
 }
 
 const EditProfile: React.FC<PropsType> = ({ navigation }) => {
   const styles = getStyle();
-
+  const { user, setUser } = usePrepContext();
+  const toast = useToast();
+  const [userDetails, setUserDetails] = React.useState<any>({
+    firstName: user?.firstname,
+    lastName: user?.lastname,
+    email: user?.email,
+    mobile: user?.mobile,
+    dob: user?.dateofbirth,
+    education: user?.education,
+  });
+  console.log(userDetails);
   const radioList = [
     {
       label: 'School student',
@@ -31,6 +44,26 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
       value: 'college',
     },
   ];
+  const updateUser = () => {
+    makeRequest({
+      url: 'update-profile',
+      method: 'POST',
+      data: {
+        userId: user?._id,
+        firstname: userDetails?.firstName,
+        lastname: userDetails?.lastName,
+        email: userDetails?.email,
+        mobile: userDetails?.mobile,
+        dateofbirth: userDetails?.dob,
+        education: userDetails?.education,
+      },
+    }).then((res: any) => {
+      console.log(res?.data?.user);
+      setUser && setUser(res?.data?.user);
+
+      toast.show(res?.data?.msg, { type: 'default', duration: 3000 });
+    });
+  };
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.container}>
@@ -40,21 +73,48 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
 
           <View style={styles.formWrapper}>
             <View style={styles.inputWrapper}>
-              <InputField value="Sahibe" />
+              <InputField
+                value={userDetails?.firstName}
+                onChangeText={(text) =>
+                  setUserDetails({ ...userDetails, firstName: text })
+                }
+              />
             </View>
             <View style={styles.inputWrapper}>
-              <InputField value="Alam" />
+              <InputField
+                value={userDetails?.lastName}
+                onChangeText={(text) =>
+                  setUserDetails({ ...userDetails, lastName: text })
+                }
+              />
             </View>
             <View style={styles.inputWrapper}>
-              <InputField value="sahibe190@gmail.com" />
+              <InputField
+                value={userDetails?.email}
+                onChangeText={(text) => {
+                  setUserDetails({ ...userDetails, email: text });
+                }}
+              />
             </View>
             <View style={styles.inputWrapper}>
-              <InputField value="9627-xxxx-xxxx" />
+              <InputField
+                value={userDetails?.mobile}
+                onChangeText={(text: any) => {
+                  setUserDetails({ ...userDetails, mobile: text });
+                }}
+                keyboardType={'number-pad'}
+              />
             </View>
             <View
               style={[styles.inputWrapper, { flexDirection: 'row', gap: 10 }]}
             >
-              <RadioButton radioList={radioList} onChecked={() => {}} />
+              <RadioButton
+                checked={userDetails?.education}
+                radioList={radioList}
+                onChecked={(item: any) => {
+                  setUserDetails({ ...userDetails, education: item?.value });
+                }}
+              />
             </View>
           </View>
           <View style={styles.btnWrapper}>
@@ -65,7 +125,7 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
             </View>
             <Button
               title="Save"
-              onPress={() => navigation.goBack()}
+              onPress={() => updateUser()}
               btnWidth={'40%'}
             />
           </View>
@@ -78,8 +138,8 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
 const getStyle = () =>
   StyleSheet.create({
     deleteBtnWrapper: {
-      width: '60%',
       overflow: 'hidden',
+      flex: 1,
       backgroundColor: colors.light_red,
       borderRadius: 10,
     },
@@ -92,7 +152,7 @@ const getStyle = () =>
     deleteBtn: {
       alignContent: 'center',
       justifyContent: 'center',
-      width: '100%',
+      flex: 1,
       height: 48,
     },
     btnWrapper: {

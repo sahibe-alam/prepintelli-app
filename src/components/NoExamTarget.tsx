@@ -1,14 +1,14 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
-import {fontSizes} from '../utils/commonStyle';
-import {colors} from '../utils/commonStyle/colors';
+import { fontSizes } from '../utils/commonStyle';
+import { colors } from '../utils/commonStyle/colors';
 
-const NoExamTarget = ({onPress}: {onPress: () => void}) => {
+const NoExamTarget = ({ onPress }: { onPress: () => void }) => {
   const styles = getStyles();
   return (
     <View style={styles.noExamTarget}>
       <View style={styles.noExamTargetWrapper}>
-        <Text style={styles.noExamTargetText}>No exam target 🙁</Text>
+        <Text style={styles.noExamTargetText}>No exam target</Text>
 
         <TouchableOpacity onPress={onPress}>
           <Text style={styles.noExamTargetBtn}>Click to target</Text>
