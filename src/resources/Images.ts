@@ -6,6 +6,8 @@ const fbIc = require('../assets/img/facebook-ic.png');
 const igIc = require('../assets/img/instagram-ic.png');
 const linkedInIc = require('../assets/img/linkedin-ic.png');
 const twitterIc = require('../assets/img/twitter-ic.png');
+const eyeIc = require('../assets/img/eye.png');
+const eyeSlash = require('../assets/img/EyeSlash.png');
 export default {
   downloadIc,
   pdfIc,
@@ -15,4 +17,6 @@ export default {
   igIc,
   linkedInIc,
   twitterIc,
+  eyeIc,
+  eyeSlash,
 };

@@ -14,6 +14,9 @@ interface Props {
 }
 const CreateNewPassword: React.FC<Props> = (props) => {
   const { navigation } = props;
+  const [isShowPassConfirm, setIsShowPassConfirm] = React.useState(true);
+  const [isShowPass, setIsShowPass] = React.useState(true);
+
   const toast = useToast();
   const [passwords, setPasswords] = React.useState({
     password: '',
@@ -103,6 +106,9 @@ const CreateNewPassword: React.FC<Props> = (props) => {
         <View style={styles.wrapper}>
           <LogoTitle title="Create new password" />
           <InputField
+            isPassword={true}
+            secureTextEntry={isShowPass}
+            onHidePassword={() => setIsShowPass(!isShowPass)}
             errorMsg={errorMsg.password}
             label="New password*"
             placeholder="Enter password"
@@ -110,6 +116,9 @@ const CreateNewPassword: React.FC<Props> = (props) => {
           />
 
           <InputField
+            isPassword={true}
+            secureTextEntry={isShowPassConfirm}
+            onHidePassword={() => setIsShowPassConfirm(!isShowPassConfirm)}
             errorMsg={errorMsg.confirmPassword}
             label="Confirm password*"
             placeholder="Enter confirm password"
