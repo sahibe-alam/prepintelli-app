@@ -8,7 +8,12 @@ const linkedInIc = require('../assets/img/linkedin-ic.png');
 const twitterIc = require('../assets/img/twitter-ic.png');
 const eyeIc = require('../assets/img/eye.png');
 const eyeSlash = require('../assets/img/EyeSlash.png');
+const communityImg = require('../assets/img/community-img.png');
+const menuIc = require('../assets/img/menu-icon.png');
+const proIc = require('../assets/img/pro-icon.png');
+const coinIc = require('../assets/img/coin_ic.png');
 export default {
+  coinIc,
   downloadIc,
   pdfIc,
   logo,
@@ -19,4 +24,7 @@ export default {
   twitterIc,
   eyeIc,
   eyeSlash,
+  communityImg,
+  menuIc,
+  proIc,
 };

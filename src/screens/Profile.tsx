@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 import React from 'react';
 import { colors } from '../utils/commonStyle/colors';
 import BackHeader from '../components/BackHeader';
@@ -52,7 +52,7 @@ const Profile: React.FC<PropsType> = ({ navigation }) => {
   ];
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <BackHeader title="My profile" onPress={() => navigation.goBack()} />
       <ScrollView style={styles.scrollWrapper}>
         <DpWrapper />
@@ -62,7 +62,7 @@ const Profile: React.FC<PropsType> = ({ navigation }) => {
           ))}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

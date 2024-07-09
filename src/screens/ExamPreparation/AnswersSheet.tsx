@@ -256,7 +256,12 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
           isModalVisible={isNoCredit}
           isModalHide={() => setIsNoCredit(false)}
         >
-          <NoCreditPopUp />
+          <NoCreditPopUp
+            upgradeClick={() => {
+              navigation.navigate('Get pro');
+              setIsNoCredit(false);
+            }}
+          />
         </CustomModal>
       )}
     </>

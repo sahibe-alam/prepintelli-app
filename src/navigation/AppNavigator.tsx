@@ -21,6 +21,8 @@ import HowItsWork from '../screens/staticsScreens/HowItsWork';
 import AboutPrepIntelli from '../screens/staticsScreens/AboutPrepIntelli';
 import EditProfile from '../screens/Auth/EditProfile';
 import CreateNewPassword from '../screens/Auth/CreateNewPassword';
+import Profile from '../screens/Profile';
+import GetPro from '../screens/getPro/GetPro';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
   return (
@@ -124,6 +126,16 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Create new password"
           component={CreateNewPassword as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={Profile as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Get pro"
+          component={GetPro as React.ComponentType}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

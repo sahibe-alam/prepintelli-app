@@ -7,8 +7,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../utils/commonStyle/colors';
 import Header from '../components/Header';
 import MyPerformance from '../screens/MyPerformance';
-import Profile from '../screens/Profile';
 import MyExam from '../screens/ExamPreparation/MyExam';
+import Images from '../resources/Images';
+import GetPro from '../screens/getPro/GetPro';
 
 const Bottom = createBottomTabNavigator();
 
@@ -32,12 +33,16 @@ const CustomTabBarButton = ({
             (iconName === 'exam' && require('../assets/img/exam_icon.png')) ||
             (iconName === 'perform' &&
               require('../assets/img/progress_ic.png')) ||
-            (iconName === 'profile' && require('../assets/img/user_icon.png'))
+            (iconName === 'getpro' && Images.proIc)
           }
           style={[
             styles.icon,
             {
-              tintColor: isFocused ? colors.purple : colors.grey,
+              tintColor: isFocused
+                ? colors.purple
+                : iconName !== 'getpro'
+                ? colors.grey
+                : undefined,
             },
           ]}
         />
@@ -56,12 +61,12 @@ const CustomTabBarButton = ({
   );
 };
 
-const Main = () => {
+const Main = ({ navigation }: { navigation: any }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <Bottom.Navigator
         screenOptions={{
-          header: () => <Header />,
+          header: () => <Header navigation={navigation} />,
           tabBarStyle: { backgroundColor: colors.white },
         }}
         tabBar={(props) => (
@@ -82,19 +87,19 @@ const Main = () => {
             />
             <CustomTabBarButton
               isFocused={
+                props.state.routes[props.state.index].name === 'Get pro'
+              }
+              onPress={() => props.navigation.navigate('Get pro')}
+              iconName="getpro"
+              labelName="Get pro"
+            />
+            <CustomTabBarButton
+              isFocused={
                 props.state.routes[props.state.index].name === 'Performance'
               }
               onPress={() => props.navigation.navigate('Performance')}
               iconName="perform"
               labelName="Performance"
-            />
-            <CustomTabBarButton
-              isFocused={
-                props.state.routes[props.state.index].name === 'Profile'
-              }
-              onPress={() => props.navigation.navigate('Profile')}
-              iconName="profile"
-              labelName="Profile"
             />
           </View>
         )}
@@ -121,8 +126,8 @@ const Main = () => {
           options={{ tabBarLabel: () => null, headerShown: false }}
         />
         <Bottom.Screen
-          name="Profile"
-          component={Profile}
+          name="Get pro"
+          component={GetPro}
           options={{ tabBarLabel: () => null, headerShown: false }}
         />
       </Bottom.Navigator>

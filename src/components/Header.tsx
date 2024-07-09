@@ -5,8 +5,11 @@ import { fontSizes } from '../utils/commonStyle';
 import { usePrepContext } from '../contexts/GlobalState';
 import { makeRequest } from '../api/apiClients';
 import { useFocusEffect } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import Gradient from './Gradient';
+import Images from '../resources/Images';
 
-const Header = () => {
+const Header = ({ navigation }: { navigation: any }) => {
   const { user, getCredits, setGetCredits } = usePrepContext();
   useFocusEffect(
     useCallback(() => {
@@ -24,12 +27,22 @@ const Header = () => {
   return (
     <View style={styles.header}>
       <View style={styles.userDetails}>
-        <View style={styles.dpWrapper}>
+        <TouchableOpacity
+          onPress={() => {
+            // navigation.navigate('Profile');
+            navigation.navigate('Profile');
+          }}
+          activeOpacity={0.7}
+          style={styles.dpWrapper}
+        >
           <Image
             style={styles.dp}
             source={require('../assets/img/user_icon.png')}
           />
-        </View>
+          <Gradient style={styles.gradientMenuIcon}>
+            <Image style={styles.menuIcon} source={Images.menuIc} />
+          </Gradient>
+        </TouchableOpacity>
         <Text style={styles.userName} numberOfLines={1} ellipsizeMode="tail">
           Hi, {user?.firstname}
         </Text>
@@ -45,6 +58,22 @@ const Header = () => {
   );
 };
 const styles = StyleSheet.create({
+  menuIcon: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+  },
+  gradientMenuIcon: {
+    position: 'absolute',
+    padding: 2,
+    bottom: 0,
+    right: -4,
+    borderRadius: 50,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   header: {
     width: '100%',
     backgroundColor: colors.white,

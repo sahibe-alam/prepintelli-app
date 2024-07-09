@@ -4,7 +4,7 @@ import { colors } from '../utils/commonStyle/colors';
 import { fontSizes } from '../utils/commonStyle';
 import Button from './Button';
 
-const NoCreditPopUp = () => {
+const NoCreditPopUp = ({ upgradeClick }: any) => {
   const styles = getStyles();
   return (
     <View style={styles.container}>
@@ -18,7 +18,7 @@ const NoCreditPopUp = () => {
       <Text style={styles.heading}>
         🎉 Upgrade your plan: for more credits and additional features
       </Text>
-      <Button title="Upgrade now" onPress={() => {}} />
+      <Button title="Upgrade now" onPress={upgradeClick} />
     </View>
   );
 };
@@ -32,7 +32,7 @@ const getStyles = () => {
       textAlign: 'center',
     },
     heading: {
-      fontSize: fontSizes.p,
+      fontSize: fontSizes.p2,
       color: colors.black,
       textAlign: 'center',
       paddingBottom: 10,

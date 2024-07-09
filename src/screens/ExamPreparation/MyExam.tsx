@@ -28,6 +28,7 @@ import { llmApiCall } from '../../api/adapter/llmTutor';
 import NoExamTarget from '../../components/NoExamTarget';
 import { updateCredit } from '../../api/adapter/updateCredit';
 import NoCreditPopUp from '../../components/NoCreditPopUp';
+import Images from '../../resources/Images';
 
 interface PropsType {
   navigation: any;
@@ -294,13 +295,10 @@ Return the JSON output without any additional text.
               activeOpacity={0.8}
               style={styles.card}
             >
-              <Image
-                style={styles.cardImg}
-                source={require('../../assets/img/studyplan_img.png')}
-              />
+              <Image style={styles.cardImg} source={Images.communityImg} />
               <View style={styles.cardTitleWrapper}>
                 <Text style={styles.cardTitle}>
-                  Explore {user?.exams[0]?.exam_short_name} community
+                  {user?.exams[0]?.exam_short_name} community
                 </Text>
               </View>
             </TouchableOpacity>
@@ -411,7 +409,12 @@ Return the JSON output without any additional text.
           isModalVisible={isNoCredit}
           isModalHide={() => setIsNoCredit(false)}
         >
-          <NoCreditPopUp />
+          <NoCreditPopUp
+            upgradeClick={() => {
+              navigation.navigate('Get pro');
+              setIsNoCredit(false);
+            }}
+          />
         </CustomModal>
       )}
     </>
@@ -452,7 +455,7 @@ const getStyles = () =>
     cardTitle: {
       color: colors.blue,
       fontWeight: '600',
-      fontSize: fontSizes.p4,
+      fontSize: fontSizes.p3,
       textAlign: 'center',
     },
     cardImg: {
@@ -481,9 +484,10 @@ const getStyles = () =>
       flexDirection: 'row',
       paddingTop: spacing.l,
       flexWrap: 'wrap',
+      justifyContent: 'space-between',
+      rowGap: spacing.l,
       paddingHorizontal: spacing.l,
       paddingBottom: spacing.m,
-      gap: spacing.l,
     },
     title: {
       color: colors.black,
