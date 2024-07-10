@@ -5,42 +5,33 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { colors } from '../../utils/commonStyle/colors';
 import BackHeader from '../../components/BackHeader';
 import Button from '../../components/Button';
 import { fontSizes, spacing } from '../../utils/commonStyle';
 import Images from '../../resources/Images';
+import { makeRequest } from '../../api/apiClients';
 
 const GetPro = ({ navigation }: { navigation: any }) => {
-  const planList = [
-    {
-      price: '99',
-      actualPrice: '₹129',
-      forMonths: '1 Month',
-      discount: '10',
-      perDay: 'Per day',
-      creditsPerDay: '50',
-    },
-    {
-      price: '199',
-      actualPrice: '399',
-      forMonths: '1 Months',
-      discount: '20',
-      perDay: 'Per day',
-      creditsPerDay: '100',
-    },
-    {
-      price: '375',
-      actualPrice: '599',
-      forMonths: '1 Months',
-      discount: '30',
-      perDay: 'Per day',
-      creditsPerDay: '150',
-    },
-  ];
+  const [plans, setPlans] = useState([]);
+  const [selectedPlan, setSelectedPlan] = useState(0);
+  const [getPlan, setGetPlan] = useState<any>({});
   const styles = getStyle();
+  const selectedPlanSelected = (index: number) => {
+    setSelectedPlan(index);
+    setGetPlan(plans[index]);
+  };
+  useEffect(() => {
+    makeRequest({
+      method: 'GET',
+      url: '/get-plans',
+    }).then((res: any) => {
+      setPlans(res?.data);
+    });
+  }, []);
   return (
     <View style={styles.container}>
       <BackHeader
@@ -57,21 +48,30 @@ const GetPro = ({ navigation }: { navigation: any }) => {
             </Text>
           </View>
           <View style={styles.planWrapper}>
-            {planList.map((item, index) => (
+            {plans?.map((item: any, index) => (
               <TouchableOpacity
+                onPress={() => selectedPlanSelected(index)}
                 activeOpacity={0.5}
-                style={styles.planCard}
+                style={[
+                  styles.planCard,
+                  selectedPlan === index && styles.active,
+                ]}
                 key={index}
               >
                 <View style={styles.priceWrapper}>
                   <Text style={styles.price}>₹{item?.price}</Text>
                   <Text style={styles.actualPrice}>₹{item?.actualPrice}</Text>
-                  <Text style={styles.perMonth}>1 {item?.forMonths}</Text>
+                  <Text style={styles.perMonth}>{item?.forMonths} Month</Text>
                   <Text style={styles.cardDiscount}>
                     {item?.discount}% discount
                   </Text>
                 </View>
-                <View style={styles.perDayWrapper}>
+                <View
+                  style={[
+                    styles.perDayWrapper,
+                    selectedPlan === index && styles.active,
+                  ]}
+                >
                   <Text style={styles.perDay}>{item?.perDay}</Text>
                   <View style={styles.coinWrapper}>
                     <Image style={styles.coinIc} source={Images.coinIc} />
@@ -83,13 +83,22 @@ const GetPro = ({ navigation }: { navigation: any }) => {
               </TouchableOpacity>
             ))}
           </View>
+          <View style={styles.couponWrapper}>
+            <TextInput
+              style={styles.couponInput}
+              placeholder="Enter coupon code"
+            />
+            <TouchableOpacity style={styles.applyBtn}>
+              <Text style={styles.applyBtnText}>Apply</Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
         <View style={styles.bottomBar}>
           <View>
             <Text style={styles.labelPlan}>Select PRO plan</Text>
             <View style={{ flexDirection: 'row', gap: 8, paddingTop: 2 }}>
-              <Text style={styles.discount}>$₹1999</Text>
-              <Text style={styles.totalPrice}>$₹999</Text>
+              <Text style={styles.discount}> ₹{getPlan?.actualPrice}</Text>
+              <Text style={styles.totalPrice}>₹{getPlan?.price}</Text>
               <Text style={styles.perMonth}>/</Text>
               <Text style={styles.perMonth}>Month</Text>
             </View>
@@ -103,6 +112,40 @@ const GetPro = ({ navigation }: { navigation: any }) => {
 
 const getStyle = () => {
   return StyleSheet.create({
+    applyBtnText: {
+      color: colors.white,
+      fontSize: fontSizes.p3,
+      fontWeight: '600',
+    },
+    applyBtn: {
+      backgroundColor: colors.blue,
+      height: '100%',
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      paddingHorizontal: 16,
+    },
+    couponWrapper: {
+      margin: spacing.l,
+      borderWidth: 1,
+      borderColor: colors.blue,
+      borderRadius: 8,
+      overflow: 'hidden',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    couponInput: {
+      fontSize: fontSizes.p3,
+      flex: 1,
+      paddingHorizontal: 10,
+      paddingVertical: 12,
+    },
+    active: {
+      backgroundColor: colors.light_blue,
+      borderColor: colors.blue,
+      // scale
+      transform: [{ scale: 1.05 }],
+    },
     priceWrapper: {
       paddingHorizontal: spacing.s,
       paddingVertical: spacing.l,
@@ -151,7 +194,7 @@ const getStyle = () => {
       textAlign: 'center',
     },
     actualPrice: {
-      color: colors.grey,
+      color: colors.darkGrey,
       fontSize: fontSizes.p,
       textAlign: 'center',
       textDecorationLine: 'line-through',
@@ -184,7 +227,7 @@ const getStyle = () => {
       color: colors.purple,
     },
     perMonth: {
-      color: colors.grey,
+      color: colors.darkGrey,
       fontSize: fontSizes.p3,
       textAlign: 'center',
     },
@@ -195,6 +238,7 @@ const getStyle = () => {
     totalPrice: {
       color: colors.black,
       fontSize: fontSizes.p3,
+      fontWeight: '600',
     },
     discount: {
       color: colors.red,
