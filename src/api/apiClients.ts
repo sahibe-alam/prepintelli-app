@@ -10,7 +10,7 @@ export const llmClient = axios.create({
   },
 });
 const client = axios.create({
-  baseURL: `${'http://localhost:4000'}/api`,
+  baseURL: `${'https://prepintelli-bb8c10fb7327.herokuapp.com'}/api`,
 });
 export const makeRequest = async <T>(
   config: AxiosRequestConfig

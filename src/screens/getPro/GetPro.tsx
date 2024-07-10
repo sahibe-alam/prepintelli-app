@@ -30,6 +30,7 @@ const GetPro = ({ navigation }: { navigation: any }) => {
       url: '/get-plans',
     }).then((res: any) => {
       setPlans(res?.data);
+      setGetPlan(res?.data[0]);
     });
   }, []);
   return (
@@ -85,6 +86,7 @@ const GetPro = ({ navigation }: { navigation: any }) => {
           </View>
           <View style={styles.couponWrapper}>
             <TextInput
+              placeholderTextColor={colors.grey}
               style={styles.couponInput}
               placeholder="Enter coupon code"
             />
@@ -137,8 +139,9 @@ const getStyle = () => {
     couponInput: {
       fontSize: fontSizes.p3,
       flex: 1,
+      color: colors.black,
       paddingHorizontal: 10,
-      paddingVertical: 12,
+      paddingVertical: 10,
     },
     active: {
       backgroundColor: colors.light_blue,
@@ -233,7 +236,6 @@ const getStyle = () => {
     },
     scrollWrapper: {
       flex: 1,
-      paddingBottom: 100,
     },
     totalPrice: {
       color: colors.black,
@@ -250,8 +252,6 @@ const getStyle = () => {
       color: colors.black,
     },
     bottomBar: {
-      position: 'absolute',
-      bottom: 0,
       alignSelf: 'center',
       padding: spacing.l,
       borderTopWidth: 1,
@@ -265,6 +265,8 @@ const getStyle = () => {
       //   paddingHorizontal: spacing.l,
       flex: 1,
       position: 'relative',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
     },
     container: {
       flex: 1,
