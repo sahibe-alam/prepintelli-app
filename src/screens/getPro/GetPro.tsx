@@ -137,7 +137,7 @@ const getStyle = () => {
       alignItems: 'center',
     },
     couponInput: {
-      fontSize: fontSizes.p3,
+      fontSize: fontSizes.p2,
       flex: 1,
       color: colors.black,
       paddingHorizontal: 10,
@@ -171,8 +171,9 @@ const getStyle = () => {
       borderColor: colors.light_grey,
     },
     coinIc: {
-      width: 16,
-      height: 16,
+      width: 14,
+      height: 14,
+      marginBottom: 1,
       resizeMode: 'contain',
     },
     coinWrapper: {
@@ -183,6 +184,8 @@ const getStyle = () => {
       borderRadius: 100,
       backgroundColor: colors.light_purple,
       alignItems: 'center',
+      borderWidth: 1,
+      borderColor: '#f3d9ff',
       justifyContent: 'center',
     },
     perDay: {
@@ -222,12 +225,12 @@ const getStyle = () => {
     },
     Titlewrapper: {
       padding: spacing.l,
-      backgroundColor: colors.light_purple,
+      backgroundColor: colors.light_blue,
     },
     title: {
       fontSize: fontSizes.p2,
       textAlign: 'center',
-      color: colors.purple,
+      color: colors.blue,
     },
     perMonth: {
       color: colors.darkGrey,

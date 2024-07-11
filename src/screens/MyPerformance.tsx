@@ -266,24 +266,29 @@ const styles = StyleSheet.create({
   },
   subjectProgress: {
     marginTop: 4,
-    backgroundColor: colors.light_grey,
+    backgroundColor: colors.white,
+
     borderRadius: 50,
     overflow: 'hidden',
   },
   subjectName: {
     fontSize: fontSizes.p2,
     color: colors.purple,
+    paddingBottom: 6,
   },
   subjectResult: {
     padding: spacing.m,
     marginBottom: spacing.l,
     backgroundColor: colors.light_purple,
     borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#f3d9ff',
   },
   subjectsHeading: {
     fontSize: fontSizes.p,
     fontWeight: '500',
     color: colors.black,
+    paddingBottom: 10,
   },
   subjectWrapper: {
     marginTop: spacing.xxl,

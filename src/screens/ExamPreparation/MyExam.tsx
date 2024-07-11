@@ -298,7 +298,8 @@ Return the JSON output without any additional text.
               <Image style={styles.cardImg} source={Images.communityImg} />
               <View style={styles.cardTitleWrapper}>
                 <Text style={styles.cardTitle}>
-                  {user?.exams[0]?.exam_short_name} community
+                  {user?.exams[0]?.exam_short_name}
+                  {'\n'}community
                 </Text>
               </View>
             </TouchableOpacity>
