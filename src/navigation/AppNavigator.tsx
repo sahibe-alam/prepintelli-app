@@ -23,6 +23,8 @@ import EditProfile from '../screens/Auth/EditProfile';
 import CreateNewPassword from '../screens/Auth/CreateNewPassword';
 import Profile from '../screens/Profile';
 import GetPro from '../screens/getPro/GetPro';
+import ExploreCommunity from '../screens/community/ExploreCommunity';
+import PostScreen from '../screens/community/PostScreen';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
   return (
@@ -136,6 +138,16 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Get pro"
           component={GetPro as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Community"
+          component={ExploreCommunity as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PostScreen"
+          component={PostScreen as React.ComponentType}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

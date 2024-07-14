@@ -12,10 +12,26 @@ const communityImg = require('../assets/img/community-img.png');
 const menuIc = require('../assets/img/menu-icon.png');
 const proIc = require('../assets/img/pro-icon.png');
 const coinIc = require('../assets/img/coin_ic.png');
+const dp = require('../assets/img/dp.png');
+const pdfIc2 = require('../assets/img/FileEarmarkPdf.png');
+const imageIc = require('../assets/img/Images.png');
+const ThreeDotsVertical = require('../assets/img/ThreeDotsVertical.png');
+const gradientLike = require('../assets/img/gradient-like.png');
+const handThumbsUp = require('../assets/img/HandThumbsUp.png');
+const chatIc = require('../assets/img/Chat.png');
+const redCloseIc = require('../assets/img/red-close-ic.png');
 export default {
+  gradientLike,
+  redCloseIc,
+  handThumbsUp,
+  chatIc,
+  ThreeDotsVertical,
+  pdfIc,
+  imageIc,
+  dp,
   coinIc,
   downloadIc,
-  pdfIc,
+  pdfIc2,
   logo,
   aiTeacher,
   fbIc,

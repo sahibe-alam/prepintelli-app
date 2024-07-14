@@ -7,11 +7,13 @@ interface PropsType {
   title?: string;
   isTimer?: boolean;
   testTime?: number;
+  isBottomBorder?: boolean;
   isTimeUp?: () => void;
 }
 const BackHeader: React.FC<PropsType> = ({
   onPress,
   title,
+  isBottomBorder = true,
   isTimer = false,
   testTime = 0,
   isTimeUp,
@@ -44,7 +46,9 @@ const BackHeader: React.FC<PropsType> = ({
     )}`;
   };
   return (
-    <View style={styles.backHeader}>
+    <View
+      style={[styles.backHeader, isBottomBorder && { borderBottomWidth: 1 }]}
+    >
       <TouchableOpacity style={styles.backBtn} onPress={onPress}>
         <Image
           style={styles.backArrow}
@@ -112,7 +116,7 @@ const getStyles = () =>
       alignItems: 'center',
       gap: 0,
       paddingHorizontal: spacing.l,
-      borderBottomWidth: 1,
+      borderBottomWidth: 0,
       borderColor: colors.light_grey,
     },
   });

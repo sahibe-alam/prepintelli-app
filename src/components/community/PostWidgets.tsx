@@ -1,0 +1,69 @@
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { fontSizes, spacing } from '../../utils/commonStyle';
+import { colors } from '../../utils/commonStyle/colors';
+import Images from '../../resources/Images';
+
+const PostWidgets = ({ onPostClick }: { onPostClick: () => void }) => {
+  const styles = getStyle();
+  return (
+    <View style={styles.wrapper}>
+      <View style={styles.dpWrapper}>
+        <Image style={styles.dp} source={Images.dp} />
+      </View>
+      <TouchableOpacity
+        onPress={onPostClick}
+        style={styles.textClick}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.postText}>Post you doubt or knowledge</Text>
+      </TouchableOpacity>
+      <TouchableOpacity activeOpacity={0.7}>
+        <Image source={Images.pdfIc2} resizeMode="contain" />
+      </TouchableOpacity>
+      <TouchableOpacity activeOpacity={0.7}>
+        <Image source={Images.imageIc} resizeMode="contain" />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const getStyle = () =>
+  StyleSheet.create({
+    postText: {
+      color: colors.grey,
+      fontSize: fontSizes.p3,
+    },
+    textClick: {
+      flex: 1,
+      paddingLeft: spacing.m,
+      justifyContent: 'center',
+      borderRadius: 50,
+      borderColor: colors.grey,
+      height: 32,
+      borderWidth: 1,
+    },
+    dp: {
+      width: '100%',
+      height: '100%',
+      resizeMode: 'cover',
+    },
+    dpWrapper: {
+      width: 32,
+      height: 32,
+      borderRadius: 100,
+      overflow: 'hidden',
+      borderWidth: 1,
+      borderColor: colors.light_border,
+    },
+    wrapper: {
+      gap: spacing.m,
+      flexDirection: 'row',
+      paddingHorizontal: spacing.l,
+      paddingVertical: spacing.s,
+      borderBottomWidth: 1,
+      alignItems: 'center',
+      borderColor: colors.light_grey,
+    },
+  });
+export default PostWidgets;

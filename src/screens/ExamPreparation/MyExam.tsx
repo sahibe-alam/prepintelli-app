@@ -290,7 +290,8 @@ Return the JSON output without any additional text.
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                toast.show('Community feature coming soon 😍!');
+                // toast.show('Community feature coming soon 😍!');
+                navigation.navigate('Community');
               }}
               activeOpacity={0.8}
               style={styles.card}
