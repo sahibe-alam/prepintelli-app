@@ -20,8 +20,14 @@ const gradientLike = require('../assets/img/gradient-like.png');
 const handThumbsUp = require('../assets/img/HandThumbsUp.png');
 const chatIc = require('../assets/img/Chat.png');
 const redCloseIc = require('../assets/img/red-close-ic.png');
+const infoCircle = require('../assets/img/infoCircle.png');
+const noExam = require('../assets/img/exam-time.png');
+const userDp = require('../assets/img/user-dp.png');
 export default {
+  noExam,
   gradientLike,
+  infoCircle,
+  userDp,
   redCloseIc,
   handThumbsUp,
   chatIc,

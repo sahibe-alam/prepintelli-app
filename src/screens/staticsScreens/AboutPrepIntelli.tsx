@@ -41,10 +41,14 @@ const AboutPrepIntelli = ({ navigation }: { navigation: any }) => {
             </View>
             <View style={styles.aboutWrapperText}>
               <Text style={styles.about}>
-                PrepIntelli is a cutting-edge AI Exam Preparation App designed
-                exclusively for practice. It offers personalized study plans,
-                interactive practice tests, instant AI chatbot assistance, and
-                performance tracking.
+                PrepIntelli is an AI-driven Exam Preparation App designed for
+                competitive, college, and academic exams. It offers personalized
+                study plans, AI-generated practice questions, real-time chatbot
+                support, performance tracking, and an AI-created exam roadmap.
+                Additionally, PrepIntelli features a robust community
+                integration, allowing users to join exam-specific communities
+                where they can share knowledge, discuss doubts, and access
+                curated content.
               </Text>
               <TouchableOpacity
                 style={styles.visitBtn}
@@ -162,13 +166,13 @@ const getStyle = () =>
     },
     aiTeacherImg: {
       width: '100%',
-      height: 220,
+      height: 160,
       objectFit: 'contain',
     },
     about: {
       color: colors.black,
       fontSize: fontSizes.p2,
-      textAlign: 'center',
+      textAlign: 'justify',
     },
     aboutWrapperText: {
       padding: spacing.m,
@@ -187,9 +191,9 @@ const getStyle = () =>
       fontWeight: '500',
     },
     logo: {
-      maxHeight: 50,
+      maxHeight: 40,
       objectFit: 'contain',
-      width: 60,
+      width: 50,
     },
     container: {
       flex: 1,

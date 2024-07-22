@@ -10,7 +10,7 @@ import Gradient from './Gradient';
 import Images from '../resources/Images';
 
 const Header = ({ navigation }: { navigation: any }) => {
-  const { user, getCredits, setGetCredits } = usePrepContext();
+  const { user, getCredits, setGetCredits, setPlanType } = usePrepContext();
   useFocusEffect(
     useCallback(() => {
       makeRequest({
@@ -20,8 +20,10 @@ const Header = ({ navigation }: { navigation: any }) => {
           userId: user?._id,
         },
       }).then((res: any) => {
-        setGetCredits && setGetCredits(res?.data?.remainingCredits);
+        setGetCredits && setGetCredits(res?.data?.planDetails?.dailyCredits);
+        setPlanType && setPlanType(res?.data?.planDetails?.plan);
       });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user, setGetCredits])
   );
   return (
@@ -37,7 +39,7 @@ const Header = ({ navigation }: { navigation: any }) => {
         >
           <Image
             style={styles.dp}
-            source={require('../assets/img/user_icon.png')}
+            source={user?.userDp ? { uri: user?.userDp } : Images.userDp}
           />
           <Gradient style={styles.gradientMenuIcon}>
             <Image style={styles.menuIcon} source={Images.menuIc} />

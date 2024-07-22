@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { colors } from '../../utils/commonStyle/colors';
@@ -14,8 +15,12 @@ import Button from '../../components/Button';
 import { fontSizes, spacing } from '../../utils/commonStyle';
 import Images from '../../resources/Images';
 import { makeRequest } from '../../api/apiClients';
-
+import RazorpayCheckout from 'react-native-razorpay';
+import { usePrepContext } from '../../contexts/GlobalState';
+import { RAZAPAY_API_KEY } from '@env';
+import { getPro } from '../../api/adapter/getPro';
 const GetPro = ({ navigation }: { navigation: any }) => {
+  const { planType, user } = usePrepContext();
   const [plans, setPlans] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState(0);
   const [getPlan, setGetPlan] = useState<any>({});
@@ -33,6 +38,54 @@ const GetPro = ({ navigation }: { navigation: any }) => {
       setGetPlan(res?.data[0]);
     });
   }, []);
+  console.log(RAZAPAY_API_KEY, 'RAZAPAY_API_KEY');
+  const handlePayment = () => {
+    const options = {
+      description: 'Credits towards consultation',
+      image:
+        'https://firebasestorage.googleapis.com/v0/b/prepintelli-c45bb.appspot.com/o/logo-payment.jpg?alt=media&token=3643a725-2bcc-48dd-bfbb-3e304b3d73f7',
+      currency: 'INR',
+      key: RAZAPAY_API_KEY,
+      amount: getPlan?.price * 100,
+      name: 'PrepIntelli Ai - powered exam preparation app',
+      order_id: '', //Replace this with an order_id created using Orders API.
+      prefill: {
+        email: user?.email,
+        contact: user?.mobile,
+        name: user?.firstname + ' ' + user?.lastname,
+      },
+      theme: { color: colors.purple },
+    };
+
+    RazorpayCheckout.open(options)
+      .then((data: any) => {
+        // handle success
+        // Alert.alert(`Success: ${data.razorpay_payment_id}`);
+        getPro(
+          user?._id,
+          getPlan?.planType,
+          getPlan?.forMonths,
+          getPlan?.creditsPerDay,
+          data.razorpay_payment_id,
+          getPlan?.price
+        ).then(() => {
+          Alert.alert(`Success: ${data.razorpay_payment_id}`);
+          navigation.navigate('Main');
+        });
+      })
+      .catch((error: any) => {
+        // handle failure
+        Alert.alert(`Error: ${error.code} | ${error.description}`);
+        console.log(error);
+      });
+  };
+  console.log(
+    user?._id,
+    getPlan?.planType,
+    getPlan?.forMonths,
+    getPlan?.creditsPerDay,
+    getPlan?.price
+  );
   return (
     <View style={styles.container}>
       <BackHeader
@@ -48,42 +101,57 @@ const GetPro = ({ navigation }: { navigation: any }) => {
               Unlock practice your exam with prepIntelli pro
             </Text>
           </View>
-          <View style={styles.planWrapper}>
-            {plans?.map((item: any, index) => (
-              <TouchableOpacity
-                onPress={() => selectedPlanSelected(index)}
-                activeOpacity={0.5}
-                style={[
-                  styles.planCard,
-                  selectedPlan === index && styles.active,
-                ]}
-                key={index}
-              >
-                <View style={styles.priceWrapper}>
-                  <Text style={styles.price}>₹{item?.price}</Text>
-                  <Text style={styles.actualPrice}>₹{item?.actualPrice}</Text>
-                  <Text style={styles.perMonth}>{item?.forMonths} Month</Text>
-                  <Text style={styles.cardDiscount}>
-                    {item?.discount}% discount
-                  </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.planWrapper}>
+              {plans?.map((item: any, index) => (
+                <View key={index} style={styles.planCardWrapper}>
+                  <TouchableOpacity
+                    onPress={() => selectedPlanSelected(index)}
+                    activeOpacity={0.5}
+                    style={[
+                      styles.planCard,
+                      selectedPlan === index && styles.active,
+                    ]}
+                  >
+                    <View style={styles.priceWrapper}>
+                      <Text style={styles.price}>
+                        {item?.price > 0 ? '₹' : ''}
+                        {item?.price}
+                      </Text>
+                      <Text style={styles.actualPrice}>
+                        ₹{item?.actualPrice}
+                      </Text>
+                      <Text style={styles.perMonth}>
+                        {item?.forMonths} Month
+                      </Text>
+                      <Text style={styles.cardDiscount}>
+                        {item?.discount}% discount
+                      </Text>
+                    </View>
+                    <View
+                      style={[
+                        styles.perDayWrapper,
+                        selectedPlan === index && styles.active,
+                      ]}
+                    >
+                      <Text style={styles.perDay}>{item?.perDay}</Text>
+                      <View style={styles.coinWrapper}>
+                        <Image style={styles.coinIc} source={Images.coinIc} />
+                        <Text style={styles.coinCount}>
+                          {item?.creditsPerDay} Credits
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                  {planType === item?.planType && (
+                    <View style={styles.currentPlan}>
+                      <Text style={styles.currentPlanText}>Current plan</Text>
+                    </View>
+                  )}
                 </View>
-                <View
-                  style={[
-                    styles.perDayWrapper,
-                    selectedPlan === index && styles.active,
-                  ]}
-                >
-                  <Text style={styles.perDay}>{item?.perDay}</Text>
-                  <View style={styles.coinWrapper}>
-                    <Image style={styles.coinIc} source={Images.coinIc} />
-                    <Text style={styles.coinCount}>
-                      {item?.creditsPerDay} Credits
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
+              ))}
+            </View>
+          </ScrollView>
           <View style={styles.couponWrapper}>
             <TextInput
               placeholderTextColor={colors.grey}
@@ -95,18 +163,26 @@ const GetPro = ({ navigation }: { navigation: any }) => {
             </TouchableOpacity>
           </View>
         </ScrollView>
-        <View style={styles.bottomBar}>
-          <View>
-            <Text style={styles.labelPlan}>Select PRO plan</Text>
-            <View style={{ flexDirection: 'row', gap: 8, paddingTop: 2 }}>
-              <Text style={styles.discount}> ₹{getPlan?.actualPrice}</Text>
-              <Text style={styles.totalPrice}>₹{getPlan?.price}</Text>
-              <Text style={styles.perMonth}>/</Text>
-              <Text style={styles.perMonth}>Month</Text>
+        {getPlan?.price > 0 && (
+          <View style={styles.bottomBar}>
+            <View>
+              <Text style={styles.labelPlan}>Select PRO plan</Text>
+              <View style={{ flexDirection: 'row', gap: 8, paddingTop: 2 }}>
+                <Text style={styles.discount}> ₹{getPlan?.actualPrice}</Text>
+                <Text style={styles.totalPrice}>₹{getPlan?.price}</Text>
+                <Text style={styles.perMonth}>/</Text>
+                <Text style={styles.perMonth}>Month</Text>
+              </View>
             </View>
+            <Button
+              btnWidth={120}
+              title="Buy Pro"
+              onPress={() => {
+                handlePayment();
+              }}
+            />
           </View>
-          <Button btnWidth={120} title="Buy Pro" onPress={() => {}} />
-        </View>
+        )}
       </View>
     </View>
   );
@@ -114,6 +190,18 @@ const GetPro = ({ navigation }: { navigation: any }) => {
 
 const getStyle = () => {
   return StyleSheet.create({
+    currentPlanText: {
+      color: colors.green,
+      fontSize: 10,
+      textAlign: 'center',
+      lineHeight: 16,
+    },
+    currentPlan: {
+      marginVertical: 12,
+      padding: 4,
+      borderRadius: 40,
+      backgroundColor: colors.light_green,
+    },
     applyBtnText: {
       color: colors.white,
       fontSize: fontSizes.p3,
@@ -210,11 +298,14 @@ const getStyle = () => {
       color: colors.black,
       textAlign: 'center',
     },
-    planCard: {
+    planCardWrapper: {
       flex: 1,
+    },
+    planCard: {
       borderWidth: 1,
       borderRadius: 12,
       overflow: 'hidden',
+
       borderColor: colors.light_grey,
     },
     planWrapper: {

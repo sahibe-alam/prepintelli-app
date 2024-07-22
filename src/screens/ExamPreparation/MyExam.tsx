@@ -29,6 +29,7 @@ import NoExamTarget from '../../components/NoExamTarget';
 import { updateCredit } from '../../api/adapter/updateCredit';
 import NoCreditPopUp from '../../components/NoCreditPopUp';
 import Images from '../../resources/Images';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface PropsType {
   navigation: any;
@@ -178,7 +179,7 @@ Return the JSON output without any additional text.
 
     {
       role: 'user',
-      content: `Please provide a comprehensive roadmap for ${
+      content: `Please provide a comprehensive roadmap with syllabus for ${
         user?.exams?.[0]?.examname || user?.exams[0]?.classname
       }: ${user?.exams?.[0]?.exam_short_name}. My subjects are ${
         user?.exams?.[0]?.subjects
@@ -186,6 +187,10 @@ Return the JSON output without any additional text.
     },
   ];
   const timeData = [
+    {
+      time: 'No time limit',
+      value: 0,
+    },
     {
       time: '10 minutes',
       value: 10,
@@ -208,13 +213,15 @@ Return the JSON output without any additional text.
     },
   ];
   const handleRoadMap = async () => {
-    llmApiCall(roadMapPrompt, 3000).then((res: any) => {
-      if (res.success) {
-        if ('data' in res) {
-          extractBodyHTML(res.data?.[2]?.content);
+    if (!roadMap) {
+      llmApiCall(roadMapPrompt, 3000).then((res: any) => {
+        if (res.success) {
+          if ('data' in res) {
+            extractBodyHTML(res.data?.[2]?.content);
+          }
         }
-      }
-    });
+      });
+    }
   };
   useEffect(() => {
     if (isModalVisible) {
@@ -226,15 +233,28 @@ Return the JSON output without any additional text.
       });
     }
   }, [isModalVisible]);
-  function extractBodyHTML(htmlString: string) {
+  async function extractBodyHTML(htmlString: string) {
     const bodyStart = htmlString.indexOf('<body>');
     const bodyEnd = htmlString.indexOf('</body>');
     if (bodyStart !== -1 && bodyEnd !== -1) {
-      return setRoadMap(htmlString.substring(bodyStart, bodyEnd + 7));
+      const html = htmlString.substring(bodyStart, bodyEnd + 7);
+      await AsyncStorage.setItem('roadMap', html);
+      return setRoadMap(html);
     } else {
       return '';
     }
   }
+
+  const getHtml = async () => {
+    const html = await AsyncStorage.getItem('roadMap');
+    if (html) {
+      setRoadMap(html);
+    }
+  };
+
+  useEffect(() => {
+    getHtml();
+  }, []);
   return (
     <>
       {user?.exams.length > 0 ? (

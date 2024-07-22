@@ -12,6 +12,7 @@ import NoExamTarget from '../components/NoExamTarget';
 import { makeRequest } from '../api/apiClients';
 import { useFocusEffect } from '@react-navigation/native';
 import ThreePulseDots from '../components/commonComponents/ThreePulseDots';
+import PopOverTooltip from '../components/commonComponents/PopOverTooltip';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -63,7 +64,6 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
 
     return result;
   }
-  console.log(getLast7DaysData(userPerformance?.doubtCount || {}), 'data');
   const data = {
     labels: dateArray,
     datasets: [
@@ -149,10 +149,16 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
                 onPress={() => navigation.goBack()}
                 title="My exam performance"
               />
-              <ScrollView>
+              <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.chartWrapper}>
                   <LineChart
                     data={data}
+                    style={{
+                      backgroundColor: 'blue',
+                      margin: 10,
+                      borderRadius: 10,
+                      marginVertical: 20,
+                    }}
                     horizontalLabelRotation={0}
                     formatYLabel={(value) => value.slice(0, -3)}
                     width={screenWidth}
@@ -161,7 +167,11 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
                     chartConfig={chartConfig}
                     bezier
                   />
+                  <View style={styles.infoWrapper}>
+                    <PopOverTooltip content="This graph will show you how many doubt you have ask to Ai bot" />
+                  </View>
                 </View>
+
                 <View style={styles.resultWrapper}>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.examName}>
@@ -171,7 +181,7 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
                       exam
                     </Text>
                   </View>
-                  <View>
+                  <View style={{ paddingRight: 16 }}>
                     <CircleProgress
                       value={
                         Number(
@@ -183,9 +193,29 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
                       }
                     />
                   </View>
+                  <View style={styles.infoWrapperOverall}>
+                    <PopOverTooltip
+                      iconStyle={{ tintColor: colors.blue }}
+                      content="This graph will show you how many doubt you have ask to Ai bot"
+                    />
+                  </View>
                 </View>
                 <View style={styles.subjectWrapper}>
-                  <Text style={styles.subjectsHeading}>Subject wise score</Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      paddingBottom: 16,
+                    }}
+                  >
+                    <Text style={styles.subjectsHeading}>
+                      Subject wise score
+                    </Text>
+                    <View>
+                      <PopOverTooltip content="This graph will show you how many doubt you have ask to Ai bot" />
+                    </View>
+                  </View>
                   {userPerformance.subjectScore.map(
                     (item: any, index: number) => {
                       const widthPercentage: any = calculatePercentage(
@@ -234,8 +264,18 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  infoWrapper: {
+    position: 'absolute',
+    top: 24,
+    right: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   chartWrapper: {
-    marginLeft: -16,
+    backgroundColor: colors.light_blue,
+    position: 'relative',
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
   },
   noPerformanceLoader: {
     flex: 1,
@@ -288,7 +328,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.p,
     fontWeight: '500',
     color: colors.black,
-    paddingBottom: 10,
   },
   subjectWrapper: {
     marginTop: spacing.xxl,
@@ -299,6 +338,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: colors.blue,
   },
+  infoWrapperOverall: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+  },
   resultWrapper: {
     marginTop: spacing.xxl,
     marginHorizontal: spacing.l,
@@ -307,6 +351,7 @@ const styles = StyleSheet.create({
     gap: spacing.m,
     alignItems: 'center',
     flexDirection: 'row',
+    position: 'relative',
     justifyContent: 'space-between',
     padding: spacing.m,
   },

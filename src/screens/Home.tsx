@@ -1,4 +1,12 @@
-import { View, Text, StyleSheet, ScrollView, Linking } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Linking,
+  Alert,
+  BackHandler,
+} from 'react-native';
 import React, { useEffect } from 'react';
 import { colors } from '../utils/commonStyle/colors';
 import { fontSizes, spacing } from '../utils/commonStyle';
@@ -8,6 +16,7 @@ import CustomModal from '../components/commonComponents/CustomModal';
 import { makeRequest } from '../api/apiClients';
 import Button from '../components/Button';
 import DeviceInfo from 'react-native-device-info';
+import { useFocusEffect } from '@react-navigation/native';
 interface PropsType {
   navigation?: any;
   route?: any;
@@ -45,7 +54,27 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
       classAction: 'fetchClass',
     },
   ];
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        Alert.alert(
+          'Exit App',
+          'Are you sure you want to exit?',
+          [
+            { text: 'Cancel', onPress: () => null, style: 'cancel' },
+            { text: 'YES', onPress: () => BackHandler.exitApp() },
+          ],
+          { cancelable: false }
+        );
+        return true;
+      };
 
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
   useEffect(() => {
     makeRequest({
       method: 'GET',

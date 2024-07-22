@@ -32,9 +32,7 @@ const TestResult: React.FC<PropsType> = (props) => {
                 <Text style={styles.boldText}>Chapter or unit:</Text>{' '}
                 {chapterName}
               </Text>
-              <Text style={styles.cardText}>
-                <Text style={styles.boldText}>Time spend:</Text> 8m 20s
-              </Text>
+
               <Text style={styles.cardText}>
                 <Text style={styles.boldText}>Total questions:</Text> 10
               </Text>

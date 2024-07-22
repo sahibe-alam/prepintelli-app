@@ -11,6 +11,7 @@ import { usePrepContext } from '../../contexts/GlobalState';
 import { getUserID } from '../../utils/commonServices';
 import { getUserDetails } from '../../api/adapter/getUserDetails';
 import { useToast } from 'react-native-toast-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 interface PropsType {
   navigation: any;
   route: any;
@@ -182,7 +183,9 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
             <Button
               isLoading={isLoading}
               title="Get start"
-              onPress={() => {
+              onPress={async () => {
+                // local storage roadMap await AsyncStorage.getItem('roadMap')
+                await AsyncStorage.removeItem('roadMap');
                 if (type === 'clg' || type === 'comptv') {
                   if (targetExam?.subjects && targetExam?.examName?._id) {
                     insertExam({

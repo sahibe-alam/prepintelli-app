@@ -84,6 +84,8 @@ const SignUp: React.FC<Props> = (props) => {
   const { navigation } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
   const [isLoading, setLoading] = useState(false);
+
+  const [isShowPass, setIsShowPass] = useState(true);
   const [errorMessage, setErrorMessage] = useState({
     firstName: '',
     lastName: '',
@@ -274,15 +276,21 @@ const SignUp: React.FC<Props> = (props) => {
           />
 
           <InputField
+            onHidePassword={() => setIsShowPass(!isShowPass)}
             errorMsg={errorMessage.password}
             onChangeText={(text) => {
               dispatch({ type: 'PASSWORD', payload: text });
             }}
+            secureTextEntry={isShowPass}
+            isPassword={true}
             value={state.password}
             label="Password*"
             placeholder="Enter password"
           />
           <InputField
+            secureTextEntry={isShowPass}
+            isPassword={true}
+            onHidePassword={() => setIsShowPass(!isShowPass)}
             errorMsg={errorMessage.cPassword}
             onChangeText={(text) => {
               dispatch({ type: 'CPASSWORD', payload: text });

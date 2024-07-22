@@ -3,6 +3,8 @@ import React from 'react';
 import { colors } from '../../utils/commonStyle/colors';
 import { fontSizes, spacing } from '../../utils/commonStyle';
 import Typing from './Typing';
+import { usePrepContext } from '../../contexts/GlobalState';
+import Images from '../../resources/Images';
 
 interface propsType {
   isLeft?: boolean;
@@ -11,6 +13,7 @@ interface propsType {
 }
 const ResponseCard: React.FC<propsType> = (props) => {
   const { isLeft = true, content, forLoader } = props;
+  const { user } = usePrepContext();
   const styles = getStyles();
   const renderTextWithKeywords = (text: string) => {
     // Regular expression to match keywords wrapped in double stars
@@ -64,10 +67,17 @@ const ResponseCard: React.FC<propsType> = (props) => {
             { flexDirection: isLeft ? 'row' : 'row-reverse' },
           ]}
         >
-          <Image
-            style={styles.resDp}
-            source={require('../../assets/img/prepIntelliDp.png')}
-          />
+          {isLeft ? (
+            <Image
+              style={styles.resDp}
+              source={require('../../assets/img/prepIntelliDp.png')}
+            />
+          ) : (
+            <Image
+              style={styles.resDp}
+              source={user?.userDp ? { uri: user?.userDp } : Images.userDp}
+            />
+          )}
           <View>
             <Text style={styles.resName}>
               {isLeft ? 'PrepIntelli: Ai teacher' : 'You'}
@@ -117,7 +127,8 @@ const getStyles = () =>
     resDp: {
       width: 30,
       height: 30,
-      resizeMode: 'contain',
+      resizeMode: 'cover',
+      borderRadius: 50,
     },
     wrapper: {
       width: '90%',

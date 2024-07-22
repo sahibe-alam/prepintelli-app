@@ -4,6 +4,7 @@ import { colors } from '../utils/commonStyle/colors';
 import Gradient from '../components/Gradient';
 import { usePrepContext } from '../contexts/GlobalState';
 import { fontSizes } from '../utils/commonStyle';
+import Images from '../resources/Images';
 
 const DpWrapper = ({ isPencil = false }: { isPencil?: boolean }) => {
   const { deviceWidth } = usePrepContext();
@@ -22,7 +23,7 @@ const DpWrapper = ({ isPencil = false }: { isPencil?: boolean }) => {
       </View>
       <View style={styles.dpWrapper}>
         <Image
-          source={require('../assets//img/exam_ai_img.png')}
+          source={user?.userDp ? { uri: user?.userDp } : Images.userDp}
           style={styles.dp}
         />
         {isPencil && (
@@ -95,7 +96,9 @@ const getSyle = (deviceWidth: number) =>
       position: 'absolute',
       bottom: -40,
       alignSelf: 'center',
-      backgroundColor: colors.purple,
+      backgroundColor: colors.white,
+      borderWidth: 1,
+      borderColor: colors.blue,
     },
   });
 export default DpWrapper;
