@@ -168,7 +168,7 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
                     bezier
                   />
                   <View style={styles.infoWrapper}>
-                    <PopOverTooltip content="This graph will show you how many doubt you have ask to Ai bot" />
+                    <PopOverTooltip content="This shows the total number of doubts you have asked and cleared with the AI chatbot. It helps you keep track of your interactions and learning progress." />
                   </View>
                 </View>
 
@@ -196,7 +196,7 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
                   <View style={styles.infoWrapperOverall}>
                     <PopOverTooltip
                       iconStyle={{ tintColor: colors.blue }}
-                      content="This graph will show you how many doubt you have ask to Ai bot"
+                      content="This is your cumulative score across all subjects based on the tests you have taken. It provides a comprehensive view of your overall performance and readiness for the exam."
                     />
                   </View>
                 </View>
@@ -213,7 +213,7 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
                       Subject wise score
                     </Text>
                     <View>
-                      <PopOverTooltip content="This graph will show you how many doubt you have ask to Ai bot" />
+                      <PopOverTooltip content="This score represents your performance in each subject based on the tests you have attempted. It gives you a detailed breakdown of your strengths and areas for improvement in each subject." />
                     </View>
                   </View>
                   {userPerformance.subjectScore.map(

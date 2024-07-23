@@ -1,16 +1,16 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import React, { useCallback } from 'react';
 import { colors } from '../utils/commonStyle/colors';
 import { fontSizes } from '../utils/commonStyle';
 import { usePrepContext } from '../contexts/GlobalState';
 import { makeRequest } from '../api/apiClients';
 import { useFocusEffect } from '@react-navigation/native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Gradient from './Gradient';
 import Images from '../resources/Images';
 
 const Header = ({ navigation }: { navigation: any }) => {
   const { user, getCredits, setGetCredits, setPlanType } = usePrepContext();
+  console.log(getCredits);
   useFocusEffect(
     useCallback(() => {
       makeRequest({
@@ -20,6 +20,7 @@ const Header = ({ navigation }: { navigation: any }) => {
           userId: user?._id,
         },
       }).then((res: any) => {
+        console.log(res?.data?.remainingCredits);
         setGetCredits && setGetCredits(res?.data?.planDetails?.dailyCredits);
         setPlanType && setPlanType(res?.data?.planDetails?.plan);
       });
@@ -49,17 +50,28 @@ const Header = ({ navigation }: { navigation: any }) => {
           Hi, {user?.firstname}
         </Text>
       </View>
-      <View style={styles.coinWrapper}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('Credits uses');
+        }}
+        activeOpacity={0.7}
+        style={styles.coinWrapper}
+      >
         <Image
           style={styles.coinIcon}
           source={require('../assets/img/coin_ic.png')}
         />
         <Text style={styles.coinCount}>{getCredits}</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
 const styles = StyleSheet.create({
+  coinContainer: {
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'flex-end',
+  },
   menuIcon: {
     width: '100%',
     height: '100%',
@@ -116,8 +128,10 @@ const styles = StyleSheet.create({
   coinWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 5,
     padding: 4,
+    maxWidth: 100,
     paddingHorizontal: 10,
     borderWidth: 1,
     borderColor: colors.grey,
