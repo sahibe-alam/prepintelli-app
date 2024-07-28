@@ -41,7 +41,10 @@ const ExploreCommunity = ({ navigation }: { navigation: any }) => {
         isBottomBorder={false}
         title="Explore NEET Community"
       />
-      <PostWidgets onPostClick={() => navigation.navigate('PostScreen')} />
+      <PostWidgets
+        navigation={navigation}
+        onPostClick={() => navigation.navigate('PostScreen')}
+      />
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.scrollWrapper}

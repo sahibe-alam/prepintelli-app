@@ -19,6 +19,7 @@ import RazorpayCheckout from 'react-native-razorpay';
 import { usePrepContext } from '../../contexts/GlobalState';
 import { RAZAPAY_API_KEY } from '@env';
 import { getPro } from '../../api/adapter/getPro';
+import Gradient from '../../components/Gradient';
 const GetPro = ({ navigation }: { navigation: any }) => {
   const { planType, user } = usePrepContext();
   const [plans, setPlans] = useState([]);
@@ -96,11 +97,11 @@ const GetPro = ({ navigation }: { navigation: any }) => {
       />
       <View style={styles.screenWrapper}>
         <ScrollView style={styles.scrollWrapper}>
-          <View style={styles.Titlewrapper}>
+          <Gradient style={styles.gradient}>
             <Text style={styles.title}>
-              Unlock practice your exam with prepIntelli pro
+              Supercharge Your Exam Prep with prepIntelli 😍
             </Text>
-          </View>
+          </Gradient>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.planWrapper}>
               {plans?.map((item: any, index) => (
@@ -114,19 +115,25 @@ const GetPro = ({ navigation }: { navigation: any }) => {
                     ]}
                   >
                     <View style={styles.priceWrapper}>
-                      <Text style={styles.price}>
-                        {item?.price > 0 ? '₹' : ''}
-                        {item?.price}
+                      {/* Capitalize text */}
+                      <Text style={styles.planTypeText}>
+                        {item?.planType.toUpperCase()}
                       </Text>
-                      <Text style={styles.actualPrice}>
-                        ₹{item?.actualPrice}
-                      </Text>
-                      <Text style={styles.perMonth}>
-                        {item?.forMonths} Month
-                      </Text>
-                      <Text style={styles.cardDiscount}>
-                        {item?.discount}% discount
-                      </Text>
+                      <View style={styles.priceContent}>
+                        <Text style={styles.price}>
+                          {item?.price > 0 ? '₹' : ''}
+                          {item?.price}
+                        </Text>
+                        <Text style={styles.actualPrice}>
+                          ₹{item?.actualPrice}
+                        </Text>
+                        <Text style={styles.perMonth}>
+                          {item?.forMonths} Month
+                        </Text>
+                        <Text style={styles.cardDiscount}>
+                          {item?.discount}% discount
+                        </Text>
+                      </View>
                     </View>
                     <View
                       style={[
@@ -166,7 +173,9 @@ const GetPro = ({ navigation }: { navigation: any }) => {
         {getPlan?.price > 0 && (
           <View style={styles.bottomBar}>
             <View>
-              <Text style={styles.labelPlan}>Select PRO plan</Text>
+              <Text style={styles.labelPlan}>
+                Selected {getPlan?.planType} plan
+              </Text>
               <View style={{ flexDirection: 'row', gap: 8, paddingTop: 2 }}>
                 <Text style={styles.discount}> ₹{getPlan?.actualPrice}</Text>
                 <Text style={styles.totalPrice}>₹{getPlan?.price}</Text>
@@ -176,7 +185,7 @@ const GetPro = ({ navigation }: { navigation: any }) => {
             </View>
             <Button
               btnWidth={120}
-              title="Buy Pro"
+              title="Buy Plan"
               onPress={() => {
                 handlePayment();
               }}
@@ -190,6 +199,23 @@ const GetPro = ({ navigation }: { navigation: any }) => {
 
 const getStyle = () => {
   return StyleSheet.create({
+    gradient: {
+      padding: spacing.l,
+    },
+    priceContent: {
+      paddingVertical: 10,
+      paddingHorizontal: 6,
+      flexDirection: 'column',
+      gap: 4,
+    },
+    planTypeText: {
+      color: colors.blue,
+      fontSize: fontSizes.p4,
+      fontWeight: '600',
+      textAlign: 'center',
+      paddingVertical: 8,
+      backgroundColor: colors.light_blue,
+    },
     currentPlanText: {
       color: colors.green,
       fontSize: 10,
@@ -238,8 +264,6 @@ const getStyle = () => {
       transform: [{ scale: 1.05 }],
     },
     priceWrapper: {
-      paddingHorizontal: spacing.s,
-      paddingVertical: spacing.l,
       flexDirection: 'column',
       alignContent: 'center',
       gap: 6,
@@ -321,7 +345,8 @@ const getStyle = () => {
     title: {
       fontSize: fontSizes.p2,
       textAlign: 'center',
-      color: colors.blue,
+      color: colors.white,
+      fontWeight: '600',
     },
     perMonth: {
       color: colors.darkGrey,
@@ -344,6 +369,7 @@ const getStyle = () => {
     labelPlan: {
       fontSize: fontSizes.p2,
       color: colors.black,
+      textTransform: 'capitalize',
     },
     bottomBar: {
       alignSelf: 'center',

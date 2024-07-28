@@ -7,12 +7,17 @@ import {
 } from 'react-native';
 import React, { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getJwtToken, getUserID } from '../utils/commonServices';
+import {
+  getJwtToken,
+  getUserID,
+  removeLoginToken,
+} from '../utils/commonServices';
 import LoadingDots from 'react-native-loading-dots';
 import { colors } from '../utils/commonStyle/colors';
 import { getUserDetails } from '../api/adapter/getUserDetails';
 import { usePrepContext } from '../contexts/GlobalState';
 import { useFocusEffect } from '@react-navigation/native';
+import Images from '../resources/Images';
 
 const StartApp = ({ navigation }: any) => {
   const requestMultipleHelper = async () => {
@@ -48,6 +53,7 @@ const StartApp = ({ navigation }: any) => {
             .catch((err: any) => {
               console.log(err);
               navigation.navigate('Login');
+              removeLoginToken();
             });
         });
       } else {
@@ -77,10 +83,7 @@ const StartApp = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
       <View>
-        <Image
-          style={styles.logo}
-          source={require('../../src/assets/img/Logo.png')}
-        />
+        <Image style={styles.logo} source={Images.logo} />
         <View style={styles.loader}>
           <LoadingDots
             colors={[colors.purple, colors.blue, colors.purple, colors.blue]}

@@ -3,8 +3,9 @@ import React from 'react';
 import { fontSizes, spacing } from '../../utils/commonStyle';
 import { colors } from '../../utils/commonStyle/colors';
 import Images from '../../resources/Images';
+import GetImage from '../commonComponents/GetImage';
 
-const PostWidgets = ({ onPostClick }: { onPostClick: () => void }) => {
+const PostWidgets = ({ onPostClick, navigation }: PostWidgetsProps) => {
   const styles = getStyle();
   return (
     <View style={styles.wrapper}>
@@ -16,18 +17,26 @@ const PostWidgets = ({ onPostClick }: { onPostClick: () => void }) => {
         style={styles.textClick}
         activeOpacity={0.7}
       >
-        <Text style={styles.postText}>Post you doubt or knowledge</Text>
+        <Text style={styles.postText}>Post your doubt or knowledge</Text>
       </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.7}>
+      {/* <TouchableOpacity activeOpacity={0.7}>
         <Image source={Images.pdfIc2} resizeMode="contain" />
-      </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.7}>
+      </TouchableOpacity> */}
+      <GetImage
+        onImagePicked={(path: string) => {
+          navigation.navigate('PostScreen', { image: path });
+        }}
+      >
         <Image source={Images.imageIc} resizeMode="contain" />
-      </TouchableOpacity>
+      </GetImage>
     </View>
   );
 };
 
+type PostWidgetsProps = {
+  onPostClick: () => void;
+  navigation?: any;
+};
 const getStyle = () =>
   StyleSheet.create({
     postText: {

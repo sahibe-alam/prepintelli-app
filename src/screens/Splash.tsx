@@ -12,6 +12,7 @@ import Button from '../components/Button';
 import { fontSizes, spacing } from '../utils/commonStyle';
 import { usePrepContext } from '../contexts/GlobalState';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Images from '../resources/Images';
 interface Props {
   navigation?: any;
   route?: any;
@@ -39,10 +40,7 @@ const Splash: React.FC<Props> = ({ navigation }) => {
         <StatusBar barStyle="dark-content" backgroundColor={'white'} />
         <View style={styles.splashWrapper}>
           <View style={[styles.branding]}>
-            <Image
-              style={styles.logo}
-              source={require('../../src/assets/img/Logo.png')}
-            />
+            <Image style={styles.logo} source={Images.logo} />
             <Text style={styles.logoText}>prepIntelli</Text>
             <Text style={styles.tagline}>
               PrepIntelli app: Your AI-powered {'\n'} exam preparation companion

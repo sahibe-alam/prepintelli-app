@@ -26,6 +26,7 @@ import GetPro from '../screens/getPro/GetPro';
 import ExploreCommunity from '../screens/community/ExploreCommunity';
 import PostScreen from '../screens/community/PostScreen';
 import CreditsUses from '../screens/getPro/CreditsUses';
+import Test from '../screens/Test';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
   return (
@@ -154,6 +155,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Credits uses"
           component={CreditsUses as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Test"
+          component={Test as React.ComponentType}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

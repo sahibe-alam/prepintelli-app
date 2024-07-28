@@ -1,6 +1,6 @@
 const pdfIc = require('../assets/img/pdf-icon.png');
 const downloadIc = require('../assets/img/download_file.png');
-const logo = require('../assets/img/Logo.png');
+const logo = require('../assets/img/ai-logo.png');
 const aiTeacher = require('../assets/img/exam_ai_img.png');
 const fbIc = require('../assets/img/facebook-ic.png');
 const igIc = require('../assets/img/instagram-ic.png');

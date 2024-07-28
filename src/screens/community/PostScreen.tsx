@@ -13,11 +13,13 @@ import BackHeader from '../../components/BackHeader';
 import Images from '../../resources/Images';
 import Gradient from '../../components/Gradient';
 import { fontSizes, spacing } from '../../utils/commonStyle';
+import GetImage from '../../components/commonComponents/GetImage';
 
-const PostScreen = ({ navigation }: { navigation: any }) => {
+const PostScreen = ({ navigation, route }: PostScreenPropsType) => {
+  const { image } = route.params || {};
   const styles = getStyles();
   const [text, setText] = useState('');
-
+  const [renderImage, setRenderImage] = useState(image ? image : '');
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader
@@ -37,28 +39,31 @@ const PostScreen = ({ navigation }: { navigation: any }) => {
         />
       </View>
       <View style={styles.postWrapper}>
-        <View style={styles.postImageWrapper}>
-          <Image
-            style={styles.postImage}
-            src="https://cache.careers360.mobi/media/article_images/2019/7/29/NEET-exam-pattern.jpg"
-          />
-          <TouchableOpacity activeOpacity={0.7} style={styles.closeBtn}>
-            <Image
-              style={styles.closeIc}
-              source={Images.redCloseIc}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
+        {renderImage && (
+          <View style={styles.postImageWrapper}>
+            <Image style={styles.postImage} source={{ uri: renderImage }} />
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.closeBtn}
+              onPress={() => setRenderImage('')}
+            >
+              <Image
+                style={styles.closeIc}
+                source={Images.redCloseIc}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
       <View style={styles.postFooter}>
         <View style={styles.postActions}>
-          <TouchableOpacity>
+          <GetImage onImagePicked={(path: string) => setRenderImage(path)}>
             <Image source={Images.imageIc} resizeMode="contain" />
-          </TouchableOpacity>
-          <TouchableOpacity>
+          </GetImage>
+          {/* <TouchableOpacity>
             <Image source={Images.pdfIc2} resizeMode="contain" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <TouchableOpacity>
           <Gradient
@@ -80,6 +85,10 @@ const PostScreen = ({ navigation }: { navigation: any }) => {
   );
 };
 
+type PostScreenPropsType = {
+  navigation?: any;
+  route?: any;
+};
 const getStyles = () => {
   return StyleSheet.create({
     closeIc: {

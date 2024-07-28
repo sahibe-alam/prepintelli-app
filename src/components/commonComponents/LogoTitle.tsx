@@ -2,15 +2,13 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import React from 'react';
 import { colors } from '../../utils/commonStyle/colors';
 import { fontSizes, spacing } from '../../utils/commonStyle';
+import Images from '../../resources/Images';
 
 const LogoTitle = ({ title }: { title: string }) => {
   const styles = getStyle();
   return (
     <View style={styles.wrapper}>
-      <Image
-        style={styles.logo}
-        source={require('../../assets/img/Logo.png')}
-      />
+      <Image style={styles.logo} source={Images.logo} />
       <Text style={styles.title}>{title}</Text>
     </View>
   );

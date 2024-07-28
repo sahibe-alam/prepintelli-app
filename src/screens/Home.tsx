@@ -101,6 +101,7 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
           <View style={styles.sliderWrapper}>
             <HomeSlider />
           </View>
+
           <Text style={styles.modulesHeading}>Target your exam, With Ai </Text>
           {/* <View style={styles.moduleWrapper}>
           <ModuleCard
