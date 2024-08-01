@@ -4,13 +4,15 @@ import { fontSizes, spacing } from '../../utils/commonStyle';
 import { colors } from '../../utils/commonStyle/colors';
 import Images from '../../resources/Images';
 import GetImage from '../commonComponents/GetImage';
+import { usePrepContext } from '../../contexts/GlobalState';
 
 const PostWidgets = ({ onPostClick, navigation }: PostWidgetsProps) => {
   const styles = getStyle();
+  const { user } = usePrepContext();
   return (
     <View style={styles.wrapper}>
       <View style={styles.dpWrapper}>
-        <Image style={styles.dp} source={Images.dp} />
+        <Image style={styles.dp} source={{ uri: user?.userDp || Images.dp }} />
       </View>
       <TouchableOpacity
         onPress={onPostClick}
@@ -49,7 +51,7 @@ const getStyle = () =>
       justifyContent: 'center',
       borderRadius: 50,
       borderColor: colors.grey,
-      height: 32,
+      height: 38,
       borderWidth: 1,
     },
     dp: {
@@ -58,12 +60,12 @@ const getStyle = () =>
       resizeMode: 'cover',
     },
     dpWrapper: {
-      width: 32,
-      height: 32,
+      width: 38,
+      height: 38,
       borderRadius: 100,
       overflow: 'hidden',
       borderWidth: 1,
-      borderColor: colors.light_border,
+      borderColor: colors.blue,
     },
     wrapper: {
       gap: spacing.m,

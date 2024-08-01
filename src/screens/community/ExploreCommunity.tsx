@@ -1,39 +1,76 @@
-import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
-import React from 'react';
+import {
+  FlatList,
+  Image,
+  RefreshControl,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
 import BackHeader from '../../components/BackHeader';
 import { colors } from '../../utils/commonStyle/colors';
 import PostWidgets from '../../components/community/PostWidgets';
 import PostCard from '../../components/community/PostCard';
-
+import { io } from 'socket.io-client';
+import { usePrepContext } from '../../contexts/GlobalState';
+import { makeRequest } from '../../api/apiClients';
+import { BACKEND_URL } from '@env';
+import { fontSizes, spacing } from '../../utils/commonStyle';
+import Button from '../../components/Button';
+const socket = io(BACKEND_URL);
 const ExploreCommunity = ({ navigation }: { navigation: any }) => {
   const styles = getStyles();
+  const { user } = usePrepContext();
+  const [getPosts, setGetPosts] = useState<any | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    // Listen for new posts
+    try {
+      socket.on('newPost', ({ examId, post }) => {
+        console.log(examId, 'examId');
+        console.log(post, 'post');
+        if (examId === user?.exams[0]?.examId) {
+          setGetPosts((prevPosts: any) => [post, ...prevPosts]);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
 
-  const posts = [
-    {
-      id: 1,
-      userName: 'Sahibe Alam',
-      dp: 'https://media.licdn.com/dms/image/D4D03AQEwCUTdH_0Cow/profile-displayphoto-shrink_200_200/0/1703095236438?e=2147483647&v=beta&t=ZhsfRTt2nMUEEEwiWl-KCOM4_8XJIDr0B2-oDXCUR7k',
-      postTime: '10 hrs ago',
-      postText:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      postMedia:
-        'https://cache.careers360.mobi/media/article_images/2019/7/29/NEET-exam-pattern.jpg',
-      likes: 120,
-      comments: 10,
-    },
-    {
-      id: 2,
-      userName: 'Abhishek patel',
-      dp: 'https://static.tnn.in/thumb/msid-109859759,thumbsize-8618,width-1280,height-720,resizemode-75/109859759.jpg',
-      postTime: '10 hrs ago',
-      postText:
-        'The SC said currently it was determining the nature of the leak, and not if it actually happened. "You don t have to order a re-test for whole exam only because 2 students engaged in malpractice. Therefore, we must be careful about the nature of leak. Before we order a re-test we must be conscious of extent of leak as we are dealing with 23 lakh students',
-      postMedia:
-        'https://img.etimg.com/thumb/width-1200,height-1200,imgsize-96994,resizemode-75,msid-111575670/news/india/neet-ug-2024-supreme-court-hearing-paper-leak.jpg',
-      likes: 120,
-      comments: 10,
-    },
-  ];
+    makeRequest({
+      method: 'GET',
+      url: `/get-posts/${user?.exams[0]?.examId}`,
+    })
+      .then((res: any) => {
+        setGetPosts(res?.data?.data);
+        setIsLoading(true);
+      })
+      .catch((err: any) => {
+        console.log(err.message, 'err hai');
+        setIsLoading(true);
+      });
+
+    return () => {
+      socket.off('newPost');
+    };
+  }, [user]);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    // Simulate fetching data from an API
+    onRef();
+  }, []);
+
+  const onRef = () => {
+    return new Promise(() => {
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 2000);
+    });
+  };
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader
@@ -45,29 +82,90 @@ const ExploreCommunity = ({ navigation }: { navigation: any }) => {
         navigation={navigation}
         onPostClick={() => navigation.navigate('PostScreen')}
       />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.scrollWrapper}
-      >
-        {posts.map((item: any, index) => (
-          <PostCard
-            key={index}
-            userName={item.userName}
-            dp={item.dp}
-            postTime={item.postTime}
-            postText={item.postText}
-            postMedia={item.postMedia}
-            likes={item.likes}
-            comments={item.comments}
-          />
-        ))}
-      </ScrollView>
+
+      {isLoading ? (
+        <>
+          {getPosts?.length > 0 ? (
+            <FlatList
+              style={styles.scrollWrapper}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              //  hide scrollbar
+              showsVerticalScrollIndicator={false}
+              data={getPosts}
+              renderItem={({ item }) => <PostCard item={item} />}
+              keyExtractor={(item, index) =>
+                item.id ? item.id.toString() : index.toString()
+              }
+            />
+          ) : (
+            <View style={styles.noPostWrapper}>
+              <View>
+                <View style={styles.imgWrapper}>
+                  <Image
+                    style={styles.noPostImg}
+                    source={{
+                      uri: 'https://res.cloudinary.com/prepintelli/image/upload/v1722527652/assets/jdi0dfp7ztji8khmmnyw.png',
+                    }}
+                  />
+                </View>
+                <View style={styles.textDesc}>
+                  <Text style={styles.heading}>Community Feed is Empty 📭</Text>
+                  <Text style={styles.desc}>
+                    Be the first to share your knowledge and connect with
+                    others! 🌟
+                  </Text>
+                  <Button
+                    title="Create Post"
+                    onPress={() => navigation.navigate('PostScreen')}
+                  />
+                </View>
+              </View>
+            </View>
+          )}
+        </>
+      ) : (
+        <>
+          <Text style={{ textAlign: 'center' }}>Loading..</Text>
+        </>
+      )}
     </SafeAreaView>
   );
 };
 
 const getStyles = () => {
   return StyleSheet.create({
+    noPostWrapper: {
+      flex: 1,
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    textDesc: {
+      paddingHorizontal: spacing.l,
+    },
+    desc: {
+      textAlign: 'center',
+      paddingVertical: 10,
+      fontSize: fontSizes.p2,
+      paddingBottom: 20,
+    },
+    heading: {
+      fontSize: fontSizes.h5,
+      fontWeight: '500',
+      paddingTop: 20,
+      textAlign: 'center',
+    },
+    noPostImg: {
+      width: '100%',
+      height: '100%',
+      resizeMode: 'contain',
+    },
+    imgWrapper: {
+      aspectRatio: 1 / 0.5,
+      width: '100%',
+    },
     scrollWrapper: {
       backgroundColor: colors.light_blue,
     },

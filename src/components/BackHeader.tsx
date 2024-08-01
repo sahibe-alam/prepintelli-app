@@ -19,7 +19,9 @@ const BackHeader: React.FC<PropsType> = ({
   isTimeUp,
 }) => {
   const [timeLeft, setTimeLeft] = useState(testTime * 60);
-
+  useEffect(() => {
+    setTimeLeft(testTime * 60);
+  }, [testTime]);
   const styles = getStyles();
   useEffect(() => {
     if (timeLeft <= 0) {

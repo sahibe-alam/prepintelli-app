@@ -14,12 +14,51 @@ import Images from '../../resources/Images';
 import Gradient from '../../components/Gradient';
 import { fontSizes, spacing } from '../../utils/commonStyle';
 import GetImage from '../../components/commonComponents/GetImage';
+import { makeRequest } from '../../api/apiClients';
+import { usePrepContext } from '../../contexts/GlobalState';
+import ThreePulseDots from '../../components/commonComponents/ThreePulseDots';
 
 const PostScreen = ({ navigation, route }: PostScreenPropsType) => {
   const { image } = route.params || {};
   const styles = getStyles();
   const [text, setText] = useState('');
   const [renderImage, setRenderImage] = useState(image ? image : '');
+  const { user } = usePrepContext();
+  const [isLoading, setLoading] = useState(false);
+  const postShareHandler = () => {
+    if (text.length > 0 || renderImage) {
+      setLoading(true);
+      const formDataPost = new FormData();
+      formDataPost.append('content', text);
+      renderImage &&
+        formDataPost.append('postImage', {
+          uri: renderImage ? renderImage : '',
+          type: 'image/jpeg',
+          name: 'image.jpg',
+        });
+      formDataPost.append('examId', user?.exams[0]?.examId);
+      formDataPost.append('userId', user?._id);
+      const res = makeRequest({
+        method: 'POST',
+        url: '/share-post',
+        data: formDataPost,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      res
+        .then(() => {
+          setLoading(false);
+          navigation.goBack();
+          setRenderImage('');
+          setText('');
+        })
+        .catch((err: any) => {
+          console.log(err, 'err hai');
+          setLoading(false);
+        });
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader
@@ -65,19 +104,31 @@ const PostScreen = ({ navigation, route }: PostScreenPropsType) => {
             <Image source={Images.pdfIc2} resizeMode="contain" />
           </TouchableOpacity> */}
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.7} onPress={postShareHandler}>
           <Gradient
-            style={{ padding: spacing.s, borderRadius: 100, width: 100 }}
+            style={{
+              padding: spacing.s,
+              borderRadius: 100,
+              width: 110,
+              height: 40,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
           >
-            <Text
-              style={{
-                color: colors.white,
-                fontSize: fontSizes.p2,
-                textAlign: 'center',
-              }}
-            >
-              Post
-            </Text>
+            {isLoading ? (
+              <ThreePulseDots color="white" />
+            ) : (
+              <Text
+                style={{
+                  color: colors.white,
+                  fontSize: fontSizes.p2,
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                }}
+              >
+                Post
+              </Text>
+            )}
           </Gradient>
         </TouchableOpacity>
       </View>
@@ -113,6 +164,7 @@ const getStyles = () => {
     },
     textInput: {
       fontSize: fontSizes.p2,
+      color: colors.black,
     },
     postImage: {
       width: '100%',

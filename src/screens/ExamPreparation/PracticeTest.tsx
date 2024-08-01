@@ -144,7 +144,7 @@ const PracticeTest: React.FC<PropsType> = (props) => {
       <BackHeader
         isTimeUp={() => handleSubmit(currentQuestionIndex)}
         testTime={testTime}
-        onPress={() => navigation.goBack()}
+        onPress={() => navigation.navigate('Exam Zone')}
         title={`${currentQuestionIndex + 1}/${questionsArray?.length || 0}`}
         isTimer={testTime > 0 ? true : false}
       />

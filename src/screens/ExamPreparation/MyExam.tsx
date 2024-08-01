@@ -137,9 +137,20 @@ Return the JSON output without any additional text.
               type: 'danger',
             });
           }
-          updateCredit(user?._id, 2).then((res: any) => {
-            setGetCredits && setGetCredits(res?.data?.remainingCredits);
-          });
+          updateCredit(user?._id, 2)
+            .then((res: any) => {
+              setGetCredits && setGetCredits(res?.data?.remainingCredits);
+            })
+            .then(() => {
+              setLoading(false);
+            })
+            .catch((err: any) => {
+              setLoading(false);
+              console.log(err);
+              toast.show('Something went wrong', {
+                type: 'danger',
+              });
+            });
         })
         .catch((err: any) => {
           setLoading(false);
@@ -259,7 +270,10 @@ Return the JSON output without any additional text.
     <>
       {user?.exams.length > 0 ? (
         <SafeAreaView style={styles.conatainer}>
-          <BackHeader onPress={() => navigation.goBack()} title={'My exam'} />
+          <BackHeader
+            onPress={() => navigation.navigate('Home')}
+            title={'My exam'}
+          />
           <Text style={styles.title}>
             Prepare for{' '}
             {user?.exams[0]?.exam_short_name || user?.exams[0].classname} exam
@@ -319,7 +333,7 @@ Return the JSON output without any additional text.
               <Image style={styles.cardImg} source={Images.communityImg} />
               <View style={styles.cardTitleWrapper}>
                 <Text style={styles.cardTitle}>
-                  {user?.exams[0]?.exam_short_name}
+                  {user?.exams[0]?.exam_short_name || user?.exams[0].classname}
                   {'\n'}community
                 </Text>
               </View>

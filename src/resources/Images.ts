@@ -23,7 +23,9 @@ const redCloseIc = require('../assets/img/red-close-ic.png');
 const infoCircle = require('../assets/img/infoCircle.png');
 const noExam = require('../assets/img/exam-time.png');
 const userDp = require('../assets/img/user-dp.png');
+const solidThumb = require('../assets/img/solidThumb.png');
 export default {
+  solidThumb,
   noExam,
   gradientLike,
   infoCircle,

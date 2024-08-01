@@ -119,6 +119,7 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
   };
   const toast = useToast();
   console.log(targetExam, 'targetExam');
+  console.log(targetExam?.class?._id, 'class');
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader onPress={() => navigation.goBack()} title={title} />
@@ -193,6 +194,7 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
                       subjects: targetExam?.subjects,
                       examid: targetExam.examName?._id,
                       userid: user?._id,
+                      examId: targetExam?.examName?._id,
                     });
                   } else {
                     toast.show('Please select exam and subject', {
@@ -209,6 +211,7 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
                       boardid: targetExam.examName?._id,
                       classid: targetExam.class?._id,
                       userid: user?._id,
+                      examId: targetExam?.class?._id,
                     });
                   } else {
                     toast.show('Please select exam, class and subject', {

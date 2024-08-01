@@ -1,7 +1,7 @@
-import {View, StyleSheet, Animated} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {spacing} from '../../utils/commonStyle';
-import {colors} from '../../utils/commonStyle/colors';
+import { View, StyleSheet, Animated } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { spacing } from '../../utils/commonStyle';
+import { colors } from '../../utils/commonStyle/colors';
 
 interface QuestionsProgressBarProps {
   totalQuestions?: number;

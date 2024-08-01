@@ -3,7 +3,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 export const spacing = {
   s: 10,
   m: 12,
-  l: 14,
+  l: 16,
   xl: 22,
   xxl: 26,
 };

@@ -39,7 +39,6 @@ const GetPro = ({ navigation }: { navigation: any }) => {
       setGetPlan(res?.data[0]);
     });
   }, []);
-  console.log(RAZAPAY_API_KEY, 'RAZAPAY_API_KEY');
   const handlePayment = () => {
     const options = {
       description: 'Credits towards consultation',
@@ -98,8 +97,8 @@ const GetPro = ({ navigation }: { navigation: any }) => {
       <View style={styles.screenWrapper}>
         <ScrollView style={styles.scrollWrapper}>
           <Gradient style={styles.gradient}>
-            <Text style={styles.title}>
-              Supercharge Your Exam Prep with prepIntelli 😍
+            <Text style={styles.title} numberOfLines={2}>
+              Supercharge Your Exam Prep {'\n'} with prepIntelli 😍
             </Text>
           </Gradient>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -346,7 +345,7 @@ const getStyle = () => {
       fontSize: fontSizes.p2,
       textAlign: 'center',
       color: colors.white,
-      fontWeight: '600',
+      fontWeight: '500',
     },
     perMonth: {
       color: colors.darkGrey,
