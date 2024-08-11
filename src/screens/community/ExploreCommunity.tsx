@@ -12,71 +12,85 @@ import BackHeader from '../../components/BackHeader';
 import { colors } from '../../utils/commonStyle/colors';
 import PostWidgets from '../../components/community/PostWidgets';
 import PostCard from '../../components/community/PostCard';
-import { io } from 'socket.io-client';
 import { usePrepContext } from '../../contexts/GlobalState';
 import { makeRequest } from '../../api/apiClients';
-import { BACKEND_URL } from '@env';
 import { fontSizes, spacing } from '../../utils/commonStyle';
 import Button from '../../components/Button';
-const socket = io(BACKEND_URL);
+import { useToast } from 'react-native-toast-notifications';
+import { socket } from '../../utils/socketUtil';
 const ExploreCommunity = ({ navigation }: { navigation: any }) => {
   const styles = getStyles();
-  const { user } = usePrepContext();
-  const [getPosts, setGetPosts] = useState<any | null>(null);
+  const { user, getPosts, setGetPosts } = usePrepContext();
   const [isLoading, setIsLoading] = useState(false);
-  useEffect(() => {
-    // Listen for new posts
-    try {
-      socket.on('newPost', ({ examId, post }) => {
-        console.log(examId, 'examId');
-        console.log(post, 'post');
-        if (examId === user?.exams[0]?.examId) {
-          setGetPosts((prevPosts: any) => [post, ...prevPosts]);
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  const toast = useToast();
 
+  const [refreshing, setRefreshing] = useState(false);
+  const fetchPosts = async () => {
     makeRequest({
       method: 'GET',
       url: `/get-posts/${user?.exams[0]?.examId}`,
     })
       .then((res: any) => {
-        setGetPosts(res?.data?.data);
+        setGetPosts && setGetPosts(res?.data?.data);
         setIsLoading(true);
+        setRefreshing(false);
       })
       .catch((err: any) => {
         console.log(err.message, 'err hai');
         setIsLoading(true);
+        setRefreshing(false);
+        toast.show('Something went wrong', {
+          type: 'danger',
+        });
       });
-
-    return () => {
-      socket.off('newPost');
-    };
-  }, [user]);
-
-  const [refreshing, setRefreshing] = useState(false);
-
+  };
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     // Simulate fetching data from an API
-    onRef();
+    fetchPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onRef = () => {
-    return new Promise(() => {
-      setTimeout(() => {
-        setRefreshing(false);
-      }, 2000);
+  useEffect(() => {
+    fetchPosts();
+
+    // Listen for new posts
+    socket.on('newPost', ({ examId, post }) => {
+      if (examId === user?.exams[0]?.examId) {
+        setGetPosts && setGetPosts((prevPosts: any) => [post, ...prevPosts]);
+      }
     });
-  };
+    socket.on('updateLikes', ({ postId, _, updatedLikes }) => {
+      setGetPosts &&
+        setGetPosts((prevPosts: any) =>
+          prevPosts.map((post: any) =>
+            post._id === postId ? { ...post, likesBy: updatedLikes } : post
+          )
+        );
+    });
+
+    socket.on('newComment', ({ postId, _, updated }) => {
+      setGetPosts &&
+        setGetPosts((prevPosts: any) =>
+          prevPosts.map((post: any) =>
+            post._id === postId ? { ...post, comments: updated } : post
+          )
+        );
+    });
+
+    return () => {
+      socket.off('newPost');
+      socket.off('updateLikes');
+      socket.off('newComment');
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader
         onPress={() => navigation.goBack()}
         isBottomBorder={false}
-        title="Explore NEET Community"
+        title={`${user?.exams[0]?.exam_short_name} Community`}
       />
       <PostWidgets
         navigation={navigation}
@@ -94,7 +108,9 @@ const ExploreCommunity = ({ navigation }: { navigation: any }) => {
               //  hide scrollbar
               showsVerticalScrollIndicator={false}
               data={getPosts}
-              renderItem={({ item }) => <PostCard item={item} />}
+              renderItem={({ item }) => (
+                <PostCard navigation={navigation} item={item} />
+              )}
               keyExtractor={(item, index) =>
                 item.id ? item.id.toString() : index.toString()
               }
@@ -127,7 +143,9 @@ const ExploreCommunity = ({ navigation }: { navigation: any }) => {
         </>
       ) : (
         <>
-          <Text style={{ textAlign: 'center' }}>Loading..</Text>
+          <Text style={{ textAlign: 'center', color: colors.black }}>
+            Loading..
+          </Text>
         </>
       )}
     </SafeAreaView>
@@ -150,12 +168,14 @@ const getStyles = () => {
       paddingVertical: 10,
       fontSize: fontSizes.p2,
       paddingBottom: 20,
+      color: colors.black,
     },
     heading: {
       fontSize: fontSizes.h5,
       fontWeight: '500',
       paddingTop: 20,
       textAlign: 'center',
+      color: colors.black,
     },
     noPostImg: {
       width: '100%',

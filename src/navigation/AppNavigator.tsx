@@ -27,6 +27,9 @@ import ExploreCommunity from '../screens/community/ExploreCommunity';
 import PostScreen from '../screens/community/PostScreen';
 import CreditsUses from '../screens/getPro/CreditsUses';
 import Test from '../screens/Test';
+import CommentScreen from '../screens/community/CommentScreen';
+import MyPosts from '../screens/community/MyPosts';
+import EditPost from '../screens/community/EditPost';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
   return (
@@ -160,6 +163,21 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Test"
           component={Test as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Comment Screen"
+          component={CommentScreen as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="My posts"
+          component={MyPosts as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Edit post"
+          component={EditPost as React.ComponentType}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

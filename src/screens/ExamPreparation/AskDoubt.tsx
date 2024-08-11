@@ -76,7 +76,7 @@ const AskDoubt: React.FC<propsType> = (props) => {
       scrollViewRef.current?.scrollToEnd({ animated: true });
     }, 50);
   }, [conversationList]);
-  console.log(conversationList);
+
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader

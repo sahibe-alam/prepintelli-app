@@ -9,10 +9,16 @@ import { usePrepContext } from '../../contexts/GlobalState';
 const PostWidgets = ({ onPostClick, navigation }: PostWidgetsProps) => {
   const styles = getStyle();
   const { user } = usePrepContext();
+  console.log(user?.userDp);
   return (
     <View style={styles.wrapper}>
       <View style={styles.dpWrapper}>
-        <Image style={styles.dp} source={{ uri: user?.userDp || Images.dp }} />
+        <Image
+          style={styles.dp}
+          source={
+            user?.userDp.length > 0 ? { uri: user?.userDp } : Images.userDp
+          }
+        />
       </View>
       <TouchableOpacity
         onPress={onPostClick}

@@ -15,34 +15,33 @@ import Gradient from '../../components/Gradient';
 import { fontSizes, spacing } from '../../utils/commonStyle';
 import GetImage from '../../components/commonComponents/GetImage';
 import { makeRequest } from '../../api/apiClients';
-import { usePrepContext } from '../../contexts/GlobalState';
 import ThreePulseDots from '../../components/commonComponents/ThreePulseDots';
 import { useToast } from 'react-native-toast-notifications';
 
-const PostScreen = ({ navigation, route }: PostScreenPropsType) => {
-  const { image } = route.params || {};
+const EditPost = ({ navigation, route }: PostScreenPropsType) => {
+  const { item } = route.params || {};
   const styles = getStyles();
-  const [text, setText] = useState('');
-  const [renderImage, setRenderImage] = useState(image ? image : '');
-  const { user } = usePrepContext();
+  const [text, setText] = useState(item?.content || '');
+  const [renderImage, setRenderImage] = useState(item?.postImages[0] || '');
   const [isLoading, setLoading] = useState(false);
   const toast = useToast();
+
   const postShareHandler = () => {
     if (text.trim() !== '' || renderImage !== '') {
       setLoading(true);
       const formDataPost = new FormData();
       formDataPost.append('content', text);
+      formDataPost.append('postId', item?._id);
       renderImage &&
-        formDataPost.append('postImage', {
+        formDataPost.append('editPostImg', {
           uri: renderImage ? renderImage : '',
           type: 'image/jpeg',
           name: 'image.jpg',
         });
-      formDataPost.append('examId', user?.exams[0]?.examId);
-      formDataPost.append('userId', user?._id);
+
       makeRequest({
         method: 'POST',
-        url: '/share-post',
+        url: '/edit-post',
         data: formDataPost,
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -50,20 +49,17 @@ const PostScreen = ({ navigation, route }: PostScreenPropsType) => {
       })
         .then(() => {
           setLoading(false);
+          toast.show('Post edited successfully', {
+            type: 'success',
+          });
           navigation.goBack();
-          setRenderImage('');
-          setText('');
-          toast.show(
-            `Posted Successfully 😍 in ${user?.exams[0]?.exam_short_name} community`,
-            {
-              type: 'default',
-            }
-          );
         })
         .catch((err: any) => {
-          console.log(err, 'err hai');
           setLoading(false);
-          toast.show('Something went wrong', { type: 'danger' });
+          console.log(err.message, 'err hai');
+          toast.show('Something went wrong', {
+            type: 'danger',
+          });
         });
     } else {
       toast.show('Post cannot be empty', { type: 'default' });
@@ -136,7 +132,7 @@ const PostScreen = ({ navigation, route }: PostScreenPropsType) => {
                   fontWeight: 'bold',
                 }}
               >
-                Post
+                Save
               </Text>
             )}
           </Gradient>
@@ -206,4 +202,4 @@ const getStyles = () => {
     },
   });
 };
-export default PostScreen;
+export default EditPost;

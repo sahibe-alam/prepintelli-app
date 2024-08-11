@@ -24,10 +24,18 @@ const infoCircle = require('../assets/img/infoCircle.png');
 const noExam = require('../assets/img/exam-time.png');
 const userDp = require('../assets/img/user-dp.png');
 const solidThumb = require('../assets/img/solidThumb.png');
+const sentIcon = require('../assets/img/msg_sent_ic.png');
+const shareIcon = require('../assets/img/share_icon.png');
+const trashIcon = require('../assets/img/trashIcon.png');
+const edit = require('../assets/img/edit.png');
 export default {
   solidThumb,
+  edit,
+  shareIcon,
+  sentIcon,
   noExam,
   gradientLike,
+  trashIcon,
   infoCircle,
   userDp,
   redCloseIc,

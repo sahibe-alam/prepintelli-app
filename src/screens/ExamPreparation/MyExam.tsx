@@ -39,6 +39,7 @@ const MyExam: React.FC<PropsType> = ({ navigation }) => {
   const [isLoading, setLoading] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [subject, setSubject] = useState('');
+  const [difficulty, setDifficulty] = useState('');
   const [chapter, setChapter] = useState('');
   const [testTime, setTestTime] = useState(0);
   const [isNoCredit, setIsNoCredit] = useState(false);
@@ -49,6 +50,7 @@ const MyExam: React.FC<PropsType> = ({ navigation }) => {
   const [errorMsg, setErrorMsg] = useState({
     subject: '',
     chapter: '',
+    difficulty: '',
   });
   const toast = useToast();
   const styles = getStyles();
@@ -76,7 +78,7 @@ const MyExam: React.FC<PropsType> = ({ navigation }) => {
   const prompt = `
 Generate 10 multiple-choice questions (MCQs) in JSON format for the ${
     user?.exams?.[0]?.exam_short_name || ''
-  } exam, ${subject}, focusing on the ${chapter}.
+  } exam, ${subject}, focusing on the ${chapter}, difficulty level ${difficulty}.
 
 Each question should have the following structure:
 - "q": The question itself.
@@ -91,7 +93,6 @@ Return the JSON output without any additional text.
   "exam": ${user?.exams?.[0]?.exam_short_name || ''},
   "subject": ${subject}",
   "chapter": ${chapter},
-  "questions": 3
 }
 
 `;
@@ -107,6 +108,15 @@ Return the JSON output without any additional text.
       setErrorMsg((prev) => ({ ...prev, chapter: 'Chapter is required' }));
     } else {
       setErrorMsg((prev) => ({ ...prev, chapter: '' }));
+    }
+
+    if (!difficulty) {
+      setErrorMsg((prev) => ({
+        ...prev,
+        difficulty: 'Difficulty is required',
+      }));
+    } else {
+      setErrorMsg((prev) => ({ ...prev, difficulty: '' }));
     }
   };
 
@@ -241,6 +251,7 @@ Return the JSON output without any additional text.
       setErrorMsg({
         subject: '',
         chapter: '',
+        difficulty: '',
       });
     }
   }, [isModalVisible]);
@@ -397,6 +408,30 @@ Return the JSON output without any additional text.
                     }}
                     value={chapter}
                   />
+
+                  <DropDownSelect
+                    DropDownLabel="Select difficulty level"
+                    data={[
+                      {
+                        id: 1,
+                        name: 'Easy',
+                      },
+                      {
+                        id: 2,
+                        name: 'Medium',
+                      },
+                      {
+                        id: 3,
+                        name: 'Hard',
+                      },
+                    ]}
+                    rowTextForSelection={(item: any) => item?.name}
+                    buttonTextAfterSelection={(item: any) => item?.name}
+                    errorMsg={errorMsg?.subject}
+                    onSelect={(item: any) => {
+                      setDifficulty(item?.name);
+                    }}
+                  />
                   <View>
                     <View style={styles.timeWrapper}>
                       <DropDownSelect
@@ -509,11 +544,11 @@ const getStyles = () =>
       shadowColor: '#000',
       alignItems: 'center',
       width: '48%',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.13,
+      // shadowOffset: {
+      //   width: 0,
+      //   height: 2,
+      // },
+      // shadowOpacity: 0.13,
       shadowRadius: 1.62,
     },
     cardsWrapper: {

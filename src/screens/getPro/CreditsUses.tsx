@@ -11,13 +11,13 @@ const CreditsUses = ({ navigation }: { navigation: any }) => {
   const styles = getStyle();
   return (
     <SafeAreaView style={styles.container}>
+      <BackHeader
+        onPress={() => {
+          navigation.goBack();
+        }}
+        title="My Credits"
+      />
       <View style={styles.wrapper}>
-        <BackHeader
-          onPress={() => {
-            navigation.goBack();
-          }}
-          title="My Credits"
-        />
         <View style={styles.coinWrapperContainer}>
           <Text style={{ color: colors.black, fontSize: fontSizes.h3 }}>
             Available credits

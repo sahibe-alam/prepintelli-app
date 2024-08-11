@@ -79,13 +79,7 @@ const GetPro = ({ navigation }: { navigation: any }) => {
         console.log(error);
       });
   };
-  console.log(
-    user?._id,
-    getPlan?.planType,
-    getPlan?.forMonths,
-    getPlan?.creditsPerDay,
-    getPlan?.price
-  );
+
   return (
     <View style={styles.container}>
       <BackHeader
