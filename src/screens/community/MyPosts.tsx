@@ -1,5 +1,5 @@
-import { SafeAreaView, StyleSheet } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { RefreshControl, SafeAreaView, StyleSheet } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
 import PostCard from '../../components/community/PostCard';
 import { usePrepContext } from '../../contexts/GlobalState';
 import { makeRequest } from '../../api/apiClients';
@@ -10,17 +10,36 @@ import { colors } from '../../utils/commonStyle/colors';
 const MyPosts = ({ navigation }: { navigation: any }) => {
   const { user } = usePrepContext();
   const [mysPosts, setMyPosts] = useState<any | null>(null);
-  useEffect(() => {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchMyPost = () => {
     makeRequest({
       method: 'POST',
       url: '/my-posts',
       data: {
         userId: user?._id,
       },
-    }).then((res: any) => {
-      setMyPosts(res?.data?.data);
-      console.log(res?.data?.data, 'my posts');
-    });
+    })
+      .then((res: any) => {
+        setMyPosts(res?.data?.data);
+        setRefreshing(false);
+        console.log(res?.data?.data, 'my posts');
+      })
+      .catch((err: any) => {
+        console.log(err.message, 'err hai');
+        setRefreshing(false);
+      });
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    // Simulate fetching data from an API
+    fetchMyPost();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    fetchMyPost();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const styles = getStyle();
@@ -32,7 +51,11 @@ const MyPosts = ({ navigation }: { navigation: any }) => {
         }}
         title={'My Posts'}
       />
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {mysPosts?.map((item: any) => (
           <PostCard navigation={navigation} key={item._id} item={item} />
         ))}

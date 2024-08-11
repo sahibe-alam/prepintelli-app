@@ -8,7 +8,7 @@ export const llmClient = axios.create({
   },
 });
 const client = axios.create({
-  baseURL: `${'http://192.168.1.7:4000'}/api`,
+  baseURL: `${BACKEND_URL}/api`,
 });
 export const makeRequest = async <T>(
   config: AxiosRequestConfig
@@ -16,7 +16,7 @@ export const makeRequest = async <T>(
   try {
     console.log(
       BACKEND_URL,
-      'BACKEND_URL  BACKEND_URL BACKEND_URL BACKEND_URL'
+      'BACKEND_URL  BACKEND_URL BACKEND_Ul  BACKEND_URL'
     );
     // Retrieve the authentication token from AsyncStorage
     const authToken = await AsyncStorage.getItem('jwtToken');

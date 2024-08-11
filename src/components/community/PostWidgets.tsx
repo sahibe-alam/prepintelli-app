@@ -16,7 +16,7 @@ const PostWidgets = ({ onPostClick, navigation }: PostWidgetsProps) => {
         <Image
           style={styles.dp}
           source={
-            user?.userDp.length > 0 ? { uri: user?.userDp } : Images.userDp
+            user?.userDp?.length > 0 ? { uri: user?.userDp } : Images.userDp
           }
         />
       </View>
