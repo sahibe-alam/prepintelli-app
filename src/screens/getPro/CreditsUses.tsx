@@ -29,7 +29,7 @@ const CreditsUses = ({ navigation }: { navigation: any }) => {
             <Image style={styles.coinIcon} source={Images.coinIc} />
           </View>
         </View>
-        <Text style={styles.heading}>Credits deduction ℹ</Text>
+        <Text style={styles.heading}>Credits deduction</Text>
         <View style={styles.cardWrapper}>
           <View style={styles.card}>
             <Text style={styles.cardText}>10 MCQ practice test 📚</Text>

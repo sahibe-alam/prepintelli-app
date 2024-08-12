@@ -28,7 +28,7 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
   const currentVersion = Number(appVersion).toFixed(1);
   const typeExam = [
     {
-      title: 'Competitive exam',
+      title: 'Competitive Exam',
       type: 'comptv',
       dropdownLabel: 'Select your target exam?*',
       inputLabel: 'Type your exam subjects*',
@@ -36,7 +36,7 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
       actionType: 'fetchCompetitiveExams',
     },
     {
-      title: 'College exam',
+      title: 'College Exam',
       type: 'clg',
       dropdownLabel: 'Select your course?*',
       inputLabel: 'Type your exam subjects*',
@@ -44,7 +44,7 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
       actionType: 'fetchCollegeExams',
     },
     {
-      title: 'Academics exam',
+      title: 'Academics Exam',
       type: 'acdmc',
       dropdownLabel: 'Select board*',
       dropdownLabel2: 'Select class*',
@@ -102,7 +102,7 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
             <HomeSlider />
           </View>
 
-          <Text style={styles.modulesHeading}>Target your exam, With Ai </Text>
+          <Text style={styles.modulesHeading}>Target your exam, With AI </Text>
           {/* <View style={styles.moduleWrapper}>
           <ModuleCard
             onPress={() =>
