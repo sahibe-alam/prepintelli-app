@@ -1,12 +1,21 @@
-import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, Image } from 'react-native';
 import React from 'react';
 import { colors } from '../utils/commonStyle/colors';
 import Gradient from '../components/Gradient';
 import { usePrepContext } from '../contexts/GlobalState';
 import { fontSizes } from '../utils/commonStyle';
 import Images from '../resources/Images';
+import GetImage from './commonComponents/GetImage';
 
-const DpWrapper = ({ isPencil = false }: { isPencil?: boolean }) => {
+const DpWrapper = ({
+  isPencil = false,
+  onImgDp,
+  dp,
+}: {
+  isPencil?: boolean;
+  dp?: string;
+  onImgDp?: (imagePath: string) => void;
+}) => {
   const { deviceWidth } = usePrepContext();
   const { user } = usePrepContext();
   const styles = getSyle(deviceWidth || 0);
@@ -23,16 +32,26 @@ const DpWrapper = ({ isPencil = false }: { isPencil?: boolean }) => {
       </View>
       <View style={styles.dpWrapper}>
         <Image
-          source={user?.userDp ? { uri: user?.userDp } : Images.userDp}
+          source={
+            dp
+              ? dp
+              : user?.userDp?.url
+              ? { uri: user?.userDp?.url }
+              : Images.userDp
+          }
           style={styles.dp}
         />
         {isPencil && (
-          <TouchableOpacity activeOpacity={0.7}>
+          <GetImage
+            onImagePicked={(img) => {
+              onImgDp && onImgDp(img);
+            }}
+          >
             <Image
               source={require('../assets/img/pencil_ic.png')}
               style={styles.editIcon}
             />
-          </TouchableOpacity>
+          </GetImage>
         )}
       </View>
     </View>

@@ -7,7 +7,7 @@ import { usePrepContext } from '../../contexts/GlobalState';
 import Images from '../../resources/Images';
 
 const CreditsUses = ({ navigation }: { navigation: any }) => {
-  const { getCredits } = usePrepContext();
+  const { getCredits, planType } = usePrepContext();
   const styles = getStyle();
   return (
     <SafeAreaView style={styles.container}>
@@ -21,6 +21,12 @@ const CreditsUses = ({ navigation }: { navigation: any }) => {
         <View style={styles.coinWrapperContainer}>
           <Text style={{ color: colors.black, fontSize: fontSizes.h3 }}>
             Available credits
+          </Text>
+          <Text style={{ color: colors.black, fontSize: fontSizes.p }}>
+            Current active plan:{' '}
+            <Text style={{ textTransform: 'uppercase', fontWeight: '600' }}>
+              {planType}
+            </Text>
           </Text>
           <View style={styles.coinWrapper}>
             <Text style={{ color: colors.black, fontSize: fontSizes.h4 }}>

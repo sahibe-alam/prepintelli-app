@@ -75,7 +75,9 @@ const ResponseCard: React.FC<propsType> = (props) => {
           ) : (
             <Image
               style={styles.resDp}
-              source={user?.userDp ? { uri: user?.userDp } : Images.userDp}
+              source={
+                user?.userDp?.url ? { uri: user?.userDp?.url } : Images.userDp
+              }
             />
           )}
           <View>

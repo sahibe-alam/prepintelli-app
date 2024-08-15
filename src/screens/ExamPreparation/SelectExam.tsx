@@ -91,7 +91,9 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  function removeNulls(array: any) {
+    return array.filter((element: any) => element !== null);
+  }
   const insertExam = (examData: any) => {
     setIsLoading(true);
     makeRequest({
@@ -118,8 +120,7 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
       });
   };
   const toast = useToast();
-  console.log(targetExam, 'targetExam');
-  console.log(targetExam?.class?._id, 'class');
+  console.log(targetExam?.subjects, 'targetExam');
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader onPress={() => navigation.goBack()} title={title} />
@@ -166,7 +167,6 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
                 const sub = targetExam.map((subject) =>
                   subject.value ? subject.value : null
                 );
-                console.log(sub, 'subjects');
                 dispatch({
                   type: 'subject',
                   payload: sub[0] === null ? null : sub,
@@ -191,7 +191,7 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
                   if (targetExam?.subjects && targetExam?.examName?._id) {
                     insertExam({
                       action: 'insertSubject',
-                      subjects: targetExam?.subjects,
+                      subjects: removeNulls(targetExam?.subjects),
                       examid: targetExam.examName?._id,
                       userid: user?._id,
                       examId: targetExam?.examName?._id,

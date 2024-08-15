@@ -40,7 +40,9 @@ const Header = ({ navigation }: { navigation: any }) => {
         >
           <Image
             style={styles.dp}
-            source={user?.userDp ? { uri: user?.userDp } : Images.userDp}
+            source={
+              user?.userDp?.url ? { uri: user?.userDp?.url } : Images.userDp
+            }
           />
           <Gradient style={styles.gradientMenuIcon}>
             <Image style={styles.menuIcon} source={Images.menuIc} />

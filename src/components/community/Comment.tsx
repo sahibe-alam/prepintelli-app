@@ -22,7 +22,9 @@ const Comment = ({ item }: { item: any }) => {
         <View style={styles.dpWrapper}>
           <Image
             style={styles.dp}
-            source={item.profilePic ? { uri: item.profilePic } : Images.userDp}
+            source={
+              item?.profilePic ? { uri: item?.profilePic } : Images.userDp
+            }
           />
         </View>
         <View style={styles.commentWrapper}>

@@ -25,6 +25,7 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
   const styles = getStyle();
   const { user, setUser } = usePrepContext();
   const toast = useToast();
+  const [isLoading, setLoading] = React.useState(false);
   const [userDetails, setUserDetails] = React.useState<any>({
     firstName: user?.firstname,
     lastName: user?.lastname,
@@ -32,8 +33,8 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
     mobile: user?.mobile,
     dob: user?.dateofbirth,
     education: user?.education,
+    userDp: user?.userDp,
   });
-  console.log(userDetails);
   const radioList = [
     {
       label: 'School student',
@@ -45,31 +46,59 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
     },
   ];
   const updateUser = () => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append('userId', user?._id);
+    formData.append('firstname', userDetails?.firstName);
+    formData.append('lastname', userDetails?.lastName);
+    formData.append('email', userDetails?.email);
+    formData.append('mobile', userDetails?.mobile);
+    formData.append('education', userDetails?.education);
+    if (userDetails?.userDp) {
+      formData.append('profileImage', {
+        uri: userDetails?.userDp?.uri,
+        type: 'image/jpeg',
+        name: 'image.jpg',
+      });
+    }
     makeRequest({
       url: 'update-profile',
       method: 'POST',
-      data: {
-        userId: user?._id,
-        firstname: userDetails?.firstName,
-        lastname: userDetails?.lastName,
-        email: userDetails?.email,
-        mobile: userDetails?.mobile,
-        dateofbirth: userDetails?.dob,
-        education: userDetails?.education,
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
       },
-    }).then((res: any) => {
-      console.log(res?.data?.user);
-      setUser && setUser(res?.data?.user);
-
-      toast.show(res?.data?.msg, { type: 'default', duration: 3000 });
-    });
+    })
+      .then((res: any) => {
+        console.log(res?.data?.user);
+        setUser && setUser(res?.data?.user);
+        toast.show(res?.data?.msg, { type: 'default', duration: 3000 });
+        setLoading(false);
+      })
+      .catch((err: any) => {
+        console.log(err, 'err');
+        setLoading(false);
+        toast.show('Something went wrong', { type: 'danger' });
+      });
   };
+  console.log(userDetails);
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.container}>
         <BackHeader title="My profile" onPress={() => navigation.goBack()} />
         <ScrollView contentContainerStyle={styles.scrollWrapper}>
-          <DpWrapper isPencil={true} />
+          <DpWrapper
+            dp={userDetails?.userDp}
+            onImgDp={(userDp) =>
+              setUserDetails({
+                ...userDetails,
+                userDp: {
+                  uri: userDp,
+                },
+              })
+            }
+            isPencil={true}
+          />
 
           <View style={styles.formWrapper}>
             <View style={styles.inputWrapper}>
@@ -124,6 +153,7 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
               </TouchableOpacity>
             </View>
             <Button
+              isLoading={isLoading}
               title="Save"
               onPress={() => updateUser()}
               btnWidth={'40%'}

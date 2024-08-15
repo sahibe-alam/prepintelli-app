@@ -1,9 +1,15 @@
-import { View, Text, StyleSheet, Image, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { fontSizes, spacing } from '../../utils/commonStyle';
 import Images from '../../resources/Images';
 import { colors } from '../../utils/commonStyle/colors';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { usePrepContext } from '../../contexts/GlobalState';
 import { makeRequest } from '../../api/apiClients';
 import Lightbox from 'react-native-lightbox-v2';
@@ -112,7 +118,7 @@ const PostCard: React.FC<PostCardProps> = ({
         // remove deleted post from getPosts
         setGetPosts &&
           setGetPosts((prevPosts: any) =>
-            prevPosts.filter((post: any) => post._id !== item?._id)
+            prevPosts?.filter((post: any) => post?._id !== item?._id)
           );
       })
       .catch((err: any) => {
@@ -134,7 +140,7 @@ const PostCard: React.FC<PostCardProps> = ({
       },
     ]);
   };
-  console.log(item?.sharedBy?.userId, user?._id, 'shared by');
+  console.log(item, 'shared by');
   return (
     <>
       <View style={styles.cardWrapper}>
