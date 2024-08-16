@@ -127,6 +127,7 @@ const getStyle = () => {
       textAlignVertical: 'top',
       height: 100,
       borderRadius: 10,
+      color: colors.black,
       padding: 10,
     },
     heading: {

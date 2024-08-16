@@ -281,19 +281,18 @@ const PostCard: React.FC<PostCardProps> = ({
         setToggle={setIsModalVisible}
         handleTogglePress={() => setIsModalVisible(!isModalVisible)}
       >
-        <TouchableOpacity
-          onPress={() => {
-            setIsModalVisible(false);
-            setIsReportModalVisible(true);
-          }}
-          activeOpacity={0.7}
-          style={styles.popBtn}
-        >
-          <Image style={styles.popBtnImg} source={Images.infoCircle} />
-          <Text style={styles.popBtnText}>Report</Text>
-        </TouchableOpacity>
         {item?.sharedBy?.userId !== user?._id ? (
-          <></>
+          <TouchableOpacity
+            onPress={() => {
+              setIsModalVisible(false);
+              setIsReportModalVisible(true);
+            }}
+            activeOpacity={0.7}
+            style={styles.popBtn}
+          >
+            <Image style={styles.popBtnImg} source={Images.infoCircle} />
+            <Text style={styles.popBtnText}>Report</Text>
+          </TouchableOpacity>
         ) : (
           <>
             <TouchableOpacity
@@ -344,7 +343,7 @@ const getStyle = () => {
       objectFit: 'contain',
     },
     popBtn: {
-      marginBottom: spacing.l,
+      paddingVertical: spacing.s,
       flexDirection: 'row',
       alignItems: 'center',
       gap: spacing.s,

@@ -6,7 +6,6 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  Alert,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { colors } from '../../utils/commonStyle/colors';
@@ -48,7 +47,7 @@ const GetPro = ({ navigation }: { navigation: any }) => {
     const options = {
       description: 'Credits towards consultation',
       image:
-        'https://firebasestorage.googleapis.com/v0/b/prepintelli-c45bb.appspot.com/o/logo-payment.jpg?alt=media&token=3643a725-2bcc-48dd-bfbb-3e304b3d73f7',
+        'https://res.cloudinary.com/prepintelli/image/upload/v1723822975/assets/itneileo69y4ljy7tnwo.png',
       currency: 'INR',
       key: RAZAPAY_API_KEY,
       amount: getPlanPrice() * 100,
@@ -72,16 +71,30 @@ const GetPro = ({ navigation }: { navigation: any }) => {
           getPlan?.forMonths,
           getPlan?.creditsPerDay,
           data.razorpay_payment_id,
-          getPlan?.price
-        ).then(() => {
-          // Alert.alert(`Success: ${data.razorpay_payment_id}`);
-
-          navigation.navigate('Main');
-        });
+          getPlanPrice()
+        )
+          .then(() => {
+            navigation.navigate('Main');
+            // Alert.alert(`Success: ${data.razorpay_payment_id}`);
+            toast.show(
+              `${getPlan?.planType.toUpperCase()} Upgraded Successful 🥳`,
+              {
+                type: 'success',
+                duration: 3000,
+              }
+            );
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((error: any) => {
         // handle failure
-        Alert.alert(`Error: ${error.code} | ${error.description}`);
+        toast.show('Payment Failed', {
+          type: 'danger',
+          duration: 3000,
+        });
+        // Alert.alert(`Error: ${error.code} | ${error.description}`);
         console.log(error);
       });
   };
@@ -123,7 +136,7 @@ const GetPro = ({ navigation }: { navigation: any }) => {
     const price = coupon
       ? getPlan?.price - (coupon?.discountValue * getPlan?.price) / 100
       : getPlan?.price;
-    return price;
+    return price.toFixed(2);
   };
 
   console.log(couponCode, 'couponCode');
@@ -227,8 +240,10 @@ const GetPro = ({ navigation }: { navigation: any }) => {
                     {' '}
                     {coupon?.discountValue}% extra discount:{' '}
                     <Text style={{ fontWeight: '700' }}>
-                      -₹
-                      {getPlan?.price * (coupon?.discountValue / 100)}
+                      - ₹
+                      {(getPlan?.price * (coupon?.discountValue / 100)).toFixed(
+                        2
+                      )}
                     </Text>
                   </Text>
                   <TouchableOpacity
