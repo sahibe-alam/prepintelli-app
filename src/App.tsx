@@ -12,7 +12,7 @@ const App = () => {
       <GlobalState>
         <ToastProvider
           placement="bottom"
-          offsetBottom={100}
+          offsetBottom={50}
           successColor={colors.green}
           dangerColor={colors.red}
           warningColor="orange"

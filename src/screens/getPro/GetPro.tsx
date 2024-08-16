@@ -20,12 +20,17 @@ import { usePrepContext } from '../../contexts/GlobalState';
 import { RAZAPAY_API_KEY } from '@env';
 import { getPro } from '../../api/adapter/getPro';
 import Gradient from '../../components/Gradient';
+import { useToast } from 'react-native-toast-notifications';
 const GetPro = ({ navigation }: { navigation: any }) => {
   const { planType, user } = usePrepContext();
   const [plans, setPlans] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState(0);
+  const [couponCode, setCouponCode] = useState('');
+  const [isCouponGetting, setIsCouponGetting] = useState(false);
+  const [coupon, setCoupon] = useState<any | null>(null);
   const [getPlan, setGetPlan] = useState<any>({});
   const styles = getStyle();
+  const toast = useToast();
   const selectedPlanSelected = (index: number) => {
     setSelectedPlan(index);
     setGetPlan(plans[index]);
@@ -46,7 +51,7 @@ const GetPro = ({ navigation }: { navigation: any }) => {
         'https://firebasestorage.googleapis.com/v0/b/prepintelli-c45bb.appspot.com/o/logo-payment.jpg?alt=media&token=3643a725-2bcc-48dd-bfbb-3e304b3d73f7',
       currency: 'INR',
       key: RAZAPAY_API_KEY,
-      amount: getPlan?.price * 100,
+      amount: getPlanPrice() * 100,
       name: 'PrepIntelli Ai - powered exam preparation app',
       order_id: '', //Replace this with an order_id created using Orders API.
       prefill: {
@@ -69,7 +74,8 @@ const GetPro = ({ navigation }: { navigation: any }) => {
           data.razorpay_payment_id,
           getPlan?.price
         ).then(() => {
-          Alert.alert(`Success: ${data.razorpay_payment_id}`);
+          // Alert.alert(`Success: ${data.razorpay_payment_id}`);
+
           navigation.navigate('Main');
         });
       })
@@ -80,6 +86,47 @@ const GetPro = ({ navigation }: { navigation: any }) => {
       });
   };
 
+  const getCoupon = () => {
+    if (couponCode !== '') {
+      setIsCouponGetting(true);
+      makeRequest({
+        method: 'POST',
+        url: '/get-coupon',
+        data: {
+          code: couponCode,
+        },
+      })
+        .then((res: any) => {
+          setCoupon(res?.data?.data);
+          console.log(res?.data);
+          toast.show(res?.data?.msg || 'Congratulations coupon applied 🥳', {
+            type: 'default',
+            duration: 3000,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setCouponCode('');
+          setIsCouponGetting(false);
+        });
+    } else {
+      toast.show('Please enter coupon code', {
+        type: 'default',
+        duration: 2000,
+      });
+    }
+  };
+
+  const getPlanPrice = () => {
+    const price = coupon
+      ? getPlan?.price - (coupon?.discountValue * getPlan?.price) / 100
+      : getPlan?.price;
+    return price;
+  };
+
+  console.log(couponCode, 'couponCode');
   return (
     <View style={styles.container}>
       <BackHeader
@@ -156,34 +203,67 @@ const GetPro = ({ navigation }: { navigation: any }) => {
             <TextInput
               placeholderTextColor={colors.grey}
               style={styles.couponInput}
+              value={couponCode}
+              onChangeText={(text) => setCouponCode(text.toUpperCase().trim())}
               placeholder="Enter coupon code"
             />
-            <TouchableOpacity style={styles.applyBtn}>
-              <Text style={styles.applyBtnText}>Apply</Text>
+            <TouchableOpacity onPress={getCoupon} style={styles.applyBtn}>
+              <Text style={styles.applyBtnText}>
+                {isCouponGetting ? 'Wait...' : 'Apply'}
+              </Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
         {getPlan?.price > 0 && (
-          <View style={styles.bottomBar}>
-            <View>
-              <Text style={styles.labelPlan}>
-                Selected {getPlan?.planType} plan
-              </Text>
-              <View style={{ flexDirection: 'row', gap: 8, paddingTop: 2 }}>
-                <Text style={styles.discount}> ₹{getPlan?.actualPrice}</Text>
-                <Text style={styles.totalPrice}>₹{getPlan?.price}</Text>
-                <Text style={styles.perMonth}>/</Text>
-                <Text style={styles.perMonth}>Month</Text>
+          <>
+            <View style={styles.bottomBar}>
+              {coupon && (
+                <View style={styles.couponWrapperApplied}>
+                  <Text style={styles.couponApplied}>
+                    Coupon Applied 🎉 :{' '}
+                    <Text style={{ fontWeight: '700' }}>{coupon?.code}</Text>
+                  </Text>
+                  <Text style={styles.discountCoupon}>
+                    {' '}
+                    {coupon?.discountValue}% extra discount:{' '}
+                    <Text style={{ fontWeight: '700' }}>
+                      -₹
+                      {getPlan?.price * (coupon?.discountValue / 100)}
+                    </Text>
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => setCoupon(null)}
+                    style={styles.closeBtn}
+                  >
+                    <Image style={styles.closeIc} source={Images.redCloseIc} />
+                  </TouchableOpacity>
+                </View>
+              )}
+              <View style={styles.bottomBarContent}>
+                <View>
+                  <Text style={styles.labelPlan}>
+                    Selected {getPlan?.planType} plan
+                  </Text>
+                  <View style={{ flexDirection: 'row', gap: 8, paddingTop: 2 }}>
+                    <Text style={styles.discount}>
+                      {' '}
+                      ₹{getPlan?.actualPrice}
+                    </Text>
+                    <Text style={styles.totalPrice}>₹{getPlanPrice()}</Text>
+                    <Text style={styles.perMonth}>/</Text>
+                    <Text style={styles.perMonth}>Month</Text>
+                  </View>
+                </View>
+                <Button
+                  btnWidth={120}
+                  title="Buy Plan"
+                  onPress={() => {
+                    handlePayment();
+                  }}
+                />
               </View>
             </View>
-            <Button
-              btnWidth={120}
-              title="Buy Plan"
-              onPress={() => {
-                handlePayment();
-              }}
-            />
-          </View>
+          </>
         )}
       </View>
     </View>
@@ -192,6 +272,35 @@ const GetPro = ({ navigation }: { navigation: any }) => {
 
 const getStyle = () => {
   return StyleSheet.create({
+    discountCoupon: {
+      color: colors.green,
+      fontSize: fontSizes.p2,
+    },
+    couponWrapperApplied: {
+      backgroundColor: colors.light_green,
+      padding: 10,
+      marginBottom: 10,
+      borderRadius: 4,
+      borderWidth: 1,
+      borderColor: colors.green,
+      position: 'relative',
+      gap: 4,
+    },
+    closeIc: {
+      width: 20,
+      height: 20,
+    },
+    closeBtn: {
+      position: 'absolute',
+      right: -10,
+      top: -10,
+      padding: 4,
+    },
+    couponApplied: {
+      color: colors.green,
+      fontSize: fontSizes.p3,
+      textTransform: 'uppercase',
+    },
     gradient: {
       padding: spacing.l,
     },
@@ -364,15 +473,17 @@ const getStyle = () => {
       color: colors.black,
       textTransform: 'capitalize',
     },
+    bottomBarContent: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
     bottomBar: {
       alignSelf: 'center',
       padding: spacing.l,
       borderTopWidth: 1,
       width: '100%',
       borderColor: colors.light_grey,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
     },
     screenWrapper: {
       //   paddingHorizontal: spacing.l,

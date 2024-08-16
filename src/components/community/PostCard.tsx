@@ -15,6 +15,8 @@ import { makeRequest } from '../../api/apiClients';
 import Lightbox from 'react-native-lightbox-v2';
 import BottomHalfModal from '../commonComponents/BottomHalfModal';
 import { useToast } from 'react-native-toast-notifications';
+import CustomModal from '../commonComponents/CustomModal';
+import ReportPopUpUi from './ReportPopUpUi';
 
 type PostCardProps = {
   item: any;
@@ -36,6 +38,7 @@ const PostCard: React.FC<PostCardProps> = ({
   const { user, setGetPosts } = usePrepContext();
   const [isLikeDisable, setIsLikeDisable] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isReportModalVisible, setIsReportModalVisible] = useState(false);
   const toast = useToast();
   const handleTextLayout = (event: any) => {
     const { lines } = event.nativeEvent;
@@ -278,15 +281,19 @@ const PostCard: React.FC<PostCardProps> = ({
         setToggle={setIsModalVisible}
         handleTogglePress={() => setIsModalVisible(!isModalVisible)}
       >
-        <TouchableOpacity activeOpacity={0.7} style={styles.popBtn}>
-          <Image style={styles.popBtnImg} source={Images.shareIcon} />
-          <Text style={styles.popBtnText}>Share</Text>
+        <TouchableOpacity
+          onPress={() => {
+            setIsModalVisible(false);
+            setIsReportModalVisible(true);
+          }}
+          activeOpacity={0.7}
+          style={styles.popBtn}
+        >
+          <Image style={styles.popBtnImg} source={Images.infoCircle} />
+          <Text style={styles.popBtnText}>Report</Text>
         </TouchableOpacity>
         {item?.sharedBy?.userId !== user?._id ? (
-          <TouchableOpacity activeOpacity={0.7} style={styles.popBtn}>
-            <Image style={styles.popBtnImg} source={Images.infoCircle} />
-            <Text style={styles.popBtnText}>Report</Text>
-          </TouchableOpacity>
+          <></>
         ) : (
           <>
             <TouchableOpacity
@@ -315,6 +322,16 @@ const PostCard: React.FC<PostCardProps> = ({
           </>
         )}
       </BottomHalfModal>
+
+      <CustomModal
+        isModalVisible={isReportModalVisible}
+        isModalHide={() => setIsReportModalVisible(false)}
+      >
+        <ReportPopUpUi
+          postId={item?._id}
+          isModalHide={() => setIsReportModalVisible(false)}
+        />
+      </CustomModal>
     </>
   );
 };

@@ -3,7 +3,12 @@ import React from 'react';
 import { colors } from '../utils/commonStyle/colors';
 import { fontSizes } from '../utils/commonStyle';
 
-const RadioButton = ({ radioList = [{}, {}], onChecked, checked }: any) => {
+const RadioButton = ({
+  radioList = [{}, {}],
+  onChecked,
+  checked,
+  marginBottom,
+}: any) => {
   const styles = getStyle();
   const onCheckedHandle = (index: number, item: any) => {
     onChecked && onChecked(item);
@@ -13,7 +18,12 @@ const RadioButton = ({ radioList = [{}, {}], onChecked, checked }: any) => {
       {radioList.map((item: any, index: number) => {
         return (
           <TouchableOpacity
-            style={styles.container}
+            style={[
+              [
+                styles.container,
+                { marginBottom: index === -1 ? 0 : marginBottom || 0 },
+              ],
+            ]}
             key={index}
             onPress={() => onCheckedHandle(index, item)}
           >
