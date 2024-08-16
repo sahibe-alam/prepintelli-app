@@ -48,7 +48,7 @@ const GlobalState: React.FC<GlobalStateProps> = ({
   const [userPerformance, setUserPerformance] = useState<any>(null);
   const deviceWidth = Dimensions.get('window').width;
   const [getCredits, setGetCredits] = useState<any>(0);
-  const [getPosts, setGetPosts] = useState<any | null>(null);
+  const [getPosts, setGetPosts] = useState<any | null>([]);
   const [planType, setPlanType] = useState<any>('');
   const [orientation, setOrientation] = useState<'PORTRAIT' | 'LANDSCAPE'>(
     'PORTRAIT'

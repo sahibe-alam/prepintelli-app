@@ -57,7 +57,8 @@ const ExploreCommunity = ({ navigation }: { navigation: any }) => {
     // Listen for new posts
     socket.on('newPost', ({ examId, post }) => {
       if (examId === user?.exams[0]?.examId) {
-        setGetPosts && setGetPosts((prevPosts: any) => [post, ...prevPosts]);
+        setGetPosts &&
+          setGetPosts((prevPosts: any) => [post || {}, ...(prevPosts || [])]);
       }
     });
     socket.on('updateLikes', ({ postId, _, updatedLikes }) => {
@@ -134,7 +135,9 @@ const ExploreCommunity = ({ navigation }: { navigation: any }) => {
                   </Text>
                   <Button
                     title="Create Post"
-                    onPress={() => navigation.navigate('PostScreen')}
+                    onPress={() =>
+                      navigation.navigate('PostScreen', { image: '' })
+                    }
                   />
                 </View>
               </View>

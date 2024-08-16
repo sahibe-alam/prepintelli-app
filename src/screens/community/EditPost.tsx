@@ -32,12 +32,13 @@ const EditPost = ({ navigation, route }: PostScreenPropsType) => {
       const formDataPost = new FormData();
       formDataPost.append('content', text);
       formDataPost.append('postId', item?._id);
-      renderImage &&
+      if (renderImage.trim() !== '') {
         formDataPost.append('editPostImg', {
-          uri: renderImage ? renderImage : '',
+          uri: renderImage.trim() ? renderImage.trim() : '',
           type: 'image/jpeg',
           name: 'image.jpg',
         });
+      }
 
       makeRequest({
         method: 'POST',

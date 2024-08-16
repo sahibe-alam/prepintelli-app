@@ -26,6 +26,7 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
   const { user, setUser } = usePrepContext();
   const toast = useToast();
   const [isLoading, setLoading] = React.useState(false);
+  const [getNewDp, setGetNewDp] = React.useState('');
   const [userDetails, setUserDetails] = React.useState<any>({
     firstName: user?.firstname,
     lastName: user?.lastname,
@@ -33,7 +34,7 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
     mobile: user?.mobile,
     dob: user?.dateofbirth,
     education: user?.education,
-    userDp: user?.userDp,
+    userDp: user?.userDp?.url,
   });
   const radioList = [
     {
@@ -54,15 +55,17 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
     formData.append('email', userDetails?.email);
     formData.append('mobile', userDetails?.mobile);
     formData.append('education', userDetails?.education);
-    if (userDetails?.userDp) {
+    if (getNewDp !== '') {
+      console.log(getNewDp, 'getNewDp');
       formData.append('profileImage', {
-        uri: userDetails?.userDp?.uri,
-        type: 'image/jpeg',
+        uri: getNewDp,
+        type: 'image/jpg',
         name: 'image.jpg',
       });
     }
+    console.log(formData, 'formData');
     makeRequest({
-      url: 'update-profile',
+      url: '/update-profile',
       method: 'POST',
       data: formData,
       headers: {
@@ -70,7 +73,6 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
       },
     })
       .then((res: any) => {
-        console.log(res?.data?.user);
         setUser && setUser(res?.data?.user);
         toast.show(res?.data?.msg, { type: 'default', duration: 3000 });
         setLoading(false);
@@ -81,22 +83,17 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
         toast.show('Something went wrong', { type: 'danger' });
       });
   };
-  console.log(userDetails);
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.container}>
         <BackHeader title="My profile" onPress={() => navigation.goBack()} />
         <ScrollView contentContainerStyle={styles.scrollWrapper}>
           <DpWrapper
-            dp={userDetails?.userDp}
-            onImgDp={(userDp) =>
-              setUserDetails({
-                ...userDetails,
-                userDp: {
-                  uri: userDp,
-                },
-              })
-            }
+            dp={getNewDp}
+            onImgDp={(userDp) => {
+              setUserDetails({ ...userDetails, userDp });
+              setGetNewDp(userDp);
+            }}
             isPencil={true}
           />
 

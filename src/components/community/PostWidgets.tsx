@@ -9,7 +9,6 @@ import { usePrepContext } from '../../contexts/GlobalState';
 const PostWidgets = ({ onPostClick, navigation }: PostWidgetsProps) => {
   const styles = getStyle();
   const { user } = usePrepContext();
-  console.log(user?.userDp);
   return (
     <View style={styles.wrapper}>
       <View style={styles.dpWrapper}>
@@ -34,7 +33,7 @@ const PostWidgets = ({ onPostClick, navigation }: PostWidgetsProps) => {
       </TouchableOpacity> */}
       <GetImage
         onImagePicked={(path: string) => {
-          navigation.navigate('PostScreen', { image: path });
+          navigation.navigate('PostScreen', { image: path || '' });
         }}
       >
         <Image source={Images.imageIc} resizeMode="contain" />

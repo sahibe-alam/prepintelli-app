@@ -34,7 +34,7 @@ const DpWrapper = ({
         <Image
           source={
             dp
-              ? dp
+              ? { uri: dp }
               : user?.userDp?.url
               ? { uri: user?.userDp?.url }
               : Images.userDp
@@ -43,6 +43,7 @@ const DpWrapper = ({
         />
         {isPencil && (
           <GetImage
+            cropping={true}
             onImagePicked={(img) => {
               onImgDp && onImgDp(img);
             }}

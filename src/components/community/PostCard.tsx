@@ -112,9 +112,11 @@ const PostCard: React.FC<PostCardProps> = ({
       },
     })
       .then(() => {
+        setIsModalVisible(false);
         toast.show('Post deleted successfully', {
           type: 'success',
         });
+
         // remove deleted post from getPosts
         setGetPosts &&
           setGetPosts((prevPosts: any) =>
@@ -140,7 +142,6 @@ const PostCard: React.FC<PostCardProps> = ({
       },
     ]);
   };
-  console.log(item, 'shared by');
   return (
     <>
       <View style={styles.cardWrapper}>

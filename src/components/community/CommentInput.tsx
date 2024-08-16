@@ -18,6 +18,7 @@ import GetImage from '../commonComponents/GetImage';
 import { usePrepContext } from '../../contexts/GlobalState';
 import { makeRequest } from '../../api/apiClients';
 import { useToast } from 'react-native-toast-notifications';
+import ThreePulseDots from '../commonComponents/ThreePulseDots';
 
 interface CommentActionProps {
   inputValue: string;
@@ -75,6 +76,7 @@ const CommentInput = forwardRef<CommentInputHandle, CommentInputProps>(
     const [inputValue, setInputValue] = useState<string>('');
     const [renderImage, setRenderImage] = useState<string>('');
     const inputRef = useRef<TextInput>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { user } = usePrepContext();
     const toast = useToast();
     const styles = getStyle(inputValue);
@@ -93,6 +95,7 @@ const CommentInput = forwardRef<CommentInputHandle, CommentInputProps>(
     };
 
     const postComment = async () => {
+      setIsLoading(true);
       const formData = new FormData();
       formData.append('comment', inputValue.trim());
       formData.append('userId', user?._id);
@@ -117,10 +120,12 @@ const CommentInput = forwardRef<CommentInputHandle, CommentInputProps>(
             setInputValue('');
             setRenderImage('');
             onInputChange && onInputChange('');
+            setIsLoading(false);
           })
           .catch((err) => {
             console.log(err?.data, 'err');
             toast.show('Something went wrong', { type: 'danger' });
+            setIsLoading(false);
           });
       } else {
         toast.show('Comment cannot be empty', { type: 'default' });
@@ -161,13 +166,17 @@ const CommentInput = forwardRef<CommentInputHandle, CommentInputProps>(
           placeholder="Add a comment"
           placeholderTextColor={colors.grey}
         />
-        <CommentAction
-          renderImage={renderImage}
-          inputValue={inputValue}
-          setRenderImage={setRenderImage}
-          styles={styles}
-          onPostComment={postComment}
-        />
+        {isLoading ? (
+          <ThreePulseDots color={colors.blue} />
+        ) : (
+          <CommentAction
+            renderImage={renderImage}
+            inputValue={inputValue}
+            setRenderImage={(path: string) => setRenderImage(path)}
+            styles={styles}
+            onPostComment={postComment}
+          />
+        )}
       </View>
     );
   }

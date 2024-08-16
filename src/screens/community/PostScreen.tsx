@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { colors } from '../../utils/commonStyle/colors';
 import BackHeader from '../../components/BackHeader';
 import Images from '../../resources/Images';
@@ -23,7 +23,7 @@ const PostScreen = ({ navigation, route }: PostScreenPropsType) => {
   const { image } = route.params || {};
   const styles = getStyles();
   const [text, setText] = useState('');
-  const [renderImage, setRenderImage] = useState(image ? image : '');
+  const [renderImage, setRenderImage] = useState('');
   const { user } = usePrepContext();
   const [isLoading, setLoading] = useState(false);
   const toast = useToast();
@@ -32,12 +32,13 @@ const PostScreen = ({ navigation, route }: PostScreenPropsType) => {
       setLoading(true);
       const formDataPost = new FormData();
       formDataPost.append('content', text);
-      renderImage &&
-        formDataPost.append('postImage', {
-          uri: renderImage ? renderImage : '',
+      if (renderImage !== '') {
+        formDataPost?.append('postImage', {
+          uri: renderImage,
           type: 'image/jpeg',
           name: 'image.jpg',
         });
+      }
       formDataPost.append('examId', user?.exams[0]?.examId);
       formDataPost.append('userId', user?._id);
       makeRequest({
@@ -69,6 +70,12 @@ const PostScreen = ({ navigation, route }: PostScreenPropsType) => {
       toast.show('Post cannot be empty', { type: 'default' });
     }
   };
+
+  useEffect(() => {
+    if (image) {
+      setRenderImage(image);
+    }
+  }, [image]);
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader

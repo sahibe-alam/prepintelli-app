@@ -1,9 +1,13 @@
-import { RefreshControl, SafeAreaView, StyleSheet } from 'react-native';
+import {
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import PostCard from '../../components/community/PostCard';
 import { usePrepContext } from '../../contexts/GlobalState';
 import { makeRequest } from '../../api/apiClients';
-import { ScrollView } from 'react-native-gesture-handler';
 import BackHeader from '../../components/BackHeader';
 import { colors } from '../../utils/commonStyle/colors';
 
