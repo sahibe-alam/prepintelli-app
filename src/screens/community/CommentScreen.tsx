@@ -7,6 +7,8 @@ import Comment from '../../components/community/Comment';
 import CommentInput from '../../components/community/CommentInput';
 import { usePrepContext } from '../../contexts/GlobalState';
 import { socket } from '../../utils/socketUtil';
+import { makeRequest } from '../../api/apiClients';
+import { useShowMessage } from '../../utils/showMessage';
 const CommentScreen = ({
   navigation,
   route,
@@ -14,19 +16,21 @@ const CommentScreen = ({
   navigation: any;
   route: any;
 }) => {
-  const { item } = route.params;
+  const { itemPost } = route.params;
   const commentInputRef = useRef<any>(null);
   const scrollViewRef = useRef<ScrollView | null>(null);
-  const [renderComments, setComments] = useState<any>(item?.comments || []);
+  const [renderComments, setComments] = useState<any>(itemPost?.comments || []);
   const hasMounted = useRef(false);
+  const [commentId, setCommentId] = useState<any>(null);
   const { setGetPosts } = usePrepContext();
+  const showMessage = useShowMessage();
   const styles = getStyle();
   useEffect(() => {
     socket.on('newComment', ({ postId, _, updated }) => {
-      if (postId !== item?._id) {
+      if (postId !== itemPost?._id) {
         return;
       }
-      setComments(postId === item?._id ? updated : renderComments);
+      setComments(postId === itemPost?._id ? updated : renderComments);
       setGetPosts &&
         setGetPosts((prevPosts: any) =>
           prevPosts.map((post: any) =>
@@ -55,6 +59,41 @@ const CommentScreen = ({
       hasMounted.current = true;
     }
   }, [renderComments]);
+
+  const handleDeleteComment = async () => {
+    makeRequest({
+      method: 'POST',
+      url: '/delete-comment',
+      data: {
+        postId: itemPost?._id,
+        commentId: commentId,
+      },
+    })
+      .then(() => {
+        setComments((prevComments: any) =>
+          prevComments?.filter((comment: any) => comment?._id !== commentId)
+        );
+        setCommentId(null);
+        setGetPosts &&
+          setGetPosts((prevPosts: any) =>
+            prevPosts?.map((post: any) =>
+              post?._id === itemPost?._id
+                ? {
+                    ...post,
+                    comments: post?.comments?.filter(
+                      (comment: any) => comment?._id !== commentId
+                    ),
+                  }
+                : post
+            )
+          );
+
+        showMessage('Comment deleted successfully');
+      })
+      .catch(() => {
+        showMessage('Something went wrong. Please try again');
+      });
+  };
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader onPress={() => navigation.goBack()} title="Comments" />
@@ -63,14 +102,21 @@ const CommentScreen = ({
           <PostCard
             onPressComment={handlePostCardPress}
             isCommentScreen={false}
-            item={item}
+            item={itemPost}
           />
           {renderComments?.map((item: any) => (
-            <Comment key={item._id} item={item} />
+            <Comment
+              sharedByUserId={itemPost?.sharedBy?.userId}
+              getCommentID={(id: any) => setCommentId(id)}
+              handleDeleteComment={handleDeleteComment}
+              postId={itemPost._id}
+              key={item._id}
+              item={item}
+            />
           ))}
         </View>
       </ScrollView>
-      <CommentInput ref={commentInputRef} item={item} />
+      <CommentInput ref={commentInputRef} item={itemPost} />
     </SafeAreaView>
   );
 };

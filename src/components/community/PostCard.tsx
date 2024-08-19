@@ -261,7 +261,7 @@ const PostCard: React.FC<PostCardProps> = ({
             <TouchableOpacity
               onPress={() => {
                 if (isCommentScreen) {
-                  navigation.navigate('Comment Screen', { item });
+                  navigation.navigate('Comment Screen', { itemPost: item });
                 }
                 onPressComment();
               }}
@@ -327,6 +327,7 @@ const PostCard: React.FC<PostCardProps> = ({
         isModalHide={() => setIsReportModalVisible(false)}
       >
         <ReportPopUpUi
+          reportType="post"
           postId={item?._id}
           isModalHide={() => setIsReportModalVisible(false)}
         />
@@ -337,16 +338,16 @@ const PostCard: React.FC<PostCardProps> = ({
 // aspect 1/1
 const getStyle = () => {
   return StyleSheet.create({
-    popBtnImg: {
-      width: 18,
-      height: 18,
-      objectFit: 'contain',
-    },
     popBtn: {
       paddingVertical: spacing.s,
       flexDirection: 'row',
       alignItems: 'center',
       gap: spacing.s,
+    },
+    popBtnImg: {
+      width: 18,
+      height: 18,
+      objectFit: 'contain',
     },
     popBtnText: {
       color: colors.black,
@@ -440,7 +441,7 @@ const getStyle = () => {
       color: colors.grey,
     },
     userName: {
-      fontSize: fontSizes.p3,
+      fontSize: fontSizes.p2,
       fontWeight: '500',
       color: colors.black,
     },

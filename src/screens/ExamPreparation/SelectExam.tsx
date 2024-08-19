@@ -12,6 +12,7 @@ import { getUserID } from '../../utils/commonServices';
 import { getUserDetails } from '../../api/adapter/getUserDetails';
 import { useToast } from 'react-native-toast-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useShowMessage } from '../../utils/showMessage';
 interface PropsType {
   navigation: any;
   route: any;
@@ -120,6 +121,7 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
       });
   };
   const toast = useToast();
+  const showMessage = useShowMessage();
   console.log(targetExam?.subjects, 'targetExam');
   return (
     <SafeAreaView style={styles.container}>
@@ -197,10 +199,11 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
                       examId: targetExam?.examName?._id,
                     });
                   } else {
-                    toast.show('Please select exam and subject', {
-                      type: 'default',
-                      duration: 2000,
-                    });
+                    // toast.show('Please select exam and subject', {
+                    //   type: 'default',
+                    //   duration: 2000,
+                    // });
+                    showMessage('Please select exam and subject');
                   }
                 }
                 if (type === 'acdmc') {

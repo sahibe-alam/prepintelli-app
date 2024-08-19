@@ -27,7 +27,7 @@ const FaQs = ({ navigation }: AboutPrepIntelliPropsType) => {
       <SafeAreaView style={styles.container}>
         <BackHeader title="FAQs" onPress={() => navigation.goBack()} />
         <ScrollView style={styles.scrollWrapper}>
-          {faq?.faqs?.map((item: any, index: number) => (
+          {faq?.faqs?.reverse().map((item: any, index: number) => (
             <View style={styles.accordionWrapper} key={index}>
               <AccordionItem title={item?.title}>
                 <Text style={styles.accordionContent}>{item?.desc}</Text>

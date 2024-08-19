@@ -4,10 +4,11 @@ import {
   StyleSheet,
   ScrollView,
   Linking,
-  Alert,
   BackHandler,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { colors } from '../utils/commonStyle/colors';
 import { fontSizes, spacing } from '../utils/commonStyle';
 import HomeSlider from '../components/HomeSlider';
@@ -17,6 +18,8 @@ import { makeRequest } from '../api/apiClients';
 import Button from '../components/Button';
 import DeviceInfo from 'react-native-device-info';
 import { useFocusEffect } from '@react-navigation/native';
+import { useShowMessage } from '../utils/showMessage';
+import { createDoubleBackHandler } from '../utils/backButtonHandler';
 interface PropsType {
   navigation?: any;
   route?: any;
@@ -54,46 +57,56 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
       classAction: 'fetchClass',
     },
   ];
+  const showMessage = useShowMessage();
   useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
-        Alert.alert(
-          'Exit App',
-          'Are you sure you want to exit?',
-          [
-            { text: 'Cancel', onPress: () => null, style: 'cancel' },
-            { text: 'YES', onPress: () => BackHandler.exitApp() },
-          ],
-          { cancelable: false }
-        );
-        return true;
+    useCallback(() => {
+      const { handleBackPress, cleanup } = createDoubleBackHandler(showMessage);
+
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+        cleanup();
       };
-
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, [])
+    }, [showMessage])
   );
   useEffect(() => {
     makeRequest({
       method: 'GET',
       url: '/app-update',
     }).then((res: any) => {
-      console.log(res?.data);
       if (res.data.length > 0) {
         // get last object off array
         setAppUpdate(res.data[res.data.length - 1]);
         const newVersion = Number(
           res.data[res?.data?.length - 1]?.appVersion
         ).toFixed(1);
-        console.log(newVersion, currentVersion);
         if (newVersion > currentVersion) {
           setUpdateModalVisible(true);
         }
       }
     });
   }, [currentVersion]);
+
+  const requestMultipleHelper = async () => {
+    const granted = await PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      // ask mic permission
+      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+    ]);
+
+    return granted;
+  };
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      setTimeout(() => {
+        requestMultipleHelper();
+      }, 800);
+    }
+  }, []);
   return (
     <>
       <View style={styles.container}>

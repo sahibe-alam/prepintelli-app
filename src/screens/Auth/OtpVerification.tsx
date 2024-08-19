@@ -19,7 +19,6 @@ interface PropsType {
 }
 const OtpVerification: React.FC<PropsType> = ({ navigation, route }) => {
   const { isForgotPassword, email, state } = route.params || {};
-  console.log(state);
   const [otp, setOtp] = useState('');
   const [isLoading, setLoading] = useState(false);
   const toast = useToast();

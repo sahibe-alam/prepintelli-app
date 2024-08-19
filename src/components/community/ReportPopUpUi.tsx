@@ -5,16 +5,21 @@ import { fontSizes } from '../../utils/commonStyle';
 import RadioButton from '../RadioButton';
 import Button from '../Button';
 import { makeRequest } from '../../api/apiClients';
-import { useToast } from 'react-native-toast-notifications';
 import { usePrepContext } from '../../contexts/GlobalState';
+import { useShowMessage } from '../../utils/showMessage';
 
-const ReportPopUpUi = ({ isModalHide = () => {}, postId }: any) => {
+const ReportPopUpUi = ({
+  isModalHide = () => {},
+  postId,
+  commentId = '',
+  reportType = '',
+}: any) => {
   const styles = getStyle();
   const [message, setMessage] = React.useState('');
   const [checked, setChecked] = React.useState<any>();
   const [isReason, setIsReason] = React.useState(false);
   const { user } = usePrepContext();
-  const toast = useToast();
+  const showMessage = useShowMessage();
   const radioList = [
     {
       label: 'Spam or Irrelevant Content',
@@ -52,11 +57,14 @@ const ReportPopUpUi = ({ isModalHide = () => {}, postId }: any) => {
           postId: postId,
           message: message,
           reportLabel: checked?.label,
+          commentId: commentId,
+          reportType: reportType,
         },
       }).then(() => {
-        toast.show('Reported Successfully', {
-          type: 'default',
-        });
+        // toast.show('Reported Successfully', {
+        //   type: 'default',
+        // });
+        showMessage('Reported Successfully');
         isModalHide();
       });
     } else {
@@ -64,7 +72,6 @@ const ReportPopUpUi = ({ isModalHide = () => {}, postId }: any) => {
     }
   };
 
-  console.log(postId);
   return (
     <View>
       <Text style={styles.heading}>Report This Post</Text>

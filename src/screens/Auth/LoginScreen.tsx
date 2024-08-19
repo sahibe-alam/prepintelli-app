@@ -5,8 +5,9 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  BackHandler,
 } from 'react-native';
-import React, { useReducer, useState } from 'react';
+import React, { useCallback, useReducer, useState } from 'react';
 import { colors } from '../../utils/commonStyle/colors';
 import LogoTitle from '../../components/commonComponents/LogoTitle';
 import Button from '../../components/Button';
@@ -22,6 +23,9 @@ import { makeRequest } from '../../api/apiClients';
 import { useToast } from 'react-native-toast-notifications';
 import { getUserDetails } from '../../api/adapter/getUserDetails';
 import { usePrepContext } from '../../contexts/GlobalState';
+import { useFocusEffect } from '@react-navigation/native';
+import { useShowMessage } from '../../utils/showMessage';
+import { createDoubleBackHandler } from '../../utils/backButtonHandler';
 
 interface Props {
   navigation?: any;
@@ -142,7 +146,20 @@ const LoginScreen: React.FC<Props> = (props) => {
     }
   };
   const styles = getStyles();
+  const showMessage = useShowMessage();
 
+  useFocusEffect(
+    useCallback(() => {
+      const { handleBackPress, cleanup } = createDoubleBackHandler(showMessage);
+
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+        cleanup();
+      };
+    }, [showMessage])
+  );
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView

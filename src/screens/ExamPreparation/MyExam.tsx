@@ -43,10 +43,10 @@ const MyExam: React.FC<PropsType> = ({ navigation }) => {
   const [chapter, setChapter] = useState('');
   const [testTime, setTestTime] = useState(0);
   const [isNoCredit, setIsNoCredit] = useState(false);
-
   const [subjectIndex, setSubjectIndex] = useState<number | null>(null);
   const [roadMap, setRoadMap] = useState<any>(null);
   const [modalType, setModalType] = useState<any>('');
+  const [isNoProPlanModalVisible, setIsNoProPlanModalVisible] = useState(false);
   const [errorMsg, setErrorMsg] = useState({
     subject: '',
     chapter: '',
@@ -55,7 +55,7 @@ const MyExam: React.FC<PropsType> = ({ navigation }) => {
   const toast = useToast();
   const styles = getStyles();
   const { width } = useWindowDimensions();
-  const { user, getCredits, setGetCredits } = usePrepContext();
+  const { user, getCredits, planType, setGetCredits } = usePrepContext();
   const toggleModal = (type: string) => {
     if (type === 'doubt') {
       if (getCredits > 0) {
@@ -322,7 +322,11 @@ Return the JSON output without any additional text.
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('Study plan');
+                if (planType !== 'free') {
+                  navigation.navigate('Study plan');
+                } else {
+                  setIsNoProPlanModalVisible(true);
+                }
               }}
               activeOpacity={0.8}
               style={styles.card}
@@ -432,6 +436,7 @@ Return the JSON output without any additional text.
                       setDifficulty(item?.name);
                     }}
                   />
+
                   <View>
                     <View style={styles.timeWrapper}>
                       <DropDownSelect
@@ -488,6 +493,37 @@ Return the JSON output without any additional text.
           />
         </CustomModal>
       )}
+      <CustomModal
+        isModalVisible={isNoProPlanModalVisible}
+        isModalHide={() => setIsNoProPlanModalVisible(false)}
+      >
+        <Text
+          style={{
+            color: colors.black,
+            fontSize: fontSizes.h5,
+            textAlign: 'center',
+            marginBottom: 10,
+          }}
+        >
+          Upgrade Your Plan to Access Personalized Study Plans
+        </Text>
+        <Text
+          style={{
+            color: colors.black,
+            fontSize: fontSizes.p2,
+            textAlign: 'center',
+            marginBottom: 20,
+          }}
+        >
+          Unlock custom study plans tailored to your chosen subjects and exam
+          schedule.
+        </Text>
+
+        <Button
+          title={'Upgrade Now'}
+          onPress={() => navigation.navigate('Get pro')}
+        />
+      </CustomModal>
     </>
   );
 };

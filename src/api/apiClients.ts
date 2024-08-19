@@ -16,7 +16,7 @@ export const makeRequest = async <T>(
   try {
     console.log(
       BACKEND_URL,
-      'BACKEND_URL  BACKEND_ URL BACKEND_Ul  BACKEND_URL'
+      'BACKEND_URL  BACKE ND_ URL BACKEND_Ul  BACKEND_URL'
     );
     // Retrieve the authentication token from AsyncStorage
     const authToken = await AsyncStorage.getItem('jwtToken');

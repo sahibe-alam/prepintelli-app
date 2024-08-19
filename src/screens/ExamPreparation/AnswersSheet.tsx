@@ -19,6 +19,7 @@ import { updateAskDoubt } from '../../api/adapter/studentPerformance';
 import { usePrepContext } from '../../contexts/GlobalState';
 import NoCreditPopUp from '../../components/NoCreditPopUp';
 import { updateCredit } from '../../api/adapter/updateCredit';
+import Button from '../../components/Button';
 
 interface PropsType {
   navigation: any;
@@ -35,11 +36,12 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [doubtQuestion, setDoubtQuestion] = useState<any>([]);
   const [inputValue, setInputValue] = useState('');
+  const [isNoProPlanModalVisible, setIsNoProPlanModalVisible] = useState(false);
   const [isNoCredit, setIsNoCredit] = useState(false);
 
   const [isLoading, setLoading] = useState(false);
   const scrollViewRef = useRef<ScrollView | null>(null);
-  const { user, getCredits, setGetCredits } = usePrepContext();
+  const { user, getCredits, setGetCredits, planType } = usePrepContext();
   const [conversationList, setConversationList] = React.useState<any>([]);
   const toggleModal = (question?: any, questionIndex?: number) => {
     setModalVisible(!isModalVisible);
@@ -195,7 +197,13 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
                 })}
                 <TouchableOpacity
                   style={styles.doubtBtn}
-                  onPress={() => askDoubtHandler(item, index)}
+                  onPress={() => {
+                    if (planType !== 'free') {
+                      askDoubtHandler(item, index);
+                    } else {
+                      setIsNoProPlanModalVisible(true);
+                    }
+                  }}
                 >
                   <Text style={styles.doubtBtnText}>Ask doubt🤔</Text>
                 </TouchableOpacity>
@@ -264,6 +272,37 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
           />
         </CustomModal>
       )}
+
+      <CustomModal
+        isModalVisible={isNoProPlanModalVisible}
+        isModalHide={() => setIsNoProPlanModalVisible(false)}
+      >
+        <Text
+          style={{
+            color: colors.black,
+            fontSize: fontSizes.h5,
+            textAlign: 'center',
+            marginBottom: 10,
+          }}
+        >
+          Upgrade Your Plan for Specific Question Doubt Resolution
+        </Text>
+        <Text
+          style={{
+            color: colors.black,
+            fontSize: fontSizes.p2,
+            textAlign: 'center',
+            marginBottom: 20,
+          }}
+        >
+          Ask detailed questions on specific test items during practice tests
+        </Text>
+
+        <Button
+          title={'Upgrade Now'}
+          onPress={() => navigation.navigate('Get pro')}
+        />
+      </CustomModal>
     </>
   );
 };

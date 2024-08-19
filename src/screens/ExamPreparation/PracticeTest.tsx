@@ -8,6 +8,7 @@ import Questions from '../../components/examPrepComponents/Questions';
 import QuestionsProgressBar from '../../components/examPrepComponents/QuestionsProgressBar';
 import { storeSubjectScore } from '../../api/adapter/studentPerformance';
 import { usePrepContext } from '../../contexts/GlobalState';
+import { useShowMessage } from '../../utils/showMessage';
 
 interface PropsType {
   navigation?: any;
@@ -29,6 +30,7 @@ const PracticeTest: React.FC<PropsType> = (props) => {
   const styles = getStyles();
   const [answers, setAnswers] = useState<number[]>([]);
   const { user } = usePrepContext();
+  const showMessage = useShowMessage();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [results, setResults] = useState<{
     correctAnswers: number;
@@ -142,7 +144,10 @@ const PracticeTest: React.FC<PropsType> = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader
-        isTimeUp={() => handleSubmit(currentQuestionIndex)}
+        isTimeUp={() => {
+          showMessage('Test time is up');
+          handleSubmit(currentQuestionIndex);
+        }}
         testTime={testTime}
         onPress={() => navigation.navigate('Exam Zone')}
         title={`${currentQuestionIndex + 1}/${questionsArray?.length || 0}`}

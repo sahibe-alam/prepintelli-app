@@ -1,11 +1,5 @@
-import {
-  View,
-  StyleSheet,
-  Image,
-  PermissionsAndroid,
-  Platform,
-} from 'react-native';
-import React, { useEffect } from 'react';
+import { View, StyleSheet, Image } from 'react-native';
+import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   getJwtToken,
@@ -20,18 +14,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import Images from '../resources/Images';
 
 const StartApp = ({ navigation }: any) => {
-  const requestMultipleHelper = async () => {
-    const granted = await PermissionsAndroid.requestMultiple([
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-      PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      // ask mic permission
-      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-    ]);
-
-    return granted;
-  };
   const { setUser } = usePrepContext();
   const checkIfAppLaunchedBefore = async () => {
     try {
@@ -61,11 +43,6 @@ const StartApp = ({ navigation }: any) => {
       }
     });
   };
-  useEffect(() => {
-    if (Platform.OS === 'android') {
-      requestMultipleHelper();
-    }
-  }, []);
 
   useFocusEffect(() => {
     checkIfAppLaunchedBefore().then((value) => {

@@ -91,7 +91,9 @@ const ExploreCommunity = ({ navigation }: { navigation: any }) => {
       <BackHeader
         onPress={() => navigation.goBack()}
         isBottomBorder={false}
-        title={`${user?.exams[0]?.exam_short_name} Community`}
+        title={`${
+          user?.exams[0]?.exam_short_name || user?.exams[0]?.classname
+        } Community`}
       />
       <PostWidgets
         navigation={navigation}

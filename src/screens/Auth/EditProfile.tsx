@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Text,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -16,7 +17,8 @@ import Button from '../../components/Button';
 import RadioButton from '../../components/RadioButton';
 import { usePrepContext } from '../../contexts/GlobalState';
 import { makeRequest } from '../../api/apiClients';
-import { useToast } from 'react-native-toast-notifications';
+import { useShowMessage } from '../../utils/showMessage';
+import { removeLoginToken } from '../../utils/commonServices';
 interface PropsType {
   navigation: any;
 }
@@ -24,9 +26,9 @@ interface PropsType {
 const EditProfile: React.FC<PropsType> = ({ navigation }) => {
   const styles = getStyle();
   const { user, setUser } = usePrepContext();
-  const toast = useToast();
   const [isLoading, setLoading] = React.useState(false);
   const [getNewDp, setGetNewDp] = React.useState('');
+  const showMessage = useShowMessage();
   const [userDetails, setUserDetails] = React.useState<any>({
     firstName: user?.firstname,
     lastName: user?.lastname,
@@ -74,14 +76,44 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
     })
       .then((res: any) => {
         setUser && setUser(res?.data?.user);
-        toast.show(res?.data?.msg, { type: 'default', duration: 3000 });
+        showMessage(res?.data?.msg);
         setLoading(false);
+        navigation.goBack();
       })
       .catch((err: any) => {
         console.log(err, 'err');
         setLoading(false);
-        toast.show('Something went wrong', { type: 'danger' });
+        showMessage('Something went wrong');
       });
+  };
+
+  const deleteUser = () => {
+    makeRequest({
+      method: 'DELETE',
+      url: `/delete-permanent-account/${user?._id}`,
+    }).then((res: any) => {
+      setUser && setUser(null);
+      navigation.navigate('Login');
+      removeLoginToken();
+      showMessage(res?.data?.msg);
+    });
+  };
+  const userDeleteHandler = () => {
+    Alert.alert(
+      'Delete Account',
+      'Are you sure you want to delete your account?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => deleteUser(),
+        },
+      ]
+    );
   };
   return (
     <View style={styles.container}>
@@ -145,7 +177,10 @@ const EditProfile: React.FC<PropsType> = ({ navigation }) => {
           </View>
           <View style={styles.btnWrapper}>
             <View style={[styles.deleteBtnWrapper]}>
-              <TouchableOpacity style={styles.deleteBtn}>
+              <TouchableOpacity
+                onPress={userDeleteHandler}
+                style={styles.deleteBtn}
+              >
                 <Text style={styles.deleteBtnText}>Delete account</Text>
               </TouchableOpacity>
             </View>

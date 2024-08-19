@@ -32,29 +32,16 @@ const StudyPlan: React.FC<propsType> = (props) => {
   const { user } = usePrepContext();
   const [html, setHtml] = useState<null | string>(null);
   const toast = useToast();
-  const prompt = `You are Students study planner developed by Sahibe alam.
-
-    ask following question or any question related to students exam in details to students.
-    1-Exam duration?
-    2-Exam format?
-    3-Exam mode?
-    4-Exam marks?
-    5-Strengths and weaknesses?
-    6-Time available for per day study?
-    7-Learning style?
-    8-Study schedule preference?
-    9-Available resources?
-    10-Practice materials?
-    11-Exam score goals?
-    12-Study session breakdown?
-    13-Motivation strategies?
-
+  const prompt = `You are Students guider you will ask one by one max 12 question from student about their exam. You are developed by Sahibe alam.
     Based on students answer create a study plan and create best time table for students.
-
- Note: Make sure when you ask final question then generate study plan it should be only in HTML code format without any plan text in it.
+ Note: Make sure when you ask final question then generate study plan it should be only in HTML code format without any  text in it.
   `;
 
-  const userPrompt = `Hello! I'm ${user?.firstname}, give a personalized study plan for my upcoming ${user?.exams[0]?.exam_short_name} exam. The subjects I'll be tackling include ${user?.exams[0]?.subjects} .
+  const userPrompt = `Hello! I'm ${
+    user?.firstname
+  }, give a full personalized study plan for my upcoming ${
+    user?.exams[0]?.exam_short_name || user?.exams[0]?.classname
+  } exam. The subjects I'll be tackling include ${user?.exams[0]?.subjects} .
   
 I need these following things in study plan
 1: give tips on how to study
@@ -69,7 +56,6 @@ I need these following things in study plan
 
 Note: ask question in plan text and always ask single question at a time.
   `;
-
   const [conversationList, setConversationList] = React.useState<any>([
     {
       role: 'system',

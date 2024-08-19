@@ -20,6 +20,7 @@ import { RAZAPAY_API_KEY } from '@env';
 import { getPro } from '../../api/adapter/getPro';
 import Gradient from '../../components/Gradient';
 import { useToast } from 'react-native-toast-notifications';
+import { useShowMessage } from '../../utils/showMessage';
 const GetPro = ({ navigation }: { navigation: any }) => {
   const { planType, user } = usePrepContext();
   const [plans, setPlans] = useState([]);
@@ -98,7 +99,7 @@ const GetPro = ({ navigation }: { navigation: any }) => {
         console.log(error);
       });
   };
-
+  const showMessage = useShowMessage();
   const getCoupon = () => {
     if (couponCode !== '') {
       setIsCouponGetting(true);
@@ -111,11 +112,7 @@ const GetPro = ({ navigation }: { navigation: any }) => {
       })
         .then((res: any) => {
           setCoupon(res?.data?.data);
-          console.log(res?.data);
-          toast.show(res?.data?.msg || 'Congratulations coupon applied 🥳', {
-            type: 'default',
-            duration: 3000,
-          });
+          showMessage(res?.data?.msg || 'Congratulations coupon applied 🥳');
         })
         .catch((err) => {
           console.log(err);
@@ -139,7 +136,6 @@ const GetPro = ({ navigation }: { navigation: any }) => {
     return price.toFixed(2);
   };
 
-  console.log(couponCode, 'couponCode');
   return (
     <View style={styles.container}>
       <BackHeader
@@ -155,63 +151,64 @@ const GetPro = ({ navigation }: { navigation: any }) => {
               Supercharge Your Exam Prep {'\n'} with prepIntelli 😍
             </Text>
           </Gradient>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View style={styles.planWrapper}>
-              {plans?.map((item: any, index) => (
-                <View key={index} style={styles.planCardWrapper}>
-                  <TouchableOpacity
-                    onPress={() => selectedPlanSelected(index)}
-                    activeOpacity={0.5}
+          <View style={styles.choosePlanWrapper}>
+            <Text style={styles.choosePlanText}> Choose your plan: </Text>
+          </View>
+          <View style={styles.planWrapper}>
+            {plans?.map((item: any, index) => (
+              <View key={index} style={styles.planCardWrapper}>
+                <TouchableOpacity
+                  onPress={() => selectedPlanSelected(index)}
+                  activeOpacity={0.5}
+                  style={[
+                    styles.planCard,
+                    selectedPlan === index && styles.active,
+                  ]}
+                >
+                  <View style={styles.priceWrapper}>
+                    {/* Capitalize text */}
+                    <Text style={styles.planTypeText}>
+                      {item?.planType.toUpperCase()}
+                    </Text>
+                    <View style={styles.priceContent}>
+                      <Text style={styles.price}>
+                        {item?.price > 0 ? '₹' : ''}
+                        {item?.price}
+                      </Text>
+                      <Text style={styles.actualPrice}>
+                        ₹{item?.actualPrice}
+                      </Text>
+                      <Text style={styles.perMonth}>
+                        {item?.forMonths} Month
+                      </Text>
+                      <Text style={styles.cardDiscount}>
+                        {item?.discount}% discount
+                      </Text>
+                    </View>
+                  </View>
+                  <View
                     style={[
-                      styles.planCard,
+                      styles.perDayWrapper,
                       selectedPlan === index && styles.active,
                     ]}
                   >
-                    <View style={styles.priceWrapper}>
-                      {/* Capitalize text */}
-                      <Text style={styles.planTypeText}>
-                        {item?.planType.toUpperCase()}
+                    <Text style={styles.perDay}>{item?.perDay}</Text>
+                    <View style={styles.coinWrapper}>
+                      <Image style={styles.coinIc} source={Images.coinIc} />
+                      <Text style={styles.coinCount}>
+                        {item?.creditsPerDay} Credits
                       </Text>
-                      <View style={styles.priceContent}>
-                        <Text style={styles.price}>
-                          {item?.price > 0 ? '₹' : ''}
-                          {item?.price}
-                        </Text>
-                        <Text style={styles.actualPrice}>
-                          ₹{item?.actualPrice}
-                        </Text>
-                        <Text style={styles.perMonth}>
-                          {item?.forMonths} Month
-                        </Text>
-                        <Text style={styles.cardDiscount}>
-                          {item?.discount}% discount
-                        </Text>
-                      </View>
                     </View>
-                    <View
-                      style={[
-                        styles.perDayWrapper,
-                        selectedPlan === index && styles.active,
-                      ]}
-                    >
-                      <Text style={styles.perDay}>{item?.perDay}</Text>
-                      <View style={styles.coinWrapper}>
-                        <Image style={styles.coinIc} source={Images.coinIc} />
-                        <Text style={styles.coinCount}>
-                          {item?.creditsPerDay} Credits
-                        </Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                  {planType === item?.planType && (
-                    <View style={styles.currentPlan}>
-                      <Text style={styles.currentPlanText}>Current plan</Text>
-                    </View>
-                  )}
-                </View>
-              ))}
-            </View>
-          </ScrollView>
+                  </View>
+                </TouchableOpacity>
+                {planType === item?.planType && (
+                  <View style={styles.currentPlan}>
+                    <Text style={styles.currentPlanText}>Current plan</Text>
+                  </View>
+                )}
+              </View>
+            ))}
+          </View>
           <View style={styles.couponWrapper}>
             <TextInput
               placeholderTextColor={colors.grey}
@@ -225,6 +222,50 @@ const GetPro = ({ navigation }: { navigation: any }) => {
                 {isCouponGetting ? 'Wait...' : 'Apply'}
               </Text>
             </TouchableOpacity>
+          </View>
+          <View style={styles.choosePlanWrapper}>
+            <Text style={[styles.choosePlanText, { paddingBottom: 10 }]}>
+              Included in All Plans:
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: 10,
+                alignItems: 'center',
+                paddingBottom: 6,
+              }}
+            >
+              <Text>✅</Text>
+              <Text style={{ color: colors.black, fontSize: fontSizes.p2 }}>
+                Personalized Study Plans
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: 10,
+                alignItems: 'center',
+                paddingBottom: 6,
+              }}
+            >
+              <Text>✅</Text>
+              <Text style={{ color: colors.black, fontSize: fontSizes.p2 }}>
+                Specific Question Doubt Resolution
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: 10,
+                alignItems: 'center',
+                paddingBottom: 6,
+              }}
+            >
+              <Text>✅</Text>
+              <Text style={{ color: colors.black, fontSize: fontSizes.p2 }}>
+                Test Question explanation
+              </Text>
+            </View>
           </View>
         </ScrollView>
         {getPlan?.price > 0 && (
@@ -287,6 +328,15 @@ const GetPro = ({ navigation }: { navigation: any }) => {
 
 const getStyle = () => {
   return StyleSheet.create({
+    choosePlanText: {
+      color: colors.black,
+      fontSize: fontSizes.h5,
+      fontWeight: '600',
+    },
+    choosePlanWrapper: {
+      paddingHorizontal: spacing.l,
+      paddingTop: spacing.l,
+    },
     discountCoupon: {
       color: colors.green,
       fontSize: fontSizes.p2,
@@ -454,6 +504,7 @@ const getStyle = () => {
       paddingVertical: spacing.xl,
       flexDirection: 'row',
       gap: 10,
+      width: '100%',
     },
     Titlewrapper: {
       padding: spacing.l,

@@ -1,7 +1,7 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
-import {fontSizes, spacing} from '../../utils/commonStyle';
-import {colors} from '../../utils/commonStyle/colors';
+import { fontSizes, spacing } from '../../utils/commonStyle';
+import { colors } from '../../utils/commonStyle/colors';
 
 interface PropsTypes {
   question?: any;
@@ -12,7 +12,7 @@ interface PropsTypes {
   answers?: any;
   currentQuestionIndex?: number;
 }
-const Questions: React.FC<PropsTypes> = props => {
+const Questions: React.FC<PropsTypes> = (props) => {
   const {
     question,
     currentQuestionNumber,
@@ -49,7 +49,8 @@ const Questions: React.FC<PropsTypes> = props => {
                     ? colors.light_blue
                     : colors.light_grey,
               },
-            ]}>
+            ]}
+          >
             <View
               style={[
                 styles.radioWrapper,
@@ -59,7 +60,8 @@ const Questions: React.FC<PropsTypes> = props => {
                       ? colors.blue
                       : colors.grey,
                 },
-              ]}>
+              ]}
+            >
               <View
                 style={[
                   styles.selected,
@@ -81,7 +83,8 @@ const Questions: React.FC<PropsTypes> = props => {
                       ? colors.blue
                       : colors.black,
                 },
-              ]}>
+              ]}
+            >
               {item}
             </Text>
           </TouchableOpacity>
@@ -119,7 +122,7 @@ const getStyles = () =>
       flexDirection: 'row',
       gap: 6,
     },
-    qNumber: {color: colors.black, fontWeight: '600', fontSize: fontSizes.p2},
+    qNumber: { color: colors.black, fontWeight: '600', fontSize: fontSizes.p2 },
     question: {
       flex: 1,
       color: colors.black,
