@@ -35,7 +35,7 @@ const PostCard: React.FC<PostCardProps> = ({
   const styles = getStyle();
   const [likes, setLikes] = useState(0);
   const [isLike, setIsLike] = useState(false);
-  const { user, setGetPosts } = usePrepContext();
+  const { user, setGetPosts, setMyPosts } = usePrepContext();
   const [isLikeDisable, setIsLikeDisable] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isReportModalVisible, setIsReportModalVisible] = useState(false);
@@ -123,6 +123,12 @@ const PostCard: React.FC<PostCardProps> = ({
         // remove deleted post from getPosts
         setGetPosts &&
           setGetPosts((prevPosts: any) =>
+            prevPosts?.filter((post: any) => post?._id !== item?._id)
+          );
+
+        // remove deleted post from myPosts
+        setMyPosts &&
+          setMyPosts((prevPosts: any) =>
             prevPosts?.filter((post: any) => post?._id !== item?._id)
           );
       })

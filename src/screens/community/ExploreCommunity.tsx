@@ -18,6 +18,7 @@ import { fontSizes, spacing } from '../../utils/commonStyle';
 import Button from '../../components/Button';
 import { useToast } from 'react-native-toast-notifications';
 import { socket } from '../../utils/socketUtil';
+import ThreePulseDots from '../../components/commonComponents/ThreePulseDots';
 const ExploreCommunity = ({ navigation }: { navigation: any }) => {
   const styles = getStyles();
   const { user, getPosts, setGetPosts } = usePrepContext();
@@ -148,9 +149,9 @@ const ExploreCommunity = ({ navigation }: { navigation: any }) => {
         </>
       ) : (
         <>
-          <Text style={{ textAlign: 'center', color: colors.black }}>
-            Loading..
-          </Text>
+          <View style={styles.noPerformanceLoader}>
+            <ThreePulseDots color={colors.blue} />
+          </View>
         </>
       )}
     </SafeAreaView>
@@ -159,6 +160,12 @@ const ExploreCommunity = ({ navigation }: { navigation: any }) => {
 
 const getStyles = () => {
   return StyleSheet.create({
+    noPerformanceLoader: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.lightBg,
+    },
     noPostWrapper: {
       flex: 1,
       flexDirection: 'column',

@@ -12,8 +12,7 @@ import BackHeader from '../../components/BackHeader';
 import { colors } from '../../utils/commonStyle/colors';
 
 const MyPosts = ({ navigation }: { navigation: any }) => {
-  const { user } = usePrepContext();
-  const [mysPosts, setMyPosts] = useState<any | null>(null);
+  const { user, mysPosts, setMyPosts } = usePrepContext();
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchMyPost = () => {
@@ -25,7 +24,7 @@ const MyPosts = ({ navigation }: { navigation: any }) => {
       },
     })
       .then((res: any) => {
-        setMyPosts(res?.data?.data);
+        setMyPosts && setMyPosts(res?.data?.data);
         setRefreshing(false);
         console.log(res?.data?.data, 'my posts');
       })

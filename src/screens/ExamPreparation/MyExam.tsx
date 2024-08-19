@@ -38,10 +38,6 @@ interface PropsType {
 const MyExam: React.FC<PropsType> = ({ navigation }) => {
   const [isLoading, setLoading] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [subject, setSubject] = useState('');
-  const [difficulty, setDifficulty] = useState('');
-  const [chapter, setChapter] = useState('');
-  const [testTime, setTestTime] = useState(0);
   const [isNoCredit, setIsNoCredit] = useState(false);
   const [subjectIndex, setSubjectIndex] = useState<number | null>(null);
   const [roadMap, setRoadMap] = useState<any>(null);
@@ -51,11 +47,75 @@ const MyExam: React.FC<PropsType> = ({ navigation }) => {
     subject: '',
     chapter: '',
     difficulty: '',
+    lang: '',
+    testTime: '',
+  });
+  const [getUserInputs, setGetUserInputs] = useState<any>({
+    subject: '',
+    chapter: '',
+    difficulty: '',
+    lang: '',
+    testTime: 0,
   });
   const toast = useToast();
   const styles = getStyles();
   const { width } = useWindowDimensions();
   const { user, getCredits, planType, setGetCredits } = usePrepContext();
+
+  let error = false;
+  const errorObj: { [key: string]: string } = {};
+  const isValidError = (errType: string) => {
+    if (errType === 'practice') {
+      const fieldsToValidate = [
+        {
+          field: 'subject',
+          validation: (value: string) =>
+            value.trim() === '' ? 'Subject is required' : '',
+        },
+        {
+          field: 'chapter',
+          validation: (value: string) =>
+            value.trim() === '' ? 'Chapter is required' : '',
+        },
+        {
+          field: 'difficulty',
+          validation: (value: string) =>
+            value.trim() === '' ? 'Difficulty is required' : '',
+        },
+        {
+          field: 'lang',
+          validation: (value: string) =>
+            value.trim() === '' ? 'Language is required' : '',
+        },
+      ];
+
+      fieldsToValidate.forEach(({ field, validation }) => {
+        const newErrorMessage = validation(getUserInputs[field] || '');
+        errorObj[field] = newErrorMessage;
+        if (newErrorMessage !== '') {
+          error = true;
+        }
+      });
+    }
+    if (errType === 'doubt') {
+      const fieldsToValidate = [
+        {
+          field: 'subject',
+          validation: (value: string) =>
+            value.trim() === '' ? 'Subject is required' : '',
+        },
+      ];
+
+      fieldsToValidate.forEach(({ field, validation }) => {
+        const newErrorMessage = validation(getUserInputs[field] || '');
+        errorObj[field] = newErrorMessage;
+        if (newErrorMessage !== '') {
+          error = true;
+        }
+      });
+    }
+    return error;
+  };
   const toggleModal = (type: string) => {
     if (type === 'doubt') {
       if (getCredits > 0) {
@@ -71,14 +131,21 @@ const MyExam: React.FC<PropsType> = ({ navigation }) => {
         setIsNoCredit(true);
       }
     }
-    setTestTime(0);
+    setGetUserInputs({
+      ...getUserInputs,
+      testTime: 0,
+    });
   };
 
   // Prompt for question generation
   const prompt = `
 Generate 10 multiple-choice questions (MCQs) in JSON format for the ${
     user?.exams?.[0]?.exam_short_name || ''
-  } exam, ${subject}, focusing on the ${chapter}, difficulty level ${difficulty}.
+  } exam, ${getUserInputs?.subject}, focusing on the ${
+    getUserInputs?.chapter
+  }, difficulty level ${getUserInputs?.difficulty} and language ${
+    getUserInputs?.lang
+  }.
 
 Each question should have the following structure:
 - "q": The question itself.
@@ -91,92 +158,70 @@ Return the JSON output without any additional text.
 
 {
   "exam": ${user?.exams?.[0]?.exam_short_name || ''},
-  "subject": ${subject}",
-  "chapter": ${chapter},
+  "subject": ${getUserInputs?.subject || ''},",
+  "chapter": ${getUserInputs?.chapter || ''},
+  "difficulty": ${getUserInputs?.difficulty || ''},
+  "lang": ${getUserInputs?.lang || ''},
+
 }
 
 `;
 
-  const validations = () => {
-    if (!subject) {
-      setErrorMsg((prev) => ({ ...prev, subject: 'Subject is required' }));
-    } else {
-      setErrorMsg((prev) => ({ ...prev, subject: '' }));
-    }
-
-    if (!chapter) {
-      setErrorMsg((prev) => ({ ...prev, chapter: 'Chapter is required' }));
-    } else {
-      setErrorMsg((prev) => ({ ...prev, chapter: '' }));
-    }
-
-    if (!difficulty) {
-      setErrorMsg((prev) => ({
-        ...prev,
-        difficulty: 'Difficulty is required',
-      }));
-    } else {
-      setErrorMsg((prev) => ({ ...prev, difficulty: '' }));
-    }
-  };
-
   const handlePractice = () => {
     setLoading(true);
-    if (subject && chapter) {
-      questionGeneratorLlm([
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ])
-        .then((res: any) => {
-          setChapter('');
-          setModalVisible(false);
-          setLoading(false);
-          const jsonQuestions = JSON.parse(res.data);
-          if ('questions' in jsonQuestions) {
-            navigation.navigate('Practice test', {
-              generativeAiData: jsonQuestions,
-              subjectName: subject,
-              chapterName: chapter,
-              testTime: testTime,
-              subjectIndex: subjectIndex,
-            });
-          } else {
-            toast.show('Something went wrong 😔', {
-              type: 'danger',
-            });
-          }
-          updateCredit(user?._id, 2)
-            .then((res: any) => {
-              setGetCredits && setGetCredits(res?.data?.remainingCredits);
-            })
-            .then(() => {
-              setLoading(false);
-            })
-            .catch((err: any) => {
-              setLoading(false);
-              console.log(err);
-              toast.show('Something went wrong', {
-                type: 'danger',
-              });
-            });
-        })
-        .catch((err: any) => {
-          setLoading(false);
-          console.log(err);
-          toast.show('Something went wrong', {
+    questionGeneratorLlm([
+      {
+        role: 'user',
+        content: prompt,
+      },
+    ])
+      .then((res: any) => {
+        setModalVisible(false);
+        setLoading(false);
+        const jsonQuestions = JSON.parse(res.data);
+        if ('questions' in jsonQuestions) {
+          navigation.navigate('Practice test', {
+            generativeAiData: jsonQuestions,
+            subjectName: getUserInputs?.subject || '',
+            chapterName: getUserInputs?.chapter || '',
+            testTime: getUserInputs?.testTime || 0,
+            subjectIndex: subjectIndex,
+          });
+        } else {
+          toast.show('Something went wrong 😔', {
             type: 'danger',
           });
+        }
+        updateCredit(user?._id, 2)
+          .then((res: any) => {
+            setGetCredits && setGetCredits(res?.data?.remainingCredits);
+          })
+          .then(() => {
+            setLoading(false);
+          })
+          .catch((err: any) => {
+            setLoading(false);
+            console.log(err);
+            toast.show('Something went wrong', {
+              type: 'danger',
+            });
+          });
+      })
+      .catch((err: any) => {
+        setLoading(false);
+        console.log(err);
+        toast.show('Something went wrong', {
+          type: 'danger',
         });
-    } else {
-      setLoading(false);
-    }
+      });
   };
   const handleStart = () => {
     if (modalType === 'practice') {
-      validations();
-
+      const isErr = isValidError('practice');
+      setErrorMsg({ ...errorMsg, ...errorObj });
+      if (isErr) {
+        return;
+      }
       if (getCredits > 1) {
         handlePractice();
       } else {
@@ -184,11 +229,14 @@ Return the JSON output without any additional text.
       }
     }
     if (modalType === 'doubt') {
-      validations();
-
+      const isErr = isValidError('doubt');
+      setErrorMsg({ ...errorMsg, ...errorObj });
+      if (isErr) {
+        return;
+      }
       setModalVisible(false);
       navigation.navigate('Ask doubt', {
-        subject: subject,
+        subject: getUserInputs?.subject || '',
       });
     }
   };
@@ -246,14 +294,23 @@ Return the JSON output without any additional text.
   };
   useEffect(() => {
     if (isModalVisible) {
-      setSubject('');
-      setChapter('');
+      setGetUserInputs({
+        ...getUserInputs,
+        testTime: 0,
+        difficulty: '',
+        subject: '',
+        chapter: '',
+        lang: '',
+      });
       setErrorMsg({
         subject: '',
         chapter: '',
         difficulty: '',
+        lang: '',
+        testTime: '',
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalVisible]);
   async function extractBodyHTML(htmlString: string) {
     const bodyStart = htmlString.indexOf('<body>');
@@ -393,12 +450,16 @@ Return the JSON output without any additional text.
               <DropDownSelect
                 DropDownLabel="Select subject"
                 data={user?.exams[0]?.subjects || []}
-                rowTextForSelection={(item: any) => item}
-                buttonTextAfterSelection={(item: any) => item}
+                rowTextForSelection={(item: any) =>
+                  item.charAt(0).toUpperCase() + item.slice(1)
+                }
+                buttonTextAfterSelection={(item: any) =>
+                  item.charAt(0).toUpperCase() + item.slice(1)
+                }
                 errorMsg={errorMsg?.subject}
                 onSelect={(item: any, index: number) => {
                   setSubjectIndex(index);
-                  setSubject(item);
+                  setGetUserInputs({ ...getUserInputs, subject: item });
                 }}
               />
               {modalType === 'practice' && (
@@ -408,9 +469,9 @@ Return the JSON output without any additional text.
                     placeholder="Type chapter or unit"
                     errorMsg={errorMsg?.chapter}
                     onChangeText={(text) => {
-                      setChapter(text);
+                      setGetUserInputs({ ...getUserInputs, chapter: text });
                     }}
-                    value={chapter}
+                    value={getUserInputs?.chapter}
                   />
 
                   <DropDownSelect
@@ -431,22 +492,48 @@ Return the JSON output without any additional text.
                     ]}
                     rowTextForSelection={(item: any) => item?.name}
                     buttonTextAfterSelection={(item: any) => item?.name}
-                    errorMsg={errorMsg?.subject}
+                    errorMsg={errorMsg?.difficulty}
                     onSelect={(item: any) => {
-                      setDifficulty(item?.name);
+                      setGetUserInputs({
+                        ...getUserInputs,
+                        difficulty: item?.name,
+                      });
                     }}
                   />
-
+                  <DropDownSelect
+                    DropDownLabel="Select Language"
+                    data={[
+                      {
+                        id: 1,
+                        name: 'English',
+                      },
+                      {
+                        id: 2,
+                        name: 'Hindi',
+                      },
+                    ]}
+                    rowTextForSelection={(item: any) => item?.name}
+                    buttonTextAfterSelection={(item: any) => item?.name}
+                    errorMsg={errorMsg?.lang}
+                    onSelect={(item: any) => {
+                      setGetUserInputs({ ...getUserInputs, lang: item?.name });
+                    }}
+                  />
                   <View>
                     <View style={styles.timeWrapper}>
                       <DropDownSelect
                         DropDownLabel="Select time for 10 questions"
                         defaultButtonText="Select time"
                         data={timeData}
+                        errorMsg={errorMsg?.testTime}
                         rowTextForSelection={(item: any) => item.time}
                         buttonTextAfterSelection={(item: any) => item.time}
                         onSelect={(item: any) => {
-                          setTestTime(item.value);
+                          // setTestTime(item.value);
+                          setGetUserInputs({
+                            ...getUserInputs,
+                            testTime: item?.value,
+                          });
                         }}
                       />
                     </View>

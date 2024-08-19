@@ -26,6 +26,8 @@ interface PrepContextProps {
   planType?: any;
   getPosts?: any;
   setGetPosts?: (value: any) => void;
+  mysPosts?: any;
+  setMyPosts?: (value: any) => void;
 }
 const PrepContext = React.createContext<PrepContextProps>({});
 
@@ -50,6 +52,7 @@ const GlobalState: React.FC<GlobalStateProps> = ({
   const [getCredits, setGetCredits] = useState<any>(0);
   const [getPosts, setGetPosts] = useState<any | null>([]);
   const [planType, setPlanType] = useState<any>('');
+  const [mysPosts, setMyPosts] = useState<any | null>(null);
   const [orientation, setOrientation] = useState<'PORTRAIT' | 'LANDSCAPE'>(
     'PORTRAIT'
   );
@@ -91,6 +94,8 @@ const GlobalState: React.FC<GlobalStateProps> = ({
         setPlanType,
         getPosts,
         setGetPosts,
+        mysPosts,
+        setMyPosts,
       }}
     >
       {children}
