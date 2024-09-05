@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   BackHandler,
+  Linking,
 } from 'react-native';
 import React, { useCallback, useReducer, useState } from 'react';
 import { colors } from '../../utils/commonStyle/colors';
@@ -160,6 +161,15 @@ const LoginScreen: React.FC<Props> = (props) => {
       };
     }, [showMessage])
   );
+
+  const openLink = async (url: string) => {
+    try {
+      await Linking.openURL(url);
+    } catch (error) {
+      console.error('Error opening URL:', error);
+      showMessage('Something went wrong');
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -226,8 +236,18 @@ const LoginScreen: React.FC<Props> = (props) => {
         <Text style={styles.t_and_c}>
           By continuing, I accept PrepIntelli's
         </Text>
-        <TouchableOpacity style={styles.btnLink}>
-          <Text style={styles.linkText}>Terms of use</Text>
+        <TouchableOpacity
+          onPress={() => openLink('https://prepintelli.com/terms-conditions')}
+          style={styles.btnLink}
+        >
+          <Text style={styles.linkText}>Terms & Conditions</Text>
+        </TouchableOpacity>
+        <Text style={styles.t_and_c}>and</Text>
+        <TouchableOpacity
+          onPress={() => openLink('https://prepintelli.com/privacy-policy')}
+          style={styles.btnLink}
+        >
+          <Text style={styles.linkText}>Privacy Policy</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -253,7 +273,7 @@ const getStyles = () =>
       flexDirection: 'row',
       justifyContent: 'center',
       padding: spacing.l,
-      gap: 2,
+      gap: 4,
       flexWrap: 'wrap',
     },
     linkText: {

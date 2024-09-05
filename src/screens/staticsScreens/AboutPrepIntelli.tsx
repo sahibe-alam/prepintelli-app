@@ -14,16 +14,18 @@ import { fontSizes, spacing } from '../../utils/commonStyle';
 import BackHeader from '../../components/BackHeader';
 import Images from '../../resources/Images';
 import DeviceInfo from 'react-native-device-info';
+import { useShowMessage } from '../../utils/showMessage';
 
 const AboutPrepIntelli = ({ navigation }: { navigation: any }) => {
   const styles = getStyle();
   const appVersion = DeviceInfo.getVersion();
-
+  const showMessage = useShowMessage();
   const openLink = async (url: string) => {
     try {
       await Linking.openURL(url);
     } catch (error) {
       console.error('Error opening URL:', error);
+      showMessage('Something went wrong');
     }
   };
   return (
@@ -68,39 +70,64 @@ const AboutPrepIntelli = ({ navigation }: { navigation: any }) => {
               <View style={styles.socialIcWrapper}>
                 <TouchableOpacity
                   style={styles.socialIc}
-                  onPress={() => openLink('https://www.facebook.com')}
+                  onPress={() =>
+                    openLink('https://www.facebook.com/prepintelli')
+                  }
                 >
                   <Image style={styles.socialIcon} source={Images.fbIc} />
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.socialIc}
-                  onPress={() => openLink('https://www.instagram.com')}
+                  onPress={() =>
+                    openLink('https://www.instagram.com/prepintelli')
+                  }
                 >
                   <Image style={styles.socialIcon} source={Images.igIc} />
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.socialIc}
-                  onPress={() => openLink('https://www.linkedin.com')}
+                  onPress={() =>
+                    openLink('https://www.linkedin.com/company/prepintelli')
+                  }
                 >
                   <Image style={styles.socialIcon} source={Images.linkedInIc} />
                 </TouchableOpacity>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={styles.socialIc}
-                  onPress={() => openLink('https://www.twitter.com')}
+                  onPress={() =>
+                    openLink('https://www.twitter.com/prepintelli')
+                  }
                 >
                   <Image style={styles.socialIcon} source={Images.twitterIc} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
               <Text style={styles.appVersionText}>
                 App Version: {appVersion}
               </Text>
             </View>
           </View>
-          <Text style={styles.termsText}>
-            By using PrepIntelli you agree to our{' '}
-            <Text style={{ fontWeight: 'bold' }}>Terms</Text> and{' '}
-            <Text style={{ fontWeight: 'bold' }}>Privacy Policy</Text>.
-          </Text>
+          <View style={styles.termsWrapper}>
+            <Text style={styles.termsText}>
+              By using PrepIntelli you agree to our{' '}
+            </Text>
+            <TouchableOpacity
+              onPress={() =>
+                openLink('https://prepintelli.com/terms-conditions')
+              }
+            >
+              <Text style={{ fontWeight: 'bold', color: colors.blue }}>
+                Terms & Conditions
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.termsText}>and</Text>
+            <TouchableOpacity
+              onPress={() => openLink('https://prepintelli.com/privacy-policy')}
+            >
+              <Text style={{ fontWeight: 'bold', color: colors.blue }}>
+                Privacy Policy
+              </Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </SafeAreaView>
     </View>
@@ -109,6 +136,12 @@ const AboutPrepIntelli = ({ navigation }: { navigation: any }) => {
 
 const getStyle = () =>
   StyleSheet.create({
+    termsWrapper: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      gap: 2,
+      flexWrap: 'wrap',
+    },
     visitBtnText: {
       color: colors.blue,
       fontSize: fontSizes.p3,

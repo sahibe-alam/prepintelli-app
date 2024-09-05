@@ -1,10 +1,8 @@
 import {
   FlatList,
-  Image,
   RefreshControl,
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -14,11 +12,10 @@ import PostWidgets from '../../components/community/PostWidgets';
 import PostCard from '../../components/community/PostCard';
 import { usePrepContext } from '../../contexts/GlobalState';
 import { makeRequest } from '../../api/apiClients';
-import { fontSizes, spacing } from '../../utils/commonStyle';
-import Button from '../../components/Button';
 import { useToast } from 'react-native-toast-notifications';
 import { socket } from '../../utils/socketUtil';
 import ThreePulseDots from '../../components/commonComponents/ThreePulseDots';
+import NoPost from '../../components/commonComponents/NoPost';
 const ExploreCommunity = ({ navigation }: { navigation: any }) => {
   const styles = getStyles();
   const { user, getPosts, setGetPosts } = usePrepContext();
@@ -120,31 +117,7 @@ const ExploreCommunity = ({ navigation }: { navigation: any }) => {
               }
             />
           ) : (
-            <View style={styles.noPostWrapper}>
-              <View>
-                <View style={styles.imgWrapper}>
-                  <Image
-                    style={styles.noPostImg}
-                    source={{
-                      uri: 'https://res.cloudinary.com/prepintelli/image/upload/v1722527652/assets/jdi0dfp7ztji8khmmnyw.png',
-                    }}
-                  />
-                </View>
-                <View style={styles.textDesc}>
-                  <Text style={styles.heading}>Community Feed is Empty 📭</Text>
-                  <Text style={styles.desc}>
-                    Be the first to share your knowledge and connect with
-                    others! 🌟
-                  </Text>
-                  <Button
-                    title="Create Post"
-                    onPress={() =>
-                      navigation.navigate('PostScreen', { image: '' })
-                    }
-                  />
-                </View>
-              </View>
-            </View>
+            <NoPost navigation={navigation} />
           )}
         </>
       ) : (
@@ -172,28 +145,7 @@ const getStyles = () => {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    textDesc: {
-      paddingHorizontal: spacing.l,
-    },
-    desc: {
-      textAlign: 'center',
-      paddingVertical: 10,
-      fontSize: fontSizes.p2,
-      paddingBottom: 20,
-      color: colors.black,
-    },
-    heading: {
-      fontSize: fontSizes.h5,
-      fontWeight: '500',
-      paddingTop: 20,
-      textAlign: 'center',
-      color: colors.black,
-    },
-    noPostImg: {
-      width: '100%',
-      height: '100%',
-      resizeMode: 'contain',
-    },
+
     imgWrapper: {
       aspectRatio: 1 / 0.5,
       width: '100%',
