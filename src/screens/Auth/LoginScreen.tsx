@@ -224,7 +224,7 @@ const LoginScreen: React.FC<Props> = (props) => {
               </View>
 
               <Button
-                title="Create new account"
+                title="Create New Account"
                 outline={true}
                 onPress={() => navigation.navigate('Sign Up')}
               />

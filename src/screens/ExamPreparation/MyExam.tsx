@@ -75,7 +75,7 @@ const MyExam: React.FC<PropsType> = ({ navigation }) => {
         {
           field: 'chapter',
           validation: (value: string) =>
-            value.trim() === '' ? 'Chapter is required' : '',
+            value.trim() === '' ? 'Chapter or unit is required' : '',
         },
         {
           field: 'difficulty',
@@ -651,6 +651,7 @@ const getStyles = () =>
       fontWeight: '600',
       fontSize: fontSizes.p3,
       textAlign: 'center',
+      textTransform: 'capitalize',
     },
     cardImg: {
       height: 60,

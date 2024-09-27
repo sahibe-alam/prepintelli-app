@@ -28,7 +28,8 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
   const [isUpdateModalVisible, setUpdateModalVisible] = React.useState(false);
   const [appUpdate, setAppUpdate] = React.useState<any>();
   const appVersion = DeviceInfo.getVersion();
-  const currentVersion = Number(appVersion).toFixed(1);
+  const currentVersion = Number(appVersion);
+  console.log(currentVersion, 'currentVersion');
   const typeExam = [
     {
       title: 'Competitive Exam',
@@ -74,20 +75,22 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
     makeRequest({
       method: 'GET',
       url: '/app-update',
-    }).then((res: any) => {
-      if (res.data.length > 0) {
-        // get last object off array
-        setAppUpdate(res.data[res.data.length - 1]);
-        const newVersion = Number(
-          res.data[res?.data?.length - 1]?.appVersion
-        ).toFixed(1);
-        if (newVersion > currentVersion) {
-          setUpdateModalVisible(true);
+    })
+      .then((res: any) => {
+        if (res?.data.success) {
+          const versionInNumber = Number(res?.data?.data?.appVersion);
+          setAppUpdate(res?.data?.data);
+          if (currentVersion < versionInNumber) {
+            setUpdateModalVisible(true);
+          }
+        } else {
+          setUpdateModalVisible(false);
         }
-      }
-    });
+      })
+      .catch((err: any) => {
+        console.log(err.message, 'err hai');
+      });
   }, [currentVersion]);
-
   const requestMultipleHelper = async () => {
     const granted = await PermissionsAndroid.requestMultiple([
       PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
@@ -212,6 +215,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.h4,
     textAlign: 'center',
     color: colors.black,
+    textTransform: 'capitalize',
   },
   typeWrapper: {
     marginTop: spacing.m,

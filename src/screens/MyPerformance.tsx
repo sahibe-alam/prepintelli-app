@@ -79,6 +79,7 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
   const chartConfig = {
     backgroundGradientFrom: colors.white,
     backgroundGradientTo: colors.white,
+
     labelColor: () => colors.black,
     propsForDots: {
       r: '2',
@@ -88,6 +89,10 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
     color: () => colors.light_purple,
     strokeWidth: 2,
     useShadowColorFromDataset: false,
+    propsForLabels: {
+      fontSize: 9, // Adjust the font size for the x and y axis labels
+    },
+    paddingLeft: 0,
   };
 
   useFocusEffect(
@@ -154,8 +159,8 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
                   <LineChart
                     data={data}
                     style={{
-                      backgroundColor: 'blue',
-                      margin: 10,
+                      margin: 8,
+
                       borderRadius: 10,
                       marginVertical: 20,
                     }}
@@ -163,7 +168,7 @@ const MyPerformance: React.FC<PropsType> = ({ navigation }) => {
                     formatYLabel={(value) => value.slice(0, -3)}
                     width={screenWidth}
                     segments={6}
-                    height={220}
+                    height={200}
                     chartConfig={chartConfig}
                     bezier
                   />
@@ -315,6 +320,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.p2,
     color: colors.purple,
     paddingBottom: 6,
+    textTransform: 'capitalize',
   },
   subjectResult: {
     padding: spacing.m,

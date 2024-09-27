@@ -81,5 +81,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     textAlign: 'center',
     color: colors.white,
+    textTransform: 'capitalize',
   },
 });

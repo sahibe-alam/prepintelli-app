@@ -268,6 +268,7 @@ const SignUp: React.FC<Props> = (props) => {
             placeholder="Enter mobile number"
           />
           <DateSelector
+            label="Date of birth*"
             errorMsg={errorMessage.dob}
             onDateChange={(date) => {
               const formattedDate = date.toString();

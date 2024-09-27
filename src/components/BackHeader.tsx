@@ -100,7 +100,7 @@ const getStyles = () =>
       alignItems: 'flex-end',
     },
     backBtn: {
-      padding: 10,
+      padding: 12,
       paddingLeft: 0,
     },
     backTitle: {

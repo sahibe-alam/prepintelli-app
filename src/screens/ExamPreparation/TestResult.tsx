@@ -160,6 +160,7 @@ const getStyle = () =>
     cardText: {
       fontSize: fontSizes.p3,
       color: colors.purple,
+      textTransform: 'capitalize',
     },
     boldText: {
       fontWeight: '600',

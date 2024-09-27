@@ -128,7 +128,7 @@ const CreateNewPassword: React.FC<Props> = (props) => {
           />
 
           <View style={styles.btnWrapper}>
-            <Button title="Create" onPress={loginHandler} />
+            <Button title="Create New Password" onPress={loginHandler} />
           </View>
         </View>
       </ScrollView>
