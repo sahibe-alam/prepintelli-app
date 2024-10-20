@@ -1,3 +1,4 @@
+// @ts-nocheck
 import axios, { AxiosRequestConfig } from 'axios';
 import { LLM_API_KEY, BACKEND_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';

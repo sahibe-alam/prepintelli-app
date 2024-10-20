@@ -10,7 +10,6 @@ import Images from '../resources/Images';
 
 const Header = ({ navigation }: { navigation: any }) => {
   const { user, getCredits, setGetCredits, setPlanType } = usePrepContext();
-  console.log(getCredits);
   useFocusEffect(
     useCallback(() => {
       makeRequest({
@@ -20,7 +19,6 @@ const Header = ({ navigation }: { navigation: any }) => {
           userId: user?._id,
         },
       }).then((res: any) => {
-        console.log(res?.data?.remainingCredits);
         setGetCredits && setGetCredits(res?.data?.planDetails?.dailyCredits);
         setPlanType && setPlanType(res?.data?.planDetails?.plan);
       });

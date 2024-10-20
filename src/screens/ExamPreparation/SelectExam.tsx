@@ -10,7 +10,6 @@ import { makeRequest } from '../../api/apiClients';
 import { usePrepContext } from '../../contexts/GlobalState';
 import { getUserID } from '../../utils/commonServices';
 import { getUserDetails } from '../../api/adapter/getUserDetails';
-import { useToast } from 'react-native-toast-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useShowMessage } from '../../utils/showMessage';
 interface PropsType {
@@ -39,18 +38,8 @@ function reducer(state: any, action: any) {
   }
 }
 const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
-  const {
-    title,
-    type,
-    actionType,
-    examDetailsUrl,
-    dropdownLabel,
-    classAction,
-    dropdownLabel2,
-    inputLabel,
-  } = route.params;
+  const { actionType, title, dropdownLabel, inputLabel } = route.params;
   const [examName, setExamName] = React.useState(null);
-  const [classes, setClasses] = React.useState(null);
   const { user, setUser } = usePrepContext();
   const [isLoading, setIsLoading] = React.useState(false);
   const [targetExam, dispatch] = React.useReducer(reducer, initialState);
@@ -58,9 +47,9 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
   const getExamDetails = () => {
     makeRequest({
       method: 'POST',
-      url: examDetailsUrl,
+      url: '/combinedCompetitiveExamAndInsertSubject',
       data: {
-        action: actionType,
+        action: 'fetchCompetitiveExams',
       },
     })
       .then((response: any) => {
@@ -70,27 +59,9 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
         console.log(error);
       });
   };
-  const getClasses = () => {
-    makeRequest({
-      method: 'POST',
-      url: examDetailsUrl,
-      data: {
-        action: classAction,
-      },
-    })
-      .then((response: any) => {
-        setClasses(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+
   useEffect(() => {
     getExamDetails();
-    if (classAction === 'fetchClass') {
-      getClasses();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   function removeNulls(array: any) {
     return array.filter((element: any) => element !== null);
@@ -99,7 +70,7 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
     setIsLoading(true);
     makeRequest({
       method: 'POST',
-      url: examDetailsUrl,
+      url: '/combinedCompetitiveExamAndInsertSubject',
       data: {
         ...examData,
       },
@@ -110,7 +81,7 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
             getUserDetails(id).then((res: any) => {
               setIsLoading(false);
               setUser && setUser(res.data[0]);
-              navigation.navigate('Exam Zone');
+              navigation.navigate('Home');
             });
           });
         }
@@ -120,12 +91,14 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
         console.log(error, 'SelectExam.tsx');
       });
   };
-  const toast = useToast();
   const showMessage = useShowMessage();
   console.log(targetExam?.subjects, 'targetExam');
   return (
     <SafeAreaView style={styles.container}>
-      <BackHeader onPress={() => navigation.goBack()} title={title} />
+      <BackHeader
+        onPress={() => navigation.goBack()}
+        title={title || 'Target Exam'}
+      />
       <ScrollView
         contentContainerStyle={styles.scrollWrapper}
         centerContent={true}
@@ -137,11 +110,7 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
               onSelect={(item: any) => {
                 dispatch({ type: 'examName', payload: item });
               }}
-              rowTextForSelection={(item: any) =>
-                actionType === 'fetchBoard'
-                  ? item?.boardShortName
-                  : item?.exam_short_name
-              }
+              rowTextForSelection={(item: any) => item?.exam_short_name}
               buttonTextAfterSelection={(selectedItem: any) =>
                 actionType === 'fetchBoard'
                   ? selectedItem?.boardShortName
@@ -150,20 +119,6 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
               data={examName}
               DropDownLabel={dropdownLabel}
             />
-            {type === 'acdmc' && (
-              <DropDownSelect
-                isSearch={true}
-                rowTextForSelection={(item: any) => item.classname}
-                buttonTextAfterSelection={(selectedItem: any) =>
-                  selectedItem?.classname
-                }
-                data={classes}
-                DropDownLabel={dropdownLabel2}
-                onSelect={(item: any) => {
-                  dispatch({ type: 'class', payload: item });
-                }}
-              />
-            )}
             <SubjectSelector
               getSubjects={(targetExam) => {
                 const sub = targetExam.map((subject) =>
@@ -189,39 +144,16 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
               onPress={async () => {
                 // local storage roadMap await AsyncStorage.getItem('roadMap')
                 await AsyncStorage.removeItem('roadMap');
-                if (type === 'clg' || type === 'comptv') {
-                  if (targetExam?.subjects && targetExam?.examName?._id) {
-                    insertExam({
-                      action: 'insertSubject',
-                      subjects: removeNulls(targetExam?.subjects),
-                      examid: targetExam.examName?._id,
-                      userid: user?._id,
-                      examId: targetExam?.examName?._id,
-                    });
-                  } else {
-                    // toast.show('Please select exam and subject', {
-                    //   type: 'default',
-                    //   duration: 2000,
-                    // });
-                    showMessage('Please select exam and subject');
-                  }
-                }
-                if (type === 'acdmc') {
-                  if (targetExam?.subjects && targetExam?.class?._id) {
-                    insertExam({
-                      action: 'insertSubject',
-                      academicsubjects: targetExam?.subjects,
-                      boardid: targetExam.examName?._id,
-                      classid: targetExam.class?._id,
-                      userid: user?._id,
-                      examId: targetExam?.class?._id,
-                    });
-                  } else {
-                    toast.show('Please select exam, class and subject', {
-                      type: 'default',
-                      duration: 2000,
-                    });
-                  }
+                if (targetExam?.subjects && targetExam?.examName?._id) {
+                  insertExam({
+                    action: 'insertSubject',
+                    subjects: removeNulls(targetExam?.subjects),
+                    examid: targetExam.examName?._id,
+                    userid: user?._id,
+                    examId: targetExam?.examName?._id,
+                  });
+                } else {
+                  showMessage('Please select exam and subject');
                 }
               }}
             />

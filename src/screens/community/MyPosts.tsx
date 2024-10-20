@@ -28,9 +28,7 @@ const MyPosts = ({ navigation }: { navigation: any }) => {
     })
       .then((res: any) => {
         setMyPosts && setMyPosts(res?.data?.data || []);
-        console.log(res?.data?.data);
         setRefreshing(false);
-        console.log(res?.data?.data, 'my posts');
       })
       .catch((err: any) => {
         console.log(err.message, 'err hai');

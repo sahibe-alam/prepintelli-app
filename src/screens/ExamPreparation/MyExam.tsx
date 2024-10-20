@@ -11,7 +11,6 @@ import {
 import RenderHtml from 'react-native-render-html';
 
 import React, { useEffect, useState } from 'react';
-import BackHeader from '../../components/BackHeader';
 import { colors } from '../../utils/commonStyle/colors';
 import { fontSizes, spacing } from '../../utils/commonStyle';
 import AccordionItem from '../../components/AccordionItem';
@@ -32,8 +31,8 @@ import Images from '../../resources/Images';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface PropsType {
-  navigation: any;
-  route: any;
+  navigation?: any;
+  route?: any;
 }
 const MyExam: React.FC<PropsType> = ({ navigation }) => {
   const [isLoading, setLoading] = useState(false);
@@ -338,10 +337,10 @@ Return the JSON output without any additional text.
     <>
       {user?.exams.length > 0 ? (
         <SafeAreaView style={styles.conatainer}>
-          <BackHeader
+          {/* <BackHeader
             onPress={() => navigation.navigate('Home')}
             title={'My exam'}
-          />
+          /> */}
           <Text style={styles.title}>
             Prepare for{' '}
             {user?.exams[0]?.exam_short_name || user?.exams[0].classname} exam
@@ -361,21 +360,6 @@ Return the JSON output without any additional text.
                 source={require('../../assets/img/practice_img.png')}
               />
               <Text style={styles.cardTitle}>Practice test</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                setModalType('doubt');
-                toggleModal('doubt');
-                // navigation.navigate('Ask doubt');
-              }}
-              activeOpacity={0.8}
-              style={styles.card}
-            >
-              <Image
-                style={styles.cardImg}
-                source={require('../../assets/img/ask_img.png')}
-              />
-              <Text style={styles.cardTitle}>Ask doubt?</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
@@ -405,8 +389,11 @@ Return the JSON output without any additional text.
               <Image style={styles.cardImg} source={Images.communityImg} />
               <View style={styles.cardTitleWrapper}>
                 <Text style={styles.cardTitle}>
-                  {user?.exams[0]?.exam_short_name || user?.exams[0].classname}
-                  {'\n'}community
+                  <Text style={{ textTransform: 'uppercase' }}>
+                    {user?.exams[0]?.exam_short_name ||
+                      user?.exams[0].classname}
+                  </Text>
+                  &nbsp;community
                 </Text>
               </View>
             </TouchableOpacity>
@@ -650,7 +637,7 @@ const getStyles = () =>
       color: colors.blue,
       fontWeight: '600',
       fontSize: fontSizes.p3,
-      textAlign: 'center',
+      textAlign: 'left',
       textTransform: 'capitalize',
     },
     cardImg: {
@@ -666,8 +653,10 @@ const getStyles = () =>
       backgroundColor: colors.light_blue,
       padding: 4,
       shadowColor: '#000',
+      flex: 1,
       alignItems: 'center',
-      width: '48%',
+      justifyContent: 'flex-start',
+      minWidth: '40%',
       // shadowOffset: {
       //   width: 0,
       //   height: 2,
@@ -679,6 +668,7 @@ const getStyles = () =>
       flexDirection: 'row',
       paddingTop: spacing.l,
       flexWrap: 'wrap',
+      gap: 10,
       justifyContent: 'space-between',
       rowGap: spacing.l,
       paddingHorizontal: spacing.l,
@@ -691,7 +681,6 @@ const getStyles = () =>
       marginTop: spacing.l,
     },
     conatainer: {
-      flex: 1,
       backgroundColor: colors.lightBg,
     },
   });

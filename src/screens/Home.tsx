@@ -7,6 +7,8 @@ import {
   BackHandler,
   Platform,
   PermissionsAndroid,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
 import React, { useCallback, useEffect } from 'react';
 import { colors } from '../utils/commonStyle/colors';
@@ -20,6 +22,10 @@ import DeviceInfo from 'react-native-device-info';
 import { useFocusEffect } from '@react-navigation/native';
 import { useShowMessage } from '../utils/showMessage';
 import { createDoubleBackHandler } from '../utils/backButtonHandler';
+import { usePrepContext } from '../contexts/GlobalState';
+import MyExam from './ExamPreparation/MyExam';
+import Gradient from '../components/Gradient';
+import Images from '../resources/Images';
 interface PropsType {
   navigation?: any;
   route?: any;
@@ -29,35 +35,15 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
   const [appUpdate, setAppUpdate] = React.useState<any>();
   const appVersion = DeviceInfo.getVersion();
   const currentVersion = Number(appVersion);
-  console.log(currentVersion, 'currentVersion');
-  const typeExam = [
-    {
-      title: 'Competitive Exam',
-      type: 'comptv',
-      dropdownLabel: 'Select your target exam?*',
-      inputLabel: 'Type your exam subjects*',
-      examDetailsUrl: '/combinedCompetitiveExamAndInsertSubject',
-      actionType: 'fetchCompetitiveExams',
-    },
-    {
-      title: 'College Exam',
-      type: 'clg',
-      dropdownLabel: 'Select your course?*',
-      inputLabel: 'Type your exam subjects*',
-      examDetailsUrl: '/combinedCollegeExamAndInsertSubject',
-      actionType: 'fetchCollegeExams',
-    },
-    {
-      title: 'Academics Exam',
-      type: 'acdmc',
-      dropdownLabel: 'Select board*',
-      dropdownLabel2: 'Select class*',
-      inputLabel: 'Type your exam subjects*',
-      examDetailsUrl: 'combinedAcademicExamAndInsertSubject',
-      actionType: 'fetchBoard',
-      classAction: 'fetchClass',
-    },
-  ];
+  const { user } = usePrepContext();
+  const typeExam = {
+    title: 'Choose Exam',
+    type: 'comptv',
+    dropdownLabel: 'Select your target exam?*',
+    inputLabel: 'Type your exam subjects*',
+    examDetailsUrl: '/combinedCompetitiveExamAndInsertSubject',
+    actionType: 'fetchCompetitiveExams',
+  };
   const showMessage = useShowMessage();
   useFocusEffect(
     useCallback(() => {
@@ -79,6 +65,7 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
       .then((res: any) => {
         if (res?.data.success) {
           const versionInNumber = Number(res?.data?.data?.appVersion);
+          console.log(versionInNumber);
           setAppUpdate(res?.data?.data);
           if (currentVersion < versionInNumber) {
             setUpdateModalVisible(true);
@@ -93,16 +80,13 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
   }, [currentVersion]);
   const requestMultipleHelper = async () => {
     const granted = await PermissionsAndroid.requestMultiple([
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-      PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      // ask mic permission
-      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, // required on Android 10 and below for saving files
+      PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES, // if handling images on Android 13+
     ]);
 
     return granted;
   };
+
   useEffect(() => {
     if (Platform.OS === 'android') {
       setTimeout(() => {
@@ -117,39 +101,47 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
           <View style={styles.sliderWrapper}>
             <HomeSlider />
           </View>
-
-          <Text style={styles.modulesHeading}>Target your exam, With AI </Text>
-          {/* <View style={styles.moduleWrapper}>
-          <ModuleCard
-            onPress={() =>
-              navigation.navigate('Create Exam', {
-                itemId: 86,
-                title: 'Target your exam with ai 🔥',
-              })
-            }
-            cardTitle="Exam preparation"
-            moduleType="exam"
-          />
-          <ModuleCard
-            onPress={() =>
-              navigation.navigate('Create Learn Lang', {
-                itemId: 86,
-                title: 'Target learning language with ai 🔥',
-              })
-            }
-            cardTitle="Language learning"
-            moduleType="lang"
-          />
-        </View> */}
           <View style={styles.typeWrapper}>
-            {(typeExam as Array<any>).map((item, index) => (
-              <ExamType
-                onPress={() => navigation.navigate('Select Exam', item)}
-                key={index}
-                title={item.title}
-                type={item.type}
-              />
-            ))}
+            {user?.exams.length > 0 ? (
+              <>
+                <Gradient style={styles.modulesHeadingWrapper}>
+                  <View style={styles.modulesHeadingContainer}>
+                    <Text style={styles.targetExam}>Targeted exam: </Text>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate('Select Exam', {
+                          title: 'Target new exam',
+                          dropdownLabel: 'Select new exam?*',
+                        })
+                      }
+                      style={styles.selectedExam}
+                    >
+                      <Image style={styles.examIc} source={Images.academicIc} />
+                      <Text style={styles.modulesHeading}>
+                        {user?.exams[0]?.exam_short_name}
+                      </Text>
+                      <Image
+                        style={styles.downArrow}
+                        source={Images.downArrow}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </Gradient>
+
+                <MyExam navigation={navigation} />
+              </>
+            ) : (
+              <>
+                <Text style={styles.noExamHeading}>
+                  Target Competitive exam, With AI ✨
+                </Text>
+                <ExamType
+                  onPress={() => navigation.navigate('Select Exam', typeExam)}
+                  title={typeExam.title}
+                  type={typeExam.type}
+                />
+              </>
+            )}
           </View>
         </ScrollView>
       </View>
@@ -172,7 +164,7 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
             <Button
               onPress={() => {
                 Linking.openURL(appUpdate?.appLink).catch((err) =>
-                  console.error("Couldn't load page", err)
+                  console.error('An error occurred', err)
                 );
               }}
               title="Update Now"
@@ -185,6 +177,48 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  noExamHeading: {
+    paddingHorizontal: spacing.l,
+    color: colors.black,
+    paddingBottom: spacing.m,
+    marginTop: spacing.l,
+    fontSize: fontSizes.p,
+    fontWeight: '500',
+  },
+  examIc: {
+    width: 30,
+    height: 30,
+    objectFit: 'contain',
+  },
+  selectedExam: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  downArrow: {
+    width: 20,
+    height: 20,
+    objectFit: 'contain',
+    transform: [{ rotate: '-90deg' }],
+  },
+  targetExam: {
+    color: colors.black,
+    fontSize: fontSizes.p,
+  },
+  modulesHeadingContainer: {
+    padding: spacing.m,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.lightBg,
+    borderRadius: 9,
+  },
+  modulesHeadingWrapper: {
+    overflow: 'hidden',
+    marginHorizontal: spacing.l,
+    backgroundColor: colors.light_grey,
+    padding: 1,
+    borderRadius: 10,
+  },
   updateBtn: {
     marginTop: 20,
   },
@@ -222,7 +256,6 @@ const styles = StyleSheet.create({
   },
   sliderWrapper: {
     marginTop: 4,
-    marginBottom: spacing.xl,
   },
   moduleWrapper: {
     paddingHorizontal: spacing.l,

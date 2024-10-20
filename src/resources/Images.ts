@@ -28,7 +28,11 @@ const sentIcon = require('../assets/img/msg_sent_ic.png');
 const shareIcon = require('../assets/img/share_icon.png');
 const trashIcon = require('../assets/img/trashIcon.png');
 const edit = require('../assets/img/edit.png');
+const academicIc = require('../assets/img/college_icon.png');
+const downArrow = require('../assets/img/header_back_arrow.png');
 export default {
+  downArrow,
+  academicIc,
   solidThumb,
   edit,
   shareIcon,
