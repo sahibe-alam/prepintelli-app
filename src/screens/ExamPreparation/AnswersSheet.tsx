@@ -41,7 +41,7 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
 
   const [isLoading, setLoading] = useState(false);
   const scrollViewRef = useRef<ScrollView | null>(null);
-  const { user, getCredits, setGetCredits, planType } = usePrepContext();
+  const { user, getCredits, setGetCredits } = usePrepContext();
   const [conversationList, setConversationList] = React.useState<any>([]);
   const toggleModal = (question?: any, questionIndex?: number) => {
     setModalVisible(!isModalVisible);
@@ -198,11 +198,7 @@ const AnswersSheet: React.FC<PropsType> = (props: PropsType) => {
                 <TouchableOpacity
                   style={styles.doubtBtn}
                   onPress={() => {
-                    if (planType !== 'free') {
-                      askDoubtHandler(item, index);
-                    } else {
-                      setIsNoProPlanModalVisible(true);
-                    }
+                    askDoubtHandler(item, index);
                   }}
                 >
                   <Text style={styles.doubtBtnText}>Ask doubt🤔</Text>

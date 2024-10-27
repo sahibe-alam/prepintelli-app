@@ -26,7 +26,6 @@ const PracticeTest: React.FC<PropsType> = (props) => {
   const { navigation, route } = props;
   const { generativeAiData, subjectName, chapterName, testTime, subjectIndex } =
     route.params;
-  console.log(subjectIndex, 'subjectIndex');
   const styles = getStyles();
   const [answers, setAnswers] = useState<number[]>([]);
   const { user } = usePrepContext();
