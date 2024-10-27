@@ -1,6 +1,6 @@
 import { View, StyleSheet, SafeAreaView, ScrollView, Text } from 'react-native';
 import React, { useEffect } from 'react';
-import DropDownSelect from '../../components/formComponents/DropDownSelect';
+// import DropDownSelect from '../../components/formComponents/DropDownSelect';
 import { colors } from '../../utils/commonStyle/colors';
 import BackHeader from '../../components/BackHeader';
 import { spacing } from '../../utils/commonStyle';
@@ -12,6 +12,8 @@ import { getUserID } from '../../utils/commonServices';
 import { getUserDetails } from '../../api/adapter/getUserDetails';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useShowMessage } from '../../utils/showMessage';
+import RenderExams from '../../components/examPrepComponents/RenderExams';
+import CustomModal from '../../components/commonComponents/CustomModal';
 interface PropsType {
   navigation: any;
   route: any;
@@ -38,11 +40,12 @@ function reducer(state: any, action: any) {
   }
 }
 const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
-  const { actionType, title, dropdownLabel, inputLabel } = route.params;
+  const { title, inputLabel } = route.params;
   const [examName, setExamName] = React.useState(null);
   const { user, setUser } = usePrepContext();
   const [isLoading, setIsLoading] = React.useState(false);
   const [targetExam, dispatch] = React.useReducer(reducer, initialState);
+  const [isSubjectsModal, setIsSubjectsModal] = React.useState(false);
   const styles = getStyles();
   const getExamDetails = () => {
     makeRequest({
@@ -92,20 +95,31 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
       });
   };
   const showMessage = useShowMessage();
-  console.log(targetExam?.subjects, 'targetExam');
+  console.log(targetExam?.examName, 'targetExam');
   return (
-    <SafeAreaView style={styles.container}>
-      <BackHeader
-        onPress={() => navigation.goBack()}
-        title={title || 'Target Exam'}
-      />
-      <ScrollView
-        contentContainerStyle={styles.scrollWrapper}
-        centerContent={true}
-      >
-        <View style={styles.inputsWrapper}>
-          <View style={styles.formWrapper}>
-            <DropDownSelect
+    <>
+      <SafeAreaView style={styles.container}>
+        <BackHeader
+          onPress={() => navigation.goBack()}
+          title={title || 'Target Exam'}
+        />
+        <ScrollView
+          contentContainerStyle={styles.scrollWrapper}
+          centerContent={true}
+        >
+          <RenderExams
+            exams={examName}
+            isExam={(item: any) => {
+              dispatch({ type: 'examName', payload: item });
+            }}
+            onPress={() => {
+              console.log('first');
+              setIsSubjectsModal(true);
+            }}
+          />
+          <View style={styles.inputsWrapper}>
+            <View style={styles.formWrapper}>
+              {/* <DropDownSelect
               isSearch={true}
               onSelect={(item: any) => {
                 dispatch({ type: 'examName', payload: item });
@@ -118,7 +132,19 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
               }
               data={examName}
               DropDownLabel={dropdownLabel}
-            />
+            /> */}
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+
+      <CustomModal
+        isFullHeight={true}
+        isModalVisible={isSubjectsModal}
+        isModalHide={() => setIsSubjectsModal(false)}
+      >
+        <View style={styles.modalWrapper}>
+          <ScrollView>
             <SubjectSelector
               getSubjects={(targetExam) => {
                 const sub = targetExam.map((subject) =>
@@ -131,8 +157,8 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
               }}
               label={inputLabel}
             />
-          </View>
-          <View style={styles.btnWrapper}>
+          </ScrollView>
+          <View>
             <View style={styles.warnWrapper}>
               <Text style={styles.warnText} numberOfLines={1}>
                 Ensure correct spelling as you type the subject name ⚠️
@@ -159,13 +185,17 @@ const SelectExam: React.FC<PropsType> = ({ navigation, route }) => {
             />
           </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </CustomModal>
+    </>
   );
 };
 
 const getStyles = () =>
   StyleSheet.create({
+    modalWrapper: {
+      flex: 1,
+      justifyContent: 'space-between',
+    },
     warnWrapper: {
       marginBottom: spacing.m,
       backgroundColor: colors.light_yellow,
@@ -183,10 +213,7 @@ const getStyles = () =>
     scrollWrapper: {
       flexGrow: 1,
     },
-    btnWrapper: {
-      paddingHorizontal: spacing.l,
-      paddingBottom: spacing.l,
-    },
+
     formWrapper: {
       paddingTop: spacing.l,
       paddingHorizontal: spacing.l,

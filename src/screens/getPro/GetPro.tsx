@@ -250,7 +250,7 @@ const GetPro = ({ navigation }: { navigation: any }) => {
             >
               <Text>✅</Text>
               <Text style={{ color: colors.black, fontSize: fontSizes.p2 }}>
-                Specific Question Doubt Resolution
+                Ads free
               </Text>
             </View>
             <View
@@ -260,12 +260,7 @@ const GetPro = ({ navigation }: { navigation: any }) => {
                 alignItems: 'center',
                 paddingBottom: 6,
               }}
-            >
-              <Text>✅</Text>
-              <Text style={{ color: colors.black, fontSize: fontSizes.p2 }}>
-                Test Question explanation
-              </Text>
-            </View>
+            />
           </View>
         </ScrollView>
         {getPlan?.price > 0 && (

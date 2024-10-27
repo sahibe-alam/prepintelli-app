@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { colors } from '../utils/commonStyle/colors';
 import { fontSizes, spacing } from '../utils/commonStyle';
 import HomeSlider from '../components/HomeSlider';
@@ -26,6 +26,13 @@ import { usePrepContext } from '../contexts/GlobalState';
 import MyExam from './ExamPreparation/MyExam';
 import Gradient from '../components/Gradient';
 import Images from '../resources/Images';
+import {
+  BannerAd,
+  BannerAdSize,
+  TestIds,
+  useForeground,
+} from 'react-native-google-mobile-ads';
+
 interface PropsType {
   navigation?: any;
   route?: any;
@@ -35,7 +42,15 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
   const [appUpdate, setAppUpdate] = React.useState<any>();
   const appVersion = DeviceInfo.getVersion();
   const currentVersion = Number(appVersion);
-  const { user } = usePrepContext();
+  const bannerRef = useRef<BannerAd>(null);
+
+  const adUnitId = __DEV__
+    ? TestIds.ADAPTIVE_BANNER
+    : 'ca-app-pub-6977271034834750/6052830158';
+  useForeground(() => {
+    Platform.OS === 'ios' && bannerRef.current?.load();
+  });
+  const { user, planType } = usePrepContext();
   const typeExam = {
     title: 'Choose Exam',
     type: 'comptv',
@@ -65,7 +80,6 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
       .then((res: any) => {
         if (res?.data.success) {
           const versionInNumber = Number(res?.data?.data?.appVersion);
-          console.log(versionInNumber);
           setAppUpdate(res?.data?.data);
           if (currentVersion < versionInNumber) {
             setUpdateModalVisible(true);
@@ -97,53 +111,75 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
   return (
     <>
       <View style={styles.container}>
-        <ScrollView>
-          <View style={styles.sliderWrapper}>
-            <HomeSlider />
-          </View>
-          <View style={styles.typeWrapper}>
-            {user?.exams.length > 0 ? (
-              <>
-                <Gradient style={styles.modulesHeadingWrapper}>
-                  <View style={styles.modulesHeadingContainer}>
-                    <Text style={styles.targetExam}>Targeted exam: </Text>
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate('Select Exam', {
-                          title: 'Target new exam',
-                          dropdownLabel: 'Select new exam?*',
-                        })
-                      }
-                      style={styles.selectedExam}
-                    >
-                      <Image style={styles.examIc} source={Images.academicIc} />
-                      <Text style={styles.modulesHeading}>
-                        {user?.exams[0]?.exam_short_name}
-                      </Text>
-                      <Image
-                        style={styles.downArrow}
-                        source={Images.downArrow}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </Gradient>
+        <View style={{ flex: 1 }}>
+          <ScrollView>
+            <View style={styles.sliderWrapper}>
+              <HomeSlider />
+            </View>
+            <View style={styles.typeWrapper}>
+              {user?.exams.length > 0 ? (
+                <>
+                  <Gradient style={styles.modulesHeadingWrapper}>
+                    <View style={styles.modulesHeadingContainer}>
+                      <Text style={styles.targetExam}>Targeted exam</Text>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate('Select Exam', {
+                            title: 'Target new exam',
+                            dropdownLabel: 'Select new exam?*',
+                            inputLabel: 'Type new exam subjects*',
+                          })
+                        }
+                        style={styles.selectedExam}
+                      >
+                        <Image
+                          style={styles.examIc}
+                          source={Images.academicIc}
+                        />
+                        <Text style={styles.modulesHeading}>
+                          {user?.exams[0]?.exam_short_name}
+                        </Text>
+                        <Image
+                          style={styles.downArrow}
+                          source={Images.downArrow}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </Gradient>
 
-                <MyExam navigation={navigation} />
-              </>
-            ) : (
-              <>
-                <Text style={styles.noExamHeading}>
-                  Target Competitive exam, With AI ✨
-                </Text>
-                <ExamType
-                  onPress={() => navigation.navigate('Select Exam', typeExam)}
-                  title={typeExam.title}
-                  type={typeExam.type}
-                />
-              </>
-            )}
-          </View>
-        </ScrollView>
+                  <MyExam isScreen={false} navigation={navigation} />
+                </>
+              ) : (
+                <>
+                  <Text style={styles.noExamHeading}>
+                    Target Competitive exam, With AI ✨
+                  </Text>
+                  <ExamType
+                    onPress={() => navigation.navigate('Select Exam', typeExam)}
+                    title={typeExam.title}
+                    type={typeExam.type}
+                  />
+                </>
+              )}
+            </View>
+          </ScrollView>
+
+          {planType === 'free' && (
+            <View style={{ paddingBottom: 10 }}>
+              <BannerAd
+                ref={bannerRef}
+                unitId={adUnitId}
+                size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                onAdFailedToLoad={(error) => {
+                  console.log('Ad failed to load: ', error);
+                }}
+                onAdLoaded={() => {
+                  console.log('Ad loaded');
+                }}
+              />
+            </View>
+          )}
+        </View>
       </View>
       {isUpdateModalVisible && (
         <CustomModal isForceModal={false} isModalVisible={isUpdateModalVisible}>
@@ -193,6 +229,10 @@ const styles = StyleSheet.create({
   selectedExam: {
     flexDirection: 'row',
     alignItems: 'center',
+    borderLeftWidth: 1,
+    paddingLeft: 10,
+    height: 38,
+    borderColor: colors.grey,
   },
   downArrow: {
     width: 20,

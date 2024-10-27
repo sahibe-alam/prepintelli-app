@@ -29,12 +29,14 @@ import { updateCredit } from '../../api/adapter/updateCredit';
 import NoCreditPopUp from '../../components/NoCreditPopUp';
 import Images from '../../resources/Images';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BackHeader from '../../components/BackHeader';
 
 interface PropsType {
   navigation?: any;
   route?: any;
+  isScreen?: boolean;
 }
-const MyExam: React.FC<PropsType> = ({ navigation }) => {
+const MyExam: React.FC<PropsType> = ({ navigation, isScreen = true }) => {
   const [isLoading, setLoading] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isNoCredit, setIsNoCredit] = useState(false);
@@ -57,7 +59,7 @@ const MyExam: React.FC<PropsType> = ({ navigation }) => {
     testTime: 0,
   });
   const toast = useToast();
-  const styles = getStyles();
+  const styles = getStyles(isScreen);
   const { width } = useWindowDimensions();
   const { user, getCredits, planType, setGetCredits } = usePrepContext();
 
@@ -165,7 +167,7 @@ Return the JSON output without any additional text.
 }
 
 `;
-
+  console.log(getUserInputs?.subject);
   const handlePractice = () => {
     setLoading(true);
     questionGeneratorLlm([
@@ -337,10 +339,12 @@ Return the JSON output without any additional text.
     <>
       {user?.exams.length > 0 ? (
         <SafeAreaView style={styles.conatainer}>
-          {/* <BackHeader
-            onPress={() => navigation.navigate('Home')}
-            title={'My exam'}
-          /> */}
+          {isScreen && (
+            <BackHeader
+              onPress={() => navigation.navigate('Home')}
+              title={'My exam'}
+            />
+          )}
           <Text style={styles.title}>
             Prepare for{' '}
             {user?.exams[0]?.exam_short_name || user?.exams[0].classname} exam
@@ -393,7 +397,10 @@ Return the JSON output without any additional text.
                     {user?.exams[0]?.exam_short_name ||
                       user?.exams[0].classname}
                   </Text>
-                  &nbsp;community
+                  &nbsp;community {'\n'}{' '}
+                  <Text style={{ fontSize: 12 }}>
+                    Ask a question or share your knowledge
+                  </Text>
                 </Text>
               </View>
             </TouchableOpacity>
@@ -602,7 +609,7 @@ Return the JSON output without any additional text.
   );
 };
 
-const getStyles = () =>
+const getStyles = (isScreen?: boolean) =>
   StyleSheet.create({
     cardTitleWrapper: {
       flex: 1,
@@ -636,9 +643,10 @@ const getStyles = () =>
     cardTitle: {
       color: colors.blue,
       fontWeight: '600',
-      fontSize: fontSizes.p3,
+      fontSize: fontSizes.p2,
       textAlign: 'left',
       textTransform: 'capitalize',
+      lineHeight: 22,
     },
     cardImg: {
       height: 60,
@@ -657,6 +665,7 @@ const getStyles = () =>
       alignItems: 'center',
       justifyContent: 'flex-start',
       minWidth: '40%',
+      columnGap: 6,
       // shadowOffset: {
       //   width: 0,
       //   height: 2,
@@ -682,6 +691,7 @@ const getStyles = () =>
     },
     conatainer: {
       backgroundColor: colors.lightBg,
+      flex: isScreen ? 1 : 0,
     },
   });
 export default MyExam;
