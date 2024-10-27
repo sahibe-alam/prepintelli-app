@@ -1,11 +1,14 @@
-import {View, SafeAreaView, StyleSheet} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {colors} from '../../utils/commonStyle/colors';
+import { View, SafeAreaView, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { colors } from '../../utils/commonStyle/colors';
 import BackHeader from '../../components/BackHeader';
 import Button from '../../components/Button';
-import {spacing} from '../../utils/commonStyle';
+import { spacing } from '../../utils/commonStyle';
 import Questions from '../../components/examPrepComponents/Questions';
 import QuestionsProgressBar from '../../components/examPrepComponents/QuestionsProgressBar';
+import { storeSubjectScore } from '../../api/adapter/studentPerformance';
+import { usePrepContext } from '../../contexts/GlobalState';
+import { useShowMessage } from '../../utils/showMessage';
 
 interface PropsType {
   navigation?: any;
@@ -19,11 +22,14 @@ interface Question {
   userSelected?: number;
 }
 
-const PracticeTest: React.FC<PropsType> = props => {
-  const {navigation, route} = props;
-  const {generativeAiData, subjectName, chapterName} = route.params;
+const PracticeTest: React.FC<PropsType> = (props) => {
+  const { navigation, route } = props;
+  const { generativeAiData, subjectName, chapterName, testTime, subjectIndex } =
+    route.params;
   const styles = getStyles();
   const [answers, setAnswers] = useState<number[]>([]);
+  const { user } = usePrepContext();
+  const showMessage = useShowMessage();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [results, setResults] = useState<{
     correctAnswers: number;
@@ -37,10 +43,10 @@ const PracticeTest: React.FC<PropsType> = props => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [questionsArray, setQuestionsArray] = useState<Question[] | null>(
-    generativeAiData?.questions || [],
+    generativeAiData?.questions || []
   );
   const handleOptionClick = (questionIndex: number, selectedOption: number) => {
-    setAnswers(prevAnswers => {
+    setAnswers((prevAnswers) => {
       const newAnswers = [...prevAnswers];
       newAnswers[questionIndex] = selectedOption;
       return newAnswers;
@@ -94,7 +100,15 @@ const PracticeTest: React.FC<PropsType> = props => {
       questionsWithUserSelected,
       subjectName,
       chapterName,
+      subjectIndex,
     });
+    storeSubjectScore(
+      user?._id,
+      subjectName,
+      correctAnswers,
+      totalQuestions,
+      subjectIndex
+    ).catch((error) => console.log(error));
   };
 
   const handleNext = (questionIndex: number) => {
@@ -129,9 +143,14 @@ const PracticeTest: React.FC<PropsType> = props => {
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader
-        onPress={() => navigation.goBack()}
+        isTimeUp={() => {
+          showMessage('Test time is up');
+          handleSubmit(currentQuestionIndex);
+        }}
+        testTime={testTime}
+        onPress={() => navigation.navigate('Exam Zone')}
         title={`${currentQuestionIndex + 1}/${questionsArray?.length || 0}`}
-        isTimer={true}
+        isTimer={testTime > 0 ? true : false}
       />
       <QuestionsProgressBar
         totalQuestions={questionsArray?.length || 0}
@@ -157,7 +176,8 @@ const PracticeTest: React.FC<PropsType> = props => {
             justifyContent:
               currentQuestionIndex > 0 ? 'space-between' : 'flex-end',
           },
-        ]}>
+        ]}
+      >
         {currentQuestionIndex > 0 && (
           <Button
             onPress={handlePrev}

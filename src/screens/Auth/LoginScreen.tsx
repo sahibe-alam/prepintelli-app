@@ -5,19 +5,28 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  BackHandler,
+  Linking,
 } from 'react-native';
-import React, {useReducer, useState} from 'react';
-import {colors} from '../../utils/commonStyle/colors';
+import React, { useCallback, useReducer, useState } from 'react';
+import { colors } from '../../utils/commonStyle/colors';
 import LogoTitle from '../../components/commonComponents/LogoTitle';
 import Button from '../../components/Button';
-import {spacing} from '../../utils/commonStyle';
+import { spacing } from '../../utils/commonStyle';
 import InputField from '../../components/formComponents/InputField';
-import {isValidEmail} from '../../utils/validation';
-import {setLoginToken, setUserID} from '../../utils/commonServices';
-import {makeRequest} from '../../api/apiClients';
-import {useToast} from 'react-native-toast-notifications';
-import {getUserDetails} from '../../api/adapter/getUserDetails';
-import {usePrepContext} from '../../contexts/GlobalState';
+import { isValidEmail } from '../../utils/validation';
+import {
+  getJwtToken,
+  setLoginToken,
+  setUserID,
+} from '../../utils/commonServices';
+import { makeRequest } from '../../api/apiClients';
+import { useToast } from 'react-native-toast-notifications';
+import { getUserDetails } from '../../api/adapter/getUserDetails';
+import { usePrepContext } from '../../contexts/GlobalState';
+import { useFocusEffect } from '@react-navigation/native';
+import { useShowMessage } from '../../utils/showMessage';
+import { createDoubleBackHandler } from '../../utils/backButtonHandler';
 
 interface Props {
   navigation?: any;
@@ -26,9 +35,9 @@ interface Props {
 const reducer = (state: any, action: any) => {
   switch (action.type) {
     case 'EMAIL':
-      return {...state, email: action.payload};
+      return { ...state, email: action.payload };
     case 'PASSWORD':
-      return {...state, password: action.payload};
+      return { ...state, password: action.payload };
     default:
       return state;
   }
@@ -38,20 +47,21 @@ const initialState = {
   email: '',
   password: '',
 };
-const LoginScreen: React.FC<Props> = props => {
-  const {navigation} = props;
+const LoginScreen: React.FC<Props> = (props) => {
+  const { navigation } = props;
   const [loginDate, dispatch] = useReducer(reducer, initialState);
   const [isLoading, setLoading] = useState(false);
-  const {setUser} = usePrepContext();
+  const { setUser } = usePrepContext();
+  const [isShowPass, setIsShowPass] = useState(true);
   const toast = useToast();
   const [errorMessage, setErrorMessage] = useState<{
     email: string;
     password: string;
-  }>({email: '', password: ''});
+  }>({ email: '', password: '' });
 
   const isValid = () => {
     let isError = false;
-    let errorObj: {email?: string; password?: string} = {};
+    let errorObj: { email?: string; password?: string } = {};
     const fieldsToValidate = [
       {
         field: 'email',
@@ -73,7 +83,7 @@ const LoginScreen: React.FC<Props> = props => {
       },
     ];
 
-    fieldsToValidate.forEach(({field, validation}) => {
+    fieldsToValidate.forEach(({ field, validation }) => {
       const error = validation(loginDate[field]);
       if (error) {
         isError = true;
@@ -105,17 +115,28 @@ const LoginScreen: React.FC<Props> = props => {
         },
       })
         .then((res: any) => {
-          if (res.data.success) {
+          if (res.data?.success) {
             setLoginToken(res.data.data.token);
             setUserID(res.data.data._id);
-            getUserDetails(res.data.data._id).then((res: any) => {
-              setUser && setUser(res.data[0]);
-              setLoading(false);
-              navigation.navigate('Main');
+            getJwtToken().then((token) => {
+              if (token) {
+                getUserDetails(res.data.data._id)
+                  .then((res: any) => {
+                    setUser && setUser(res.data[0]);
+                    setLoading(false);
+                    navigation.navigate('Main');
+                  })
+                  .catch((err: any) => {
+                    console.log(err, 'err');
+                    setLoading(false);
+                  });
+              }
             });
           } else {
-            toast.show(res?.data.msg, {type: 'danger'});
             setLoading(false);
+            toast.show(res.data.msg, {
+              type: 'danger',
+            });
           }
         })
 
@@ -126,19 +147,42 @@ const LoginScreen: React.FC<Props> = props => {
     }
   };
   const styles = getStyles();
+  const showMessage = useShowMessage();
 
+  useFocusEffect(
+    useCallback(() => {
+      const { handleBackPress, cleanup } = createDoubleBackHandler(showMessage);
+
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+        cleanup();
+      };
+    }, [showMessage])
+  );
+
+  const openLink = async (url: string) => {
+    try {
+      await Linking.openURL(url);
+    } catch (error) {
+      console.error('Error opening URL:', error);
+      showMessage('Something went wrong');
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollWrapper}
-        centerContent={true}>
+        centerContent={true}
+      >
         <View style={styles.wrapper}>
           <LogoTitle title="Login" />
           <InputField
             errorMsg={errorMessage.email}
             value={loginDate.email.trim().toLowerCase()}
-            onChangeText={text =>
-              dispatch({type: 'EMAIL', payload: text.trim()})
+            onChangeText={(text) =>
+              dispatch({ type: 'EMAIL', payload: text.trim() })
             }
             label="Email"
             placeholder="Enter email id"
@@ -147,8 +191,11 @@ const LoginScreen: React.FC<Props> = props => {
             <InputField
               errorMsg={errorMessage.password}
               value={loginDate.password.trim()}
-              onChangeText={text =>
-                dispatch({type: 'PASSWORD', payload: text.trim()})
+              secureTextEntry={isShowPass}
+              isPassword={true}
+              onHidePassword={() => setIsShowPass(!isShowPass)}
+              onChangeText={(text) =>
+                dispatch({ type: 'PASSWORD', payload: text.trim() })
               }
               label="Password"
               placeholder="Enter password"
@@ -158,7 +205,8 @@ const LoginScreen: React.FC<Props> = props => {
                 onPress={() => {
                   navigation.navigate('Forgot password');
                 }}
-                style={styles.forgotBtn}>
+                style={styles.forgotBtn}
+              >
                 <Text style={styles.forgotText}>Forgot password</Text>
               </TouchableOpacity>
             </View>
@@ -171,12 +219,12 @@ const LoginScreen: React.FC<Props> = props => {
             />
 
             <View>
-              <View style={{paddingVertical: spacing.s}}>
+              <View style={{ paddingVertical: spacing.s }}>
                 <Text style={styles.t_and_c}>OR</Text>
               </View>
 
               <Button
-                title="Create new account"
+                title="Create New Account"
                 outline={true}
                 onPress={() => navigation.navigate('Sign Up')}
               />
@@ -188,8 +236,18 @@ const LoginScreen: React.FC<Props> = props => {
         <Text style={styles.t_and_c}>
           By continuing, I accept PrepIntelli's
         </Text>
-        <TouchableOpacity style={styles.btnLink}>
-          <Text style={styles.linkText}>Terms of use</Text>
+        <TouchableOpacity
+          onPress={() => openLink('https://prepintelli.com/terms-conditions')}
+          style={styles.btnLink}
+        >
+          <Text style={styles.linkText}>Terms & Conditions</Text>
+        </TouchableOpacity>
+        <Text style={styles.t_and_c}>and</Text>
+        <TouchableOpacity
+          onPress={() => openLink('https://prepintelli.com/privacy-policy')}
+          style={styles.btnLink}
+        >
+          <Text style={styles.linkText}>Privacy Policy</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -215,7 +273,7 @@ const getStyles = () =>
       flexDirection: 'row',
       justifyContent: 'center',
       padding: spacing.l,
-      gap: 2,
+      gap: 4,
       flexWrap: 'wrap',
     },
     linkText: {

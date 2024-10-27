@@ -1,8 +1,15 @@
-import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import {
+  BackHandler,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import React, { useEffect } from 'react';
 import BackHeader from '../../components/BackHeader';
-import {colors} from '../../utils/commonStyle/colors';
-import {fontSizes, spacing} from '../../utils/commonStyle';
+import { colors } from '../../utils/commonStyle/colors';
+import { fontSizes, spacing } from '../../utils/commonStyle';
 import CircleProgress from '../../components/commonComponents/CircleProgress';
 import Button from '../../components/Button';
 
@@ -11,18 +18,35 @@ interface PropsType {
   results?: any;
   route?: any;
 }
-const TestResult: React.FC<PropsType> = props => {
-  const {navigation} = props;
-  const {myResults, questionsWithUserSelected, subjectName, chapterName} =
+const TestResult: React.FC<PropsType> = (props) => {
+  const { navigation } = props;
+  const { myResults, questionsWithUserSelected, subjectName, chapterName } =
     props.route.params;
   // Now you can use the title variable in the other screen
-  const styles = getStylle();
+  const styles = getStyle();
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      navigation.navigate('Exam Zone');
+      return true;
+    });
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', () => {
+        navigation.navigate('Exam Zone');
+        return true;
+      });
+    };
+  }),
+    [];
   return (
     <SafeAreaView style={styles.container}>
-      <BackHeader onPress={() => navigation.goBack()} title="Test Result" />
+      <BackHeader
+        onPress={() => navigation.navigate('Exam Zone')}
+        title="Test Result"
+      />
       <View style={styles.wrapper}>
         <View>
-          <Text style={styles.title}>Scores card</Text>
+          <Text style={styles.title}>Scores Card</Text>
           <View style={styles.scoresCardWrapper}>
             <View style={styles.cardTextWrapper}>
               <Text style={styles.cardText}>
@@ -32,9 +56,7 @@ const TestResult: React.FC<PropsType> = props => {
                 <Text style={styles.boldText}>Chapter or unit:</Text>{' '}
                 {chapterName}
               </Text>
-              <Text style={styles.cardText}>
-                <Text style={styles.boldText}>Time spend:</Text> 8m 20s
-              </Text>
+
               <Text style={styles.cardText}>
                 <Text style={styles.boldText}>Total questions:</Text> 10
               </Text>
@@ -45,8 +67,9 @@ const TestResult: React.FC<PropsType> = props => {
               <View
                 style={[
                   styles.resultBar,
-                  {backgroundColor: colors.light_green},
-                ]}>
+                  { backgroundColor: colors.light_green },
+                ]}
+              >
                 <Text style={styles.correctText}>
                   Correct answers {myResults?.correctAnswers}
                 </Text>
@@ -56,8 +79,12 @@ const TestResult: React.FC<PropsType> = props => {
                 />
               </View>
               <View
-                style={[styles.resultBar, {backgroundColor: colors.light_red}]}>
-                <Text style={[styles.correctText, {color: colors.red}]}>
+                style={[
+                  styles.resultBar,
+                  { backgroundColor: colors.light_red },
+                ]}
+              >
+                <Text style={[styles.correctText, { color: colors.red }]}>
                   Wrong answers {myResults?.wrongAnswers}
                 </Text>
                 <Image
@@ -68,9 +95,10 @@ const TestResult: React.FC<PropsType> = props => {
               <View
                 style={[
                   styles.resultBar,
-                  {backgroundColor: colors.light_yellow},
-                ]}>
-                <Text style={[styles.correctText, {color: colors.yellow}]}>
+                  { backgroundColor: colors.light_yellow },
+                ]}
+              >
+                <Text style={[styles.correctText, { color: colors.yellow }]}>
                   Not attempt {myResults?.notAttempted}
                 </Text>
                 <Text>☹️</Text>
@@ -82,7 +110,11 @@ const TestResult: React.FC<PropsType> = props => {
         <View style={styles.btnWrapper}>
           <Button
             onPress={() =>
-              navigation.navigate('Answers Sheet', {questionsWithUserSelected})
+              navigation.navigate('Answers Sheet', {
+                questionsWithUserSelected,
+                subjectName,
+                chapterName,
+              })
             }
             title="View answers"
           />
@@ -91,7 +123,7 @@ const TestResult: React.FC<PropsType> = props => {
     </SafeAreaView>
   );
 };
-const getStylle = () =>
+const getStyle = () =>
   StyleSheet.create({
     wrapper: {
       flex: 1,
@@ -128,6 +160,7 @@ const getStylle = () =>
     cardText: {
       fontSize: fontSizes.p3,
       color: colors.purple,
+      textTransform: 'capitalize',
     },
     boldText: {
       fontWeight: '600',

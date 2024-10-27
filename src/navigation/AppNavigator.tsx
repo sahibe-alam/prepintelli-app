@@ -1,6 +1,6 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import {NavigationContainer} from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 import Main from './Main';
 import TargetExam from '../screens/ExamPreparation/TargetExam';
 import SelectExam from '../screens/ExamPreparation/SelectExam';
@@ -16,6 +16,20 @@ import TestResult from '../screens/ExamPreparation/TestResult';
 import AnswersSheet from '../screens/ExamPreparation/AnswersSheet';
 import StartApp from '../screens/StartApp';
 import Splash from '../screens/Splash';
+import FaQs from '../screens/staticsScreens/FaQs';
+import HowItsWork from '../screens/staticsScreens/HowItsWork';
+import AboutPrepIntelli from '../screens/staticsScreens/AboutPrepIntelli';
+import EditProfile from '../screens/Auth/EditProfile';
+import CreateNewPassword from '../screens/Auth/CreateNewPassword';
+import Profile from '../screens/Profile';
+import GetPro from '../screens/getPro/GetPro';
+import ExploreCommunity from '../screens/community/ExploreCommunity';
+import PostScreen from '../screens/community/PostScreen';
+import CreditsUses from '../screens/getPro/CreditsUses';
+import Test from '../screens/Test';
+import CommentScreen from '../screens/community/CommentScreen';
+import MyPosts from '../screens/community/MyPosts';
+import EditPost from '../screens/community/EditPost';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
   return (
@@ -24,77 +38,147 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Start App"
           component={StartApp}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Splash"
           component={Splash}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Main"
           component={Main}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Create Exam"
           component={TargetExam}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Select Exam"
           component={SelectExam}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Exam Zone"
           component={MyExam}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Login"
           component={LoginScreen}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Sign Up"
           component={SignUp}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="OTP"
           component={OtpVerification}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Forgot password"
           component={ForgotPassword}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Ask doubt"
           component={AskDoubt}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Study plan"
           component={StudyPlan}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Practice test"
           component={PracticeTest}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Test Result"
           component={TestResult}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Answers Sheet"
           component={AnswersSheet as React.ComponentType}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="FaQs"
+          component={FaQs as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="How its work"
+          component={HowItsWork as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="About PrepIntelli"
+          component={AboutPrepIntelli as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Edit Profile"
+          component={EditProfile as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Create new password"
+          component={CreateNewPassword as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={Profile as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Get pro"
+          component={GetPro as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Community"
+          component={ExploreCommunity as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PostScreen"
+          component={PostScreen as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Credits uses"
+          component={CreditsUses as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Test"
+          component={Test as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Comment Screen"
+          component={CommentScreen as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="My posts"
+          component={MyPosts as React.ComponentType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Edit post"
+          component={EditPost as React.ComponentType}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

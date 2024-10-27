@@ -1,13 +1,23 @@
-import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
+import { View, StyleSheet, Text, Image } from 'react-native';
 import React from 'react';
-import {colors} from '../utils/commonStyle/colors';
+import { colors } from '../utils/commonStyle/colors';
 import Gradient from '../components/Gradient';
-import {usePrepContext} from '../contexts/GlobalState';
-import {fontSizes} from '../utils/commonStyle';
+import { usePrepContext } from '../contexts/GlobalState';
+import { fontSizes } from '../utils/commonStyle';
+import Images from '../resources/Images';
+import GetImage from './commonComponents/GetImage';
 
-const DpWrapper = () => {
-  const {deviceWidth} = usePrepContext();
-  const {user} = usePrepContext();
+const DpWrapper = ({
+  isPencil = false,
+  onImgDp,
+  dp,
+}: {
+  isPencil?: boolean;
+  dp?: string;
+  onImgDp?: (imagePath: string) => void;
+}) => {
+  const { deviceWidth } = usePrepContext();
+  const { user } = usePrepContext();
   const styles = getSyle(deviceWidth || 0);
   return (
     <View style={styles.gradientWrapper}>
@@ -22,15 +32,28 @@ const DpWrapper = () => {
       </View>
       <View style={styles.dpWrapper}>
         <Image
-          source={require('../assets//img/exam_ai_img.png')}
+          source={
+            dp
+              ? { uri: dp }
+              : user?.userDp?.url
+              ? { uri: user?.userDp?.url }
+              : Images.userDp
+          }
           style={styles.dp}
         />
-        <TouchableOpacity activeOpacity={0.7}>
-          <Image
-            source={require('../assets/img/pencil_ic.png')}
-            style={styles.editIcon}
-          />
-        </TouchableOpacity>
+        {isPencil && (
+          <GetImage
+            cropping={true}
+            onImagePicked={(img) => {
+              onImgDp && onImgDp(img);
+            }}
+          >
+            <Image
+              source={require('../assets/img/pencil_ic.png')}
+              style={styles.editIcon}
+            />
+          </GetImage>
+        )}
       </View>
     </View>
   );
@@ -69,7 +92,7 @@ const getSyle = (deviceWidth: number) =>
     gradientWrapper: {
       width: '100%',
       position: 'relative',
-      height: 140,
+      height: 130,
       marginBottom: 50,
     },
     scrollWrapper: {
@@ -93,7 +116,9 @@ const getSyle = (deviceWidth: number) =>
       position: 'absolute',
       bottom: -40,
       alignSelf: 'center',
-      backgroundColor: colors.purple,
+      backgroundColor: colors.white,
+      borderWidth: 1,
+      borderColor: colors.blue,
     },
   });
 export default DpWrapper;

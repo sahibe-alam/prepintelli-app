@@ -1,16 +1,56 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import React from 'react';
-import {colors} from '../utils/commonStyle/colors';
-import {fontSizes, spacing} from '../utils/commonStyle';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { colors } from '../utils/commonStyle/colors';
+import { fontSizes, spacing } from '../utils/commonStyle';
 interface PropsType {
   onPress?: () => void;
   title?: string;
   isTimer?: boolean;
+  testTime?: number;
+  isBottomBorder?: boolean;
+  isTimeUp?: () => void;
 }
-const BackHeader: React.FC<PropsType> = ({onPress, title, isTimer = false}) => {
-  const styles = getstyles();
+const BackHeader: React.FC<PropsType> = ({
+  onPress,
+  title,
+  isBottomBorder = true,
+  isTimer = false,
+  testTime = 0,
+  isTimeUp,
+}) => {
+  const [timeLeft, setTimeLeft] = useState(testTime * 60);
+  useEffect(() => {
+    setTimeLeft(testTime * 60);
+  }, [testTime]);
+  const styles = getStyles();
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      if (isTimeUp && testTime > 0) {
+        isTimeUp();
+      }
+    }
+
+    const intervalId = setInterval(() => {
+      if (timeLeft > 0) {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [timeLeft, isTimeUp, testTime]);
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${String(minutes).padStart(1, '0')}:${String(seconds).padStart(
+      2,
+      '0'
+    )}`;
+  };
   return (
-    <View style={styles.backHeader}>
+    <View
+      style={[styles.backHeader, isBottomBorder && { borderBottomWidth: 1 }]}
+    >
       <TouchableOpacity style={styles.backBtn} onPress={onPress}>
         <Image
           style={styles.backArrow}
@@ -25,7 +65,7 @@ const BackHeader: React.FC<PropsType> = ({onPress, title, isTimer = false}) => {
               style={styles.timerIc}
               source={require('../assets/img/timer_ic.png')}
             />
-            <Text style={styles.counterText}>10:00</Text>
+            <Text style={styles.counterText}>{formatTime(timeLeft)}</Text>
           </View>
         </View>
       )}
@@ -33,7 +73,7 @@ const BackHeader: React.FC<PropsType> = ({onPress, title, isTimer = false}) => {
   );
 };
 
-const getstyles = () =>
+const getStyles = () =>
   StyleSheet.create({
     counter: {
       backgroundColor: colors.light_purple,
@@ -60,7 +100,7 @@ const getstyles = () =>
       alignItems: 'flex-end',
     },
     backBtn: {
-      padding: 10,
+      padding: 12,
       paddingLeft: 0,
     },
     backTitle: {
@@ -78,7 +118,7 @@ const getstyles = () =>
       alignItems: 'center',
       gap: 0,
       paddingHorizontal: spacing.l,
-      borderBottomWidth: 1,
+      borderBottomWidth: 0,
       borderColor: colors.light_grey,
     },
   });

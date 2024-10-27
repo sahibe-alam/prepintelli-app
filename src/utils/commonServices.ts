@@ -8,6 +8,10 @@ export const setLoginToken = async (jwtToken: string) => {
   await AsyncStorage.setItem('jwtToken', jwtToken);
 };
 
+export const removeLoginToken = async () => {
+  await AsyncStorage.removeItem('jwtToken');
+};
+
 export const setUserID = async (userID: string) => {
   await AsyncStorage.setItem('userID', userID);
 };

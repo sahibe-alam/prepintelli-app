@@ -1,4 +1,4 @@
-import {makeRequest} from '../apiClients';
+import { makeRequest } from '../apiClients';
 
 export const getUserDetails = async (userId: string) => {
   if (userId) {

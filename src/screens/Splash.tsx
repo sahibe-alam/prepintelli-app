@@ -7,18 +7,19 @@ import {
   Image,
 } from 'react-native';
 import React from 'react';
-import {colors} from '../utils/commonStyle/colors';
+import { colors } from '../utils/commonStyle/colors';
 import Button from '../components/Button';
-import {fontSizes, spacing} from '../utils/commonStyle';
-import {usePrepContext} from '../contexts/GlobalState';
+import { fontSizes, spacing } from '../utils/commonStyle';
+import { usePrepContext } from '../contexts/GlobalState';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Images from '../resources/Images';
 interface Props {
   navigation?: any;
   route?: any;
   markAppLaunched?: any;
 }
-const Splash: React.FC<Props> = ({navigation}) => {
-  const {orientation} = usePrepContext();
+const Splash: React.FC<Props> = ({ navigation }) => {
+  const { orientation } = usePrepContext();
 
   const markAppLaunched = async () => {
     try {
@@ -34,15 +35,12 @@ const Splash: React.FC<Props> = ({navigation}) => {
 
   const styles = getStyle(orientation || ''); // Ensure orientation is always a string
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <View style={styles.container}>
         <StatusBar barStyle="dark-content" backgroundColor={'white'} />
         <View style={styles.splashWrapper}>
           <View style={[styles.branding]}>
-            <Image
-              style={styles.logo}
-              source={require('../../src/assets/img/Logo.png')}
-            />
+            <Image style={styles.logo} source={Images.logo} />
             <Text style={styles.logoText}>prepIntelli</Text>
             <Text style={styles.tagline}>
               PrepIntelli app: Your AI-powered {'\n'} exam preparation companion

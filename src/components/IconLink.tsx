@@ -1,7 +1,7 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
-import {fontSizes, spacing} from '../utils/commonStyle';
-import {colors} from '../utils/commonStyle/colors';
+import { fontSizes, spacing } from '../utils/commonStyle';
+import { colors } from '../utils/commonStyle/colors';
 import Gradient from './Gradient';
 
 interface IconLinkProps {
@@ -9,7 +9,7 @@ interface IconLinkProps {
   linkText?: string;
   onPress?: any;
 }
-const IconLink: React.FC<IconLinkProps> = ({icon, linkText, onPress}) => {
+const IconLink: React.FC<IconLinkProps> = ({ icon, linkText, onPress }) => {
   const styles = getSyle();
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
@@ -33,15 +33,15 @@ const IconLink: React.FC<IconLinkProps> = ({icon, linkText, onPress}) => {
 const getSyle = () =>
   StyleSheet.create({
     icon: {
-      width: 24,
-      height: 24,
+      width: 22,
+      height: 22,
       resizeMode: 'contain',
       tintColor: colors.white,
     },
     iconWrapper: {
       backgroundColor: colors.blue,
       flex: 1,
-      maxWidth: 40,
+      maxWidth: 36,
       aspectRatio: 1,
       alignItems: 'center',
       justifyContent: 'center',
@@ -61,7 +61,7 @@ const getSyle = () =>
       tintColor: colors.grey,
       height: 16,
       resizeMode: 'contain',
-      transform: [{rotate: '180deg'}],
+      transform: [{ rotate: '180deg' }],
     },
     linkWrapper: {
       flexDirection: 'row',

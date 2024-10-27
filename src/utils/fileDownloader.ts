@@ -1,10 +1,10 @@
-import {Platform} from 'react-native';
+import { Alert, Platform } from 'react-native';
 import RNFetchBlob from 'react-native-blob-util';
 
 export const fileDownloader = async (
   fileUrl: string,
   fileName?: string | null,
-  fileType?: string,
+  fileType?: string
 ) => {
   const timeStamp = new Date().getTime(); // or any timestamp you prefer
   const file_Name = fileName || timeStamp;
@@ -27,7 +27,7 @@ export const fileDownloader = async (
         path: path,
         fileCache: true,
       }).fetch('GET', fileUrl);
-
+      Alert.alert('Success', 'PDF downloaded successfully to Download folder!');
       return Promise.resolve(response.path()); // Return the downloaded file path
     }
   } catch (error) {

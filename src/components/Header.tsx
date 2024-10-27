@@ -1,35 +1,93 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
-import React from 'react';
-import {colors} from '../utils/commonStyle/colors';
-import {fontSizes} from '../utils/commonStyle';
-import {usePrepContext} from '../contexts/GlobalState';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useCallback } from 'react';
+import { colors } from '../utils/commonStyle/colors';
+import { fontSizes } from '../utils/commonStyle';
+import { usePrepContext } from '../contexts/GlobalState';
+import { makeRequest } from '../api/apiClients';
+import { useFocusEffect } from '@react-navigation/native';
+import Gradient from './Gradient';
+import Images from '../resources/Images';
 
-const Header = () => {
-  const {user} = usePrepContext();
+const Header = ({ navigation }: { navigation: any }) => {
+  const { user, getCredits, setGetCredits, setPlanType } = usePrepContext();
+  useFocusEffect(
+    useCallback(() => {
+      makeRequest({
+        url: 'get-credits',
+        method: 'POST',
+        data: {
+          userId: user?._id,
+        },
+      }).then((res: any) => {
+        setGetCredits && setGetCredits(res?.data?.planDetails?.dailyCredits);
+        setPlanType && setPlanType(res?.data?.planDetails?.plan);
+      });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user, setGetCredits])
+  );
   return (
     <View style={styles.header}>
       <View style={styles.userDetails}>
-        <View style={styles.dpWrapper}>
+        <TouchableOpacity
+          onPress={() => {
+            // navigation.navigate('Profile');
+            navigation.navigate('Profile');
+          }}
+          activeOpacity={0.7}
+          style={styles.dpWrapper}
+        >
           <Image
             style={styles.dp}
-            source={require('../assets/img/user_icon.png')}
+            source={
+              user?.userDp?.url ? { uri: user?.userDp?.url } : Images.userDp
+            }
           />
-        </View>
+          <Gradient style={styles.gradientMenuIcon}>
+            <Image style={styles.menuIcon} source={Images.menuIc} />
+          </Gradient>
+        </TouchableOpacity>
         <Text style={styles.userName} numberOfLines={1} ellipsizeMode="tail">
           Hi, {user?.firstname}
         </Text>
       </View>
-      <View style={styles.coinWrapper}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('Credits uses');
+        }}
+        activeOpacity={0.7}
+        style={styles.coinWrapper}
+      >
         <Image
           style={styles.coinIcon}
           source={require('../assets/img/coin_ic.png')}
         />
-        <Text style={styles.coinCount}>100</Text>
-      </View>
+        <Text style={styles.coinCount}>{getCredits}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 const styles = StyleSheet.create({
+  coinContainer: {
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'flex-end',
+  },
+  menuIcon: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+  },
+  gradientMenuIcon: {
+    position: 'absolute',
+    padding: 2,
+    bottom: 0,
+    right: -4,
+    borderRadius: 50,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   header: {
     width: '100%',
     backgroundColor: colors.white,
@@ -70,8 +128,10 @@ const styles = StyleSheet.create({
   coinWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 5,
     padding: 4,
+    maxWidth: 100,
     paddingHorizontal: 10,
     borderWidth: 1,
     borderColor: colors.grey,

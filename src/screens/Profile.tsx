@@ -1,18 +1,18 @@
-import {View, StyleSheet} from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 import React from 'react';
-import {colors} from '../utils/commonStyle/colors';
+import { colors } from '../utils/commonStyle/colors';
 import BackHeader from '../components/BackHeader';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import DpWrapper from '../components/DpWrapper';
 import IconLink from '../components/IconLink';
-import {spacing} from '../utils/commonStyle';
+import { spacing } from '../utils/commonStyle';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 interface PropsType {
   navigation: any;
 }
 
-const Profile: React.FC<PropsType> = ({navigation}) => {
-  const styles = getSyle();
+const Profile: React.FC<PropsType> = ({ navigation }) => {
+  const styles = getStyle();
   const logoutHandler = async () => {
     await AsyncStorage.removeItem('jwtToken');
     await AsyncStorage.removeItem('userID');
@@ -22,27 +22,27 @@ const Profile: React.FC<PropsType> = ({navigation}) => {
     {
       icon: require('../assets/img/edit_profile.png'),
       linkText: 'Edit profile',
-      onPress: () => navigation.navigate('Profile'),
+      onPress: () => navigation.navigate('Edit Profile'),
     },
     {
-      icon: require('../assets/img/alarm_ic.png'),
-      linkText: 'Practice reminder',
-      onPress: () => navigation.navigate('Profile'),
+      icon: require('../assets/img/faq_ic.png'),
+      linkText: 'My posts',
+      onPress: () => navigation.navigate('My posts'),
     },
     {
       icon: require('../assets/img/how_ic.png'),
       linkText: 'How it works',
-      onPress: () => navigation.navigate('Profile'),
+      onPress: () => navigation.navigate('How its work'),
     },
     {
       icon: require('../assets/img/about_ic.png'),
-      linkText: 'About us',
-      onPress: () => navigation.navigate('Profile'),
+      linkText: 'About PrepIntelli',
+      onPress: () => navigation.navigate('About PrepIntelli'),
     },
     {
       icon: require('../assets/img/faq_ic.png'),
-      linkText: 'fAQs',
-      onPress: () => navigation.navigate('Profile'),
+      linkText: 'FAQs',
+      onPress: () => navigation.navigate('FaQs'),
     },
     {
       icon: require('../assets/img/logout_ic.png'),
@@ -52,7 +52,7 @@ const Profile: React.FC<PropsType> = ({navigation}) => {
   ];
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <BackHeader title="My profile" onPress={() => navigation.goBack()} />
       <ScrollView style={styles.scrollWrapper}>
         <DpWrapper />
@@ -62,11 +62,11 @@ const Profile: React.FC<PropsType> = ({navigation}) => {
           ))}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
-const getSyle = () =>
+const getStyle = () =>
   StyleSheet.create({
     iconLinkWrapper: {
       paddingHorizontal: spacing.l,

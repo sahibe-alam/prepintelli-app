@@ -1,8 +1,8 @@
 import SelectDropdown from 'react-native-select-dropdown';
-import React, {useState} from 'react';
-import {fontSizes, spacing} from '../../utils/commonStyle';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {colors} from '../../utils/commonStyle/colors';
+import React, { useState } from 'react';
+import { fontSizes, spacing } from '../../utils/commonStyle';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { colors } from '../../utils/commonStyle/colors';
 
 interface PropsType {
   onSelect?: (selectedItem: any, index: number) => void;
@@ -13,6 +13,7 @@ interface PropsType {
   rowTextForSelection?: any;
   buttonTextAfterSelection?: any;
   errorMsg?: string;
+  isSearch?: boolean | undefined;
 }
 const DropDownSelect: React.FC<PropsType> = ({
   DropDownLabel = 'Label',
@@ -23,6 +24,7 @@ const DropDownSelect: React.FC<PropsType> = ({
   buttonTextAfterSelection = (item: any) => item?.label,
   errorMsg,
   data,
+  isSearch = undefined,
 }) => {
   const [isSelected, setIsSelected] = React.useState(null);
   const examNames = [
@@ -38,7 +40,7 @@ const DropDownSelect: React.FC<PropsType> = ({
   const [viewWidth, setViewWidth] = useState(0);
 
   const handleLayout = (event: any) => {
-    const {width} = event.nativeEvent.layout;
+    const { width } = event.nativeEvent.layout;
     setViewWidth(width);
   };
 
@@ -48,13 +50,13 @@ const DropDownSelect: React.FC<PropsType> = ({
       <Text style={styles.label}>{DropDownLabel}</Text>
       <View onLayout={handleLayout}>
         <SelectDropdown
-          search={true}
+          search={isSearch}
           searchPlaceHolder={searchPlaceHolder}
           searchPlaceHolderColor={colors.black}
           selectedRowStyle={styles.selectedRowStyle}
           defaultButtonText={defaultButtonText}
-          showsVerticalScrollIndicator={false}
-          selectedRowTextStyle={{color: colors.white}}
+          showsVerticalScrollIndicator={true}
+          selectedRowTextStyle={{ color: colors.white }}
           statusBarTranslucent={false}
           rowStyle={styles.rowStyle}
           rowTextStyle={styles.rowTextStyle}
@@ -62,7 +64,7 @@ const DropDownSelect: React.FC<PropsType> = ({
           buttonStyle={styles.button}
           buttonTextStyle={[
             styles.buttonTextStyle,
-            {color: isSelected ? colors.black : colors.grey},
+            { color: isSelected ? colors.black : colors.grey },
           ]}
           data={data || examNames}
           onSelect={(selectedItem, index) => {
@@ -72,15 +74,15 @@ const DropDownSelect: React.FC<PropsType> = ({
             }
           }}
           buttonTextAfterSelection={buttonTextAfterSelection}
-          renderDropdownIcon={isopen => {
+          renderDropdownIcon={(isopen) => {
             return (
               <Image
                 style={[
                   styles.arrow,
                   {
                     transform: isopen
-                      ? [{rotate: '-90deg'}, {rotateY: '180deg'}]
-                      : [{rotate: '90deg'}, {rotateY: '-180deg'}],
+                      ? [{ rotate: '-90deg' }, { rotateY: '180deg' }]
+                      : [{ rotate: '90deg' }, { rotateY: '-180deg' }],
                   },
                 ]}
                 source={require('../../assets/img/header_back_arrow.png')}
@@ -127,7 +129,7 @@ const getStyles = (width: any) =>
       height: 16,
       tintColor: colors.grey,
       resizeMode: 'contain',
-      transform: [{rotate: '90deg'}, {rotateY: '180deg'}],
+      transform: [{ rotate: '90deg' }, { rotateY: '180deg' }],
     },
     wrapper: {},
     buttonTextStyle: {

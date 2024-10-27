@@ -1,4 +1,7 @@
 {
   "name": "PrepIntelli",
-  "displayName": "PrepIntelli"
+  "displayName": "PrepIntelli",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-6977271034834750~6253076487"
+  }
 }

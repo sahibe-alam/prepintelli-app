@@ -1,4 +1,4 @@
-import React, {useState, ReactNode} from 'react';
+import React, { useState, ReactNode } from 'react';
 import {
   View,
   Text,
@@ -9,8 +9,8 @@ import {
   Image,
 } from 'react-native';
 import Gradient from './Gradient';
-import {fontSizes, spacing} from '../utils/commonStyle';
-import {colors} from '../utils/commonStyle/colors';
+import { fontSizes, spacing } from '../utils/commonStyle';
+import { colors } from '../utils/commonStyle/colors';
 
 // Enable LayoutAnimation on Android
 UIManager.setLayoutAnimationEnabledExperimental &&
@@ -47,8 +47,8 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
                 styles.arrow,
                 {
                   transform: expanded
-                    ? [{rotate: '-90deg'}, {rotateY: '180deg'}]
-                    : [{rotate: '90deg'}, {rotateY: '-180deg'}],
+                    ? [{ rotate: '-90deg' }, { rotateY: '180deg' }]
+                    : [{ rotate: '90deg' }, { rotateY: '-180deg' }],
                 },
               ]}
               source={require('../assets/img/header_back_arrow.png')}
@@ -67,7 +67,8 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
 
                 margin: 1,
                 backgroundColor: 'white',
-              }}>
+              }}
+            >
               {children}
             </View>
           </Gradient>
@@ -86,7 +87,7 @@ const getStyles = () =>
     },
     btnTitle: {
       color: 'white',
-      fontSize: fontSizes.p,
+      fontSize: fontSizes.p2,
       flex: 1,
     },
     btnTextwrapper: {
@@ -104,7 +105,7 @@ const getStyles = () =>
       tintColor: colors.white,
       alignSelf: 'center',
       resizeMode: 'contain',
-      transform: [{rotate: '90deg'}, {rotateY: '180deg'}],
+      transform: [{ rotate: '90deg' }, { rotateY: '180deg' }],
     },
   });
 export default AccordionItem;

@@ -5,17 +5,18 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, {useState} from 'react';
-import {fontSizes} from '../../utils/commonStyle';
-import {colors} from '../../utils/commonStyle/colors';
+import React, { useState } from 'react';
+import { fontSizes } from '../../utils/commonStyle';
+import { colors } from '../../utils/commonStyle/colors';
+import Images from '../../resources/Images';
 
 interface PropsTypes {
   placeholder: string;
   onInputChange?: (value: string) => void;
   onPress?: () => void;
 }
-const PromptInput: React.FC<PropsTypes> = props => {
-  const {placeholder, onInputChange, onPress} = props;
+const PromptInput: React.FC<PropsTypes> = (props) => {
+  const { placeholder, onInputChange, onPress } = props;
   const [inputValue, setInputValue] = useState('');
   const styles = getStyles();
 
@@ -42,12 +43,10 @@ const PromptInput: React.FC<PropsTypes> = props => {
         }}
         style={[
           styles.sentBtn,
-          {backgroundColor: inputValue ? colors.blue : colors.grey},
-        ]}>
-        <Image
-          style={styles.sentIcon}
-          source={require('../../assets/img/msg_sent_ic.png')}
-        />
+          { backgroundColor: inputValue ? colors.blue : colors.grey },
+        ]}
+      >
+        <Image style={styles.sentIcon} source={Images.sentIcon} />
       </TouchableOpacity>
     </View>
   );
