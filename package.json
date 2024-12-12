@@ -26,7 +26,7 @@
     "react-native-dotenv": "^3.4.11",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.15.0",
-    "react-native-google-mobile-ads": "^14.2.5",
+    "react-native-google-mobile-ads": "^14.4.0",
     "react-native-html-to-pdf": "^0.12.0",
     "react-native-image-crop-picker": "^0.41.2",
     "react-native-lightbox-v2": "^0.9.0",

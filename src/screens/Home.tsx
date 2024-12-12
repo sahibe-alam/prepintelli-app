@@ -46,7 +46,7 @@ const Home: React.FC<PropsType> = ({ navigation }) => {
 
   const adUnitId = __DEV__
     ? TestIds.ADAPTIVE_BANNER
-    : 'ca-app-pub-6977271034834750/6052830158';
+    : 'ca-app-pub-6977271034834750/7572162470';
   useForeground(() => {
     Platform.OS === 'ios' && bannerRef.current?.load();
   });

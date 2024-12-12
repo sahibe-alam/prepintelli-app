@@ -92,8 +92,8 @@ const getStyle = () => {
       borderRadius: 10,
       borderWidth: 1,
       borderColor: colors.grey,
-      minWidth: 170,
       flex: 1,
+      minWidth: '40%',
     },
     noExamText: {
       fontSize: fontSizes.p3,
